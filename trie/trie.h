@@ -58,6 +58,10 @@ class trie {
   void clean(std::unique_ptr<node<T,R>> n);
   //bool remove(std::unique_ptr<node<T,R>> n, const std::string & key, int d);
   bool contains(std::unique_ptr<node<T,R>> & n, const std::string & key, int d);
+  void get_keys_with_prefix(std::unique_ptr<node<T,R>> & n,
+			    std::string prefix,
+			    int d,
+			    std::unique_ptr<std::vector<std::string>> & v);
   void gather_keys(std::unique_ptr<node<T,R>> & n,
                    std::string prefix,
                    std::unique_ptr<std::vector<std::string>> & v);

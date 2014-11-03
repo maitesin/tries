@@ -132,18 +132,24 @@ std::vector<std::string> trie<T,R>::get_keys() {
 
 template <class T, size_t R>
 std::vector<std::string> trie<T,R>::get_keys_with_prefix(const std::string & prefix) {
-  std::unique_ptr<node<T,R>>  n (root.get());
-  for (int i = 0; i < prefix.size(); ++i)
-    if (n->sons[prefix[i]] != nullptr)
-      n = std::unique_ptr<node<T,R>>(n->sons[prefix[i]].get());
-    else
-      return std::vector<std::string>();
   std::unique_ptr<std::vector<std::string>> vec;
   vec = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-  gather_keys(n, prefix, vec);
+  get_keys_with_prefix(root, prefix, 0, vec);
   return *vec;
 }
 
+template <class T, size_t R>
+void trie<T,R>::get_keys_with_prefix(std::unique_ptr<node<T,R>> & n,
+				     std::string prefix,
+				     int d,
+				     std::unique_ptr<std::vector<std::string>> & v) {
+  if (prefix.size() == d) {
+    gather_keys(n, prefix, v);
+  } else {
+    if (n->sons[prefix[d]] != nullptr)
+      get_keys_with_prefix(n->sons[prefix[d]], prefix, d+1, v);
+  }  
+}
 
 template <class T, size_t R>
 void trie<T,R>::gather_keys(std::unique_ptr<node<T,R>> & n,
