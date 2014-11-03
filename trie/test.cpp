@@ -40,11 +40,12 @@ int main(int argc, char * argv[] ) {
   for (auto key : t.get_keys_with_prefix("Hi")) {
     std::cout << key << std::endl;
   }
-  /*
+  
   t.remove(hello);
   t.show();
   t.remove(he);
   t.show();
-  */
+  t.remove(no);
+  t.show();
   return 0;
 }

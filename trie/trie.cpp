@@ -68,7 +68,6 @@ void trie<T,R>::clean(std::unique_ptr<node<T,R>> n) {
   for (int i = 0; i < n->r; ++i) {
     if (n->sons[i] != nullptr) clean(std::move(n->sons[i]));
   }
-  // delete n;
   n.reset();
 }
 
@@ -89,14 +88,14 @@ bool trie<T,R>::contains(std::unique_ptr<node<T,R>> & n,
   return false;
 }
 
-/*
+
 template <class T, size_t R>
 void trie<T,R>::remove(const std::string & key) {
-  remove(root.get(), key, 0);
+  remove(root, key, 0);
 }
 
 template <class T, size_t R>
-bool trie<T,R>::remove(std::unique_ptr<node<T,R>> n,
+bool trie<T,R>::remove(std::unique_ptr<node<T,R>> & n,
                        const std::string & key,
                        int d) {
   if (key.size() == d && n != nullptr) {
@@ -108,10 +107,9 @@ bool trie<T,R>::remove(std::unique_ptr<node<T,R>> n,
     }
   } else {
     if (n->sons[key[d]] != nullptr) {
-      bool deleted = remove(n->sons[key[d]].get(), key, d+1);
+      bool deleted = remove(n->sons[key[d]], key, d+1);
       if (deleted) {
         n->sons[key[d]].reset();
-        //n->sons[key[d]] = nullptr;
         --n->s;
         if (n->s == 0 && n->value == T())
           return true;
@@ -120,7 +118,7 @@ bool trie<T,R>::remove(std::unique_ptr<node<T,R>> n,
     }
   }
 }
-*/
+
 
 template <class T, size_t R>
 std::vector<std::string> trie<T,R>::get_keys() {
