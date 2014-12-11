@@ -26,10 +26,11 @@ void trie<T>::put(const std::string key, const T value) {
 
 template <class T>
 node<T> * trie<T>::put(node<T> * n, const std::string key, const T value, int d) {
-  if (key.size() == d+1) {
+  if (key.size() == d) {
     n->value = value;
     return n;
   }
+  std::cout << "current position = " << key[d] << std::endl; 
   if (n->sons[key[d]] == nullptr) {
     n->sons[key[d]] = new node<T>(n->R);
   }
