@@ -30,7 +30,9 @@ node<T> * trie<T>::put(node<T> * n, const std::string key, const T value, int d)
     n->value = value;
     return n;
   }
-  std::cout << "current position = " << key[d] << std::endl; 
+  char pos = key[d];
+  std::cout << "current position = " << pos << std::endl;
+  std::cout << "integer value = " << (int) pos << std::endl;
   if (n->sons[key[d]] == nullptr) {
     n->sons[key[d]] = new node<T>(n->R);
   }

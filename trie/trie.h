@@ -27,6 +27,7 @@ class trie {
   //Constructor
  trie(int radix = 256) : R(radix) {
     root = new node<T>(R);
+    s = 0;
   }
   //Destructor
   ~trie() {
