@@ -4,43 +4,49 @@
 #include <string>
 
 template <class T>
-typedef struct _node {
+struct node {
   T value;
-  _node * sons[];
+  node ** sons;
   int R;
 
-_node(int radix) : R(radix)
+node(int radix) : R(radix)
   {
-    sons = new _node<T>*[R];
+    sons = new node<T>*[R];
     for (int i = 0; i < R; ++i) {
       sons[i] = nullptr;
     }
   }
-  ~_node() {
-    delete [] sons;
+  ~node() {
+    delete[] sons;
   }
-} node;
+};
 
 template <class T>
 class trie {
  public:
   //Constructor
- trie(int radix = 256) : R(radix) {}
+ trie(int radix = 256) : R(radix) {
+    root = new node<T>(R);
+  }
   //Destructor
   ~trie() {
-    clean();
+    clean(root);
   }
   //Methods
   const T & get(const std::string key);
   void put(const std::string key, const T value);
-  
+  int size(){return s;}
+  void show();
  private:
   //Atributes
   node<T> * root;
   int R; //Radix
+  int s;
   //Methods
   node<T> * get(node<T> * n, const std::string key, int d);
   node<T> * put(node<T> * n, const std::string key, const T value, int d);
+  void clean(node<T> * n);
+  void show(node<T> * n);
 };
 
 #endif
