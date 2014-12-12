@@ -83,14 +83,23 @@ void trie<T>::remove(std::string key) {
 }
 
 template <class T>
-void trie<T>::remove(node<T> * n, std::string key, int d) {
+bool trie<T>::remove(node<T> * n, std::string key, int d) {
   if (key.size() == d && n != nullptr) {
     n->value = T();
-    return;
+    if (n->s == 0)  {
+      delete n;
+      return true;
+    }
+    else return false;
   }
   else {
     if (n->sons[key[d]] != nullptr) {
-      remove(n->sons[key[d]], key, d+1);
+      bool deleted = remove(n->sons[key[d]], key, d+1);
+      if (deleted) {
+	--n->s;
+	if (n->s == 0) return true;
+      }
+      return false;
     }
   }
 }

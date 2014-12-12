@@ -54,8 +54,7 @@ class trie {
   node<T> * get(node<T> * n, const std::string key, int d);
   node<T> * put(node<T> * n, const std::string key, const T value, int d);
   void clean(node<T> * n);
-  void remove(node<T> * n, std::string key, int d);
-  void delete_if_no_sons(node<T> * n);
+  bool remove(node<T> * n, std::string key, int d);
   bool contains(node<T> * n, std::string key, int d);
   void show(node<T> * n);
   //std::vector<std::string> get_keys_with_preffix(node<T> * n,  std::string preffix, int d, std::vector<std::string> v);
