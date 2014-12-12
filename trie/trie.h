@@ -42,8 +42,8 @@ class trie {
   void show();
   void remove(std::string key);
   bool contains(std::string key);
-  std::vector<std::string> get_keys_with_preffix(std::string preffix);
-  std::vector<std::string> get_keys(std::string preffix);
+  //std::vector<std::string> get_keys_with_preffix(std::string preffix);
+  //std::vector<std::string> get_keys(std::string preffix);
   
  private:
   //Atributes
@@ -58,7 +58,7 @@ class trie {
   void delete_if_no_sons(node<T> * n);
   bool contains(node<T> * n, std::string key, int d);
   void show(node<T> * n);
-  std::vector<std::string> get_keys_with_preffix(node<T> * n,  std::string preffix, int d, std::vector<std::string> v);
+  //std::vector<std::string> get_keys_with_preffix(node<T> * n,  std::string preffix, int d, std::vector<std::string> v);
 };
 
 #endif
