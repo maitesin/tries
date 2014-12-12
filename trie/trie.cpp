@@ -12,7 +12,7 @@ const T & trie<T>::get(const std::string key) {
 template <class T>
 node<T> * trie<T>::get(node<T> * n, const std::string key, int d) {
   if (key.size() == d || n == nullptr) return nullptr;
-  if (key.size() == d+1) return n;
+  if (key.size() == d) return n;
   if (n->sons[key[d]] != nullptr) {
     return get(n->sons[key[d]], key, d+1);
   }
@@ -20,7 +20,7 @@ node<T> * trie<T>::get(node<T> * n, const std::string key, int d) {
 
 template <class T>
 void trie<T>::put(const std::string key, const T value) {
-  root = put(root, key, value, 0);
+  put(root, key, value, 0);
   ++s;
 }
 
@@ -30,14 +30,8 @@ node<T> * trie<T>::put(node<T> * n, const std::string key, const T value, int d)
     n->value = value;
     return n;
   }
-  char pos = key[d];
-  std::cout << "current position = " << pos << std::endl;
-  std::cout << "integer value = " << (int) pos << std::endl;
   if (n->sons[key[d]] == nullptr) {
-    std::cout << "is null: " << n->sons[key[d]]  << std::endl;
     n->sons[key[d]] = new node<T>(n->R);
-    bool is = n->sons[key[d]] != nullptr;
-    std::cout << "should not be null: " << n->sons[key[d]] << " -> " << is << std::endl;
   }
   return put(n->sons[key[d]], key, value, d+1);
 }
@@ -52,6 +46,7 @@ void trie<T>::clean(node<T> * node) {
 
 template <class T>
 void trie<T>::show() {
+  std::cout << "new trie to show" << std::endl;
   show(root);
 }
 
@@ -59,6 +54,9 @@ template <class T>
 void trie<T>::show(node<T> * node) {
   if (node->value != T()) std::cout << "value = " << node->value << std::endl;
   for (int i = 0; i < node->R; ++i) {
-    if (node->sons[i] != nullptr) show(node->sons[i]);
+    if (node->sons[i] != nullptr) {
+      std::cout << char(i) << std::endl;
+      show(node->sons[i]);
+    }
   }
 }

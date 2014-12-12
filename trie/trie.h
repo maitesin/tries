@@ -9,8 +9,7 @@ struct node {
   node ** sons;
   int R;
 
-node(int radix) : R(radix)
-  {
+node(int radix) : R(radix) {
     sons = new node<T>*[R];
     for (int i = 0; i < R; ++i) {
       sons[i] = nullptr;
@@ -36,7 +35,7 @@ class trie {
   //Methods
   const T & get(const std::string key);
   void put(const std::string key, const T value);
-  int size(){return s;}
+  int size() {return s;}
   void show();
  private:
   //Atributes
