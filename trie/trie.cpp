@@ -5,13 +5,13 @@
 template <class T>
 const T & trie<T>::get(const std::string key) {
   node<T> * node = get(root, key, 0);
-  if (root != nullptr) return node->value;
-  else return nullptr; //review that
+  if (node != nullptr) return node->value;
+  else return T(); //review that
 }
 
 template <class T>
 node<T> * trie<T>::get(node<T> * n, const std::string key, int d) {
-  if (key.size() == d || n == nullptr) return nullptr;
+  if (key.size() == d && n == nullptr) return nullptr;
   if (key.size() == d) return n;
   if (n->sons[key[d]] != nullptr) {
     return get(n->sons[key[d]], key, d+1);
@@ -59,4 +59,19 @@ void trie<T>::show(node<T> * node) {
       show(node->sons[i]);
     }
   }
+}
+
+template <class T>
+bool trie<T>::contains(std::string key) {
+  return contains(root, key, 0);
+}
+
+template <class T>
+bool trie<T>::contains(node<T> * n, std::string key, int d) {
+  if (key.size() == d && n == nullptr) return false;
+  if (key.size() == d && n->value != T()) return true;
+  if (n->sons[key[d]] != nullptr) {
+    return contains(n->sons[key[d]], key, d+1);
+  }
+  return false;
 }

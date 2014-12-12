@@ -37,6 +37,9 @@ class trie {
   void put(const std::string key, const T value);
   int size() {return s;}
   void show();
+  //void delete(std::string key);
+  bool contains(std::string key);
+  
  private:
   //Atributes
   node<T> * root;
@@ -46,6 +49,8 @@ class trie {
   node<T> * get(node<T> * n, const std::string key, int d);
   node<T> * put(node<T> * n, const std::string key, const T value, int d);
   void clean(node<T> * n);
+  //void delete(node<T>* n, std::string key, int d);
+  bool contains(node<T> * n, std::string key, int d);
   void show(node<T> * n);
 };
 
