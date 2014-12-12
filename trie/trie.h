@@ -7,6 +7,7 @@ template <class T>
 struct node {
   T value;
   node ** sons;
+  int s;
   int R;
 
 node(int radix) : R(radix) {
@@ -14,6 +15,7 @@ node(int radix) : R(radix) {
     for (int i = 0; i < R; ++i) {
       sons[i] = nullptr;
     }
+    s = 0;
   }
   ~node() {
     delete[] sons;
@@ -37,7 +39,7 @@ class trie {
   void put(const std::string key, const T value);
   int size() {return s;}
   void show();
-  //void delete(std::string key);
+  void remove(std::string key);
   bool contains(std::string key);
   
  private:
@@ -49,7 +51,8 @@ class trie {
   node<T> * get(node<T> * n, const std::string key, int d);
   node<T> * put(node<T> * n, const std::string key, const T value, int d);
   void clean(node<T> * n);
-  //void delete(node<T>* n, std::string key, int d);
+  void remove(node<T> * n, std::string key, int d);
+  void delete_if_no_sons(node<T> * n);
   bool contains(node<T> * n, std::string key, int d);
   void show(node<T> * n);
 };

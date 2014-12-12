@@ -30,6 +30,11 @@ int main(int argc, char * argv[] ) {
   std::cout << "Contains He? " << t.contains(he) << std::endl;
   std::cout << "Contains No? " << t.contains(no) << std::endl;
   std::cout << "Contains Hes? " << t.contains(hes) << std::endl;
+
+  t.remove(he);
+  t.show();
+  t.remove(hello);
+  t.show();
   
   return 0;
 }

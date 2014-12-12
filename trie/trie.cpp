@@ -32,6 +32,7 @@ node<T> * trie<T>::put(node<T> * n, const std::string key, const T value, int d)
   }
   if (n->sons[key[d]] == nullptr) {
     n->sons[key[d]] = new node<T>(n->R);
+    ++n->s;
   }
   return put(n->sons[key[d]], key, value, d+1);
 }
@@ -74,4 +75,22 @@ bool trie<T>::contains(node<T> * n, std::string key, int d) {
     return contains(n->sons[key[d]], key, d+1);
   }
   return false;
+}
+
+template <class T>
+void trie<T>::remove(std::string key) {
+  remove(root, key, 0);
+}
+
+template <class T>
+void trie<T>::remove(node<T> * n, std::string key, int d) {
+  if (key.size() == d && n != nullptr) {
+    n->value = T();
+    return;
+  }
+  else {
+    if (n->sons[key[d]] != nullptr) {
+      remove(n->sons[key[d]], key, d+1);
+    }
+  }
 }
