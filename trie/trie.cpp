@@ -46,23 +46,6 @@ void trie<T>::clean(node<T> * node) {
 }
 
 template <class T>
-void trie<T>::show() {
-  std::cout << "new trie to show" << std::endl;
-  show(root);
-}
-
-template <class T>
-void trie<T>::show(node<T> * node) {
-  if (node->value != T()) std::cout << "value = " << node->value << std::endl;
-  for (int i = 0; i < node->R; ++i) {
-    if (node->sons[i] != nullptr) {
-      std::cout << char(i) << std::endl;
-      show(node->sons[i]);
-    }
-  }
-}
-
-template <class T>
 bool trie<T>::contains(std::string key) {
   return contains(root, key, 0);
 }
@@ -104,3 +87,47 @@ bool trie<T>::remove(node<T> * n, std::string key, int d) {
     }
   }
 }
+
+
+template <class T>
+std::vector<std::string> trie<T>::get_keys() {
+  std::vector<std::string> vec;
+  gather_keys(root, "", vec);
+  return vec;
+}
+
+template <class T>
+std::vector<std::string> trie<T>::get_keys_with_prefix(std::string prefix) {
+  node<T> * n = root;
+  for (int i = 0; i < prefix.size(); ++i)
+    if (n->sons[prefix[i]] != nullptr)
+      n = n->sons[prefix[i]];
+    else
+      return std::vector<std::string>();
+  std::vector<std::string> vec;
+  gather_keys(n, prefix, vec);
+  return vec;
+}
+
+template <class T>
+void trie<T>::gather_keys(node <T> * n, std::string prefix, std::vector<std::string> & v) {
+  if (n->value != T()) {
+    v.push_back(prefix);
+  }
+  if (n->s != 0) {
+    for (int i = 0; i < n->R; ++i) {
+      if (n->sons[i] != nullptr) {
+	gather_keys(n->sons[i], prefix + char(i), v); 
+      }
+    }
+  }
+}
+
+template <class T>
+void trie<T>::show() {
+  std::cout << "new trie to show" << std::endl;
+  for (auto key : get_keys()){
+    std::cout << key << std::endl;
+  }
+}
+

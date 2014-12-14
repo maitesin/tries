@@ -20,6 +20,7 @@ int main(int argc, char * argv[] ) {
   std::cout << "Get Wololo = " << t.get(wololo) << std::endl;
   std::cout << "Get Kthulu = " << t.get(kthulu) << std::endl;
   t.put(kthulu, 4);
+  t.show();
   std::cout << "Get Kthulu = " << t.get(kthulu) << std::endl;
   std::cout << "Get He = " << t.get(he) << std::endl;
   t.put(he, 5);
@@ -31,6 +32,16 @@ int main(int argc, char * argv[] ) {
   std::cout << "Contains No? " << t.contains(no) << std::endl;
   std::cout << "Contains Hes? " << t.contains(hes) << std::endl;
 
+  std::cout << "Keys with prefix He" << std::endl;
+  for (auto key : t.get_keys_with_prefix("He")) {
+    std::cout << key << std::endl;
+  }
+
+  std::cout << "Keys with prefix Hi" << std::endl;
+  for (auto key : t.get_keys_with_prefix("Hi")) {
+    std::cout << key << std::endl;
+  }
+  
   t.remove(hello);
   t.show();
   t.remove(he);

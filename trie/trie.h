@@ -11,12 +11,13 @@ struct node {
   int s;
   int R;
 
-node(int radix) : R(radix) {
+node(int radix, T v = T()) : R(radix) {
     sons = new node<T>*[R];
     for (int i = 0; i < R; ++i) {
       sons[i] = nullptr;
     }
     s = 0;
+    value = v;
   }
   ~node() {
     delete[] sons;
@@ -42,8 +43,8 @@ class trie {
   void show();
   void remove(std::string key);
   bool contains(std::string key);
-  //std::vector<std::string> get_keys_with_preffix(std::string preffix);
-  //std::vector<std::string> get_keys(std::string preffix);
+  std::vector<std::string> get_keys_with_prefix(std::string prefix);
+  std::vector<std::string> get_keys();
   
  private:
   //Atributes
@@ -56,8 +57,7 @@ class trie {
   void clean(node<T> * n);
   bool remove(node<T> * n, std::string key, int d);
   bool contains(node<T> * n, std::string key, int d);
-  void show(node<T> * n);
-  //std::vector<std::string> get_keys_with_preffix(node<T> * n,  std::string preffix, int d, std::vector<std::string> v);
+  void gather_keys(node<T> * n,  std::string prefix, std::vector<std::string> & v);
 };
 
 #endif
