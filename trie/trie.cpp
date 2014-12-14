@@ -87,7 +87,6 @@ bool trie<T>::remove(node<T> * n, std::string key, int d) {
   if (key.size() == d && n != nullptr) {
     n->value = T();
     if (n->s == 0)  {
-      delete n;
       return true;
     }
     else return false;
@@ -96,8 +95,10 @@ bool trie<T>::remove(node<T> * n, std::string key, int d) {
     if (n->sons[key[d]] != nullptr) {
       bool deleted = remove(n->sons[key[d]], key, d+1);
       if (deleted) {
+	delete n->sons[key[d]];
+	n->sons[key[d]] = nullptr;
 	--n->s;
-	if (n->s == 0) return true;
+	if (n->s == 0 && n->value == T()) return true;
       }
       return false;
     }
