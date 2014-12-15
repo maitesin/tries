@@ -1,0 +1,4 @@
+- use unique_ptr
+- use std::array
+- think about template <class T, size_t Radix> class trie {...}
+  somethink like using Radix = std::numeric_limits<char>::max();
