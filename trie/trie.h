@@ -1,5 +1,6 @@
-#ifndef __TRIE_H__
-#define __TRIE_H__
+// Copyright 2014 Maitesin
+#ifndef TRIE_TRIE_H_
+#define TRIE_TRIE_H_
 
 #include <string>
 #include <vector>
@@ -27,16 +28,16 @@ node(int radix, T v = T()) : R(radix) {
 template <class T>
 class trie {
  public:
-  //Constructor
- trie(int radix = 256) : R(radix) {
+  // Constructor
+  explicit trie(int radix = 256) : R(radix) {
     root = new node<T>(R);
     s = 0;
   }
-  //Destructor
+  // Destructor
   ~trie() {
     clean(root);
   }
-  //Methods
+  // Methods
   const T & get(const std::string key);
   void put(const std::string key, const T value);
   int size() {return s;}
@@ -45,19 +46,22 @@ class trie {
   bool contains(std::string key);
   std::vector<std::string> get_keys_with_prefix(std::string prefix);
   std::vector<std::string> get_keys();
-  
+
  private:
-  //Atributes
+  // Atributes
   node<T> * root;
-  int R; //Radix
+  // Radix
+  int R;
   int s;
-  //Methods
+  // Methods
   node<T> * get(node<T> * n, const std::string key, int d);
   node<T> * put(node<T> * n, const std::string key, const T value, int d);
   void clean(node<T> * n);
   bool remove(node<T> * n, std::string key, int d);
   bool contains(node<T> * n, std::string key, int d);
-  void gather_keys(node<T> * n,  std::string prefix, std::vector<std::string> & v);
+  void gather_keys(node<T> * n,
+                   std::string prefix,
+                   std::vector<std::string> * v);
 };
 
-#endif
+#endif  // TRIE_TRIE_H_
