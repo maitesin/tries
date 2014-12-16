@@ -22,10 +22,6 @@ struct node {
     s = 0;
     value = v;
   }
-  
-  ~node() {
-    delete[] sons;
-  }
 };
 
 template <class T, size_t R>
@@ -57,14 +53,14 @@ class trie {
   int r;
   int s;
   // Methods
-  std::unique_ptr<node<T,R>> get(std::unique_ptr<node<T,R>> n, const std::string key, int d);
-  std::unique_ptr<node<T,R>> put(std::unique_ptr<node<T,R>> n, const std::string key, const T value, int d);
-  void clean(std::unique_ptr<node<T,R>> n);
-  bool remove(std::unique_ptr<node<T,R>> n, std::string key, int d);
-  bool contains(std::unique_ptr<node<T,R>> n, std::string key, int d);
-  void gather_keys(std::unique_ptr<node<T,R>> n,
+  const std::unique_ptr<node<T,R>> & get(const std::unique_ptr<node<T,R>> & n, const std::string key, int d);
+  const std::unique_ptr<node<T,R>> & put(const std::unique_ptr<node<T,R>> & n, const std::string key, const T value, int d);
+  void clean(std::unique_ptr<node<T,R>> & n);
+  bool remove(std::unique_ptr<node<T,R>> & n, std::string key, int d);
+  bool contains(const std::unique_ptr<node<T,R>> & n, std::string key, int d);
+  void gather_keys(const std::unique_ptr<node<T,R>> & n,
                    std::string prefix,
-                   std::unique_ptr<std::vector<std::string>> v);
+                   std::unique_ptr<std::vector<std::string>> & v);
 };
 
 #endif  // TRIE_TRIE_H_

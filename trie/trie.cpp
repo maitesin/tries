@@ -6,7 +6,7 @@
 
 template <class T, size_t R>
 const T & trie<T,R>::get(const std::string key) {
-  std::unique_ptr<node<T,R>> node = get(root, key, 0);
+  std::unique_ptr<node<T,R>> node (std::move(get(root, key, 0)));
   if (node != nullptr)
     return node->value;
   else
@@ -15,9 +15,9 @@ const T & trie<T,R>::get(const std::string key) {
 }
 
 template <class T, size_t R>
-std::unique_ptr<node<T,R>> trie<T,R>::get(std::unique_ptr<node<T,R>> n,
-				     const std::string key,
-				     int d) {
+const std::unique_ptr<node<T,R>> & trie<T,R>::get(const std::unique_ptr<node<T,R>> & n,
+                                                  const std::string key,
+                                                  int d) {
   if (key.size() == d && n == nullptr) return nullptr;
   if (key.size() == d) return n;
   if (n->sons[key[d]] != nullptr) {
@@ -33,10 +33,10 @@ void trie<T,R>::put(const std::string key,
 }
 
 template <class T, size_t R>
-std::unique_ptr<node<T,R>> trie<T,R>::put(std::unique_ptr<node<T,R>> n,
-				      const std::string key,
-				      const T value,
-				      int d) {
+const std::unique_ptr<node<T,R>> & trie<T,R>::put(const std::unique_ptr<node<T,R>> & n,
+                                                  const std::string key,
+                                                  const T value,
+                                                  int d) {
   if (key.size() == d) {
     n->value = value;
     return n;
@@ -49,11 +49,12 @@ std::unique_ptr<node<T,R>> trie<T,R>::put(std::unique_ptr<node<T,R>> n,
 }
 
 template <class T, size_t R>
-void trie<T,R>::clean(std::unique_ptr<node<T,R>> node) {
-  for (int i = 0; i < node->r; ++i) {
-    if (node->sons[i] != nullptr) clean(node->sons[i]);
+void trie<T,R>::clean(std::unique_ptr<node<T,R>> & n) {
+  for (int i = 0; i < n->r; ++i) {
+    if (n->sons[i] != nullptr) clean(n->sons[i]);
   }
-  delete node;
+  n.get();
+  // delete n;
 }
 
 template <class T, size_t R>
@@ -62,9 +63,9 @@ bool trie<T,R>::contains(std::string key) {
 }
 
 template <class T, size_t R>
-bool trie<T,R>::contains(std::unique_ptr<node<T,R>> n,
-                       std::string key,
-                       int d) {
+bool trie<T,R>::contains(const std::unique_ptr<node<T,R>> & n,
+                         std::string key,
+                         int d) {
   if (key.size() == d && n == nullptr) return false;
   if (key.size() == d && n->value != T()) return true;
   if (n->sons[key[d]] != nullptr) {
@@ -79,9 +80,9 @@ void trie<T,R>::remove(std::string key) {
 }
 
 template <class T, size_t R>
-bool trie<T,R>::remove(std::unique_ptr<node<T,R>> n,
-                     std::string key,
-                     int d) {
+bool trie<T,R>::remove(std::unique_ptr<node<T,R>> & n,
+                       std::string key,
+                       int d) {
   if (key.size() == d && n != nullptr) {
     n->value = T();
     if (n->s == 0) {
@@ -114,10 +115,10 @@ std::vector<std::string> trie<T,R>::get_keys() {
 
 template <class T, size_t R>
 std::vector<std::string> trie<T,R>::get_keys_with_prefix(std::string prefix) {
-  std::unique_ptr<node<T,R>>  n = root;
+  std::unique_ptr<node<T,R>>  n (root.get());
   for (int i = 0; i < prefix.size(); ++i)
     if (n->sons[prefix[i]] != nullptr)
-      n = n->sons[prefix[i]];
+      n (n->sons[prefix[i]].get());
     else
       return std::vector<std::string>();
   std::unique_ptr<std::vector<std::string>> vec;
@@ -126,14 +127,14 @@ std::vector<std::string> trie<T,R>::get_keys_with_prefix(std::string prefix) {
 }
 
 template <class T, size_t R>
-void trie<T,R>::gather_keys(std::unique_ptr<node<T,R>> n,
+void trie<T,R>::gather_keys(const std::unique_ptr<node<T,R>> & n,
 			    std::string prefix,
-			    std::unique_ptr<std::vector<std::string>> v) {
+			    std::unique_ptr<std::vector<std::string>> & v) {
   if (n->value != T()) {
     v->push_back(prefix);
   }
   if (n->s != 0) {
-    for (int i = 0; i < n->R; ++i) {
+    for (int i = 0; i < n->r; ++i) {
       if (n->sons[i] != nullptr) {
         gather_keys(n->sons[i], prefix + static_cast<char>(i), v);
       }
