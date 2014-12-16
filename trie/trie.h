@@ -4,33 +4,36 @@
 
 #include <string>
 #include <vector>
+#include <array>
+#include <memory>
 
-template <class T>
+template <class T, size_t R>
 struct node {
   T value;
-  node ** sons;
+  std::array<std::unique_ptr<node<T,R>>, R> sons;
   int s;
-  int R;
-
-node(int radix, T v = T()) : R(radix) {
-    sons = new node<T>*[R];
-    for (int i = 0; i < R; ++i) {
+  int r;
+  
+  explicit node(T v = T()) : r(R) {
+    sons = std::array<std::unique_ptr<node<T,R>>, R>();
+    for (int i = 0; i < r; ++i) {
       sons[i] = nullptr;
     }
     s = 0;
     value = v;
   }
+  
   ~node() {
     delete[] sons;
   }
 };
 
-template <class T>
+template <class T, size_t R>
 class trie {
  public:
   // Constructor
-  explicit trie(int radix = 256) : R(radix) {
-    root = new node<T>(R);
+ trie() : r(R) {
+    root = std::unique_ptr<node<T,R>>(new node<T,R>);
     s = 0;
   }
   // Destructor
@@ -49,19 +52,19 @@ class trie {
 
  private:
   // Atributes
-  node<T> * root;
+  std::unique_ptr<node<T,R>> root;
   // Radix
-  int R;
+  int r;
   int s;
   // Methods
-  node<T> * get(node<T> * n, const std::string key, int d);
-  node<T> * put(node<T> * n, const std::string key, const T value, int d);
-  void clean(node<T> * n);
-  bool remove(node<T> * n, std::string key, int d);
-  bool contains(node<T> * n, std::string key, int d);
-  void gather_keys(node<T> * n,
+  std::unique_ptr<node<T,R>> get(std::unique_ptr<node<T,R>> n, const std::string key, int d);
+  std::unique_ptr<node<T,R>> put(std::unique_ptr<node<T,R>> n, const std::string key, const T value, int d);
+  void clean(std::unique_ptr<node<T,R>> n);
+  bool remove(std::unique_ptr<node<T,R>> n, std::string key, int d);
+  bool contains(std::unique_ptr<node<T,R>> n, std::string key, int d);
+  void gather_keys(std::unique_ptr<node<T,R>> n,
                    std::string prefix,
-                   std::vector<std::string> * v);
+                   std::unique_ptr<std::vector<std::string>> v);
 };
 
 #endif  // TRIE_TRIE_H_

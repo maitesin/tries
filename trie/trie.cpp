@@ -1,12 +1,12 @@
 // Copyright 2014 Maitesin
-#include "./trie.h"
 #include <string>
 #include <vector>
 #include <iostream>
+#include "./trie.h"
 
-template <class T>
-const T & trie<T>::get(const std::string key) {
-  node<T> * node = get(root, key, 0);
+template <class T, size_t R>
+const T & trie<T,R>::get(const std::string key) {
+  std::unique_ptr<node<T,R>> node = get(root, key, 0);
   if (node != nullptr)
     return node->value;
   else
@@ -14,10 +14,10 @@ const T & trie<T>::get(const std::string key) {
     return T();
 }
 
-template <class T>
-node<T> * trie<T>::get(node<T> * n,
-                       const std::string key,
-                       int d) {
+template <class T, size_t R>
+std::unique_ptr<node<T,R>> trie<T,R>::get(std::unique_ptr<node<T,R>> n,
+				     const std::string key,
+				     int d) {
   if (key.size() == d && n == nullptr) return nullptr;
   if (key.size() == d) return n;
   if (n->sons[key[d]] != nullptr) {
@@ -25,44 +25,44 @@ node<T> * trie<T>::get(node<T> * n,
   }
 }
 
-template <class T>
-void trie<T>::put(const std::string key,
-                  const T value) {
+template <class T, size_t R>
+void trie<T,R>::put(const std::string key,
+		    const T value) {
   put(root, key, value, 0);
   ++s;
 }
 
-template <class T>
-node<T> * trie<T>::put(node<T> * n,
-                       const std::string key,
-                       const T value,
-                       int d) {
+template <class T, size_t R>
+std::unique_ptr<node<T,R>> trie<T,R>::put(std::unique_ptr<node<T,R>> n,
+				      const std::string key,
+				      const T value,
+				      int d) {
   if (key.size() == d) {
     n->value = value;
     return n;
   }
   if (n->sons[key[d]] == nullptr) {
-    n->sons[key[d]] = new node<T>(n->R);
+    n->sons[key[d]] = std::unique_ptr<node<T,R>>(new node<T,R>);
     ++n->s;
   }
   return put(n->sons[key[d]], key, value, d+1);
 }
 
-template <class T>
-void trie<T>::clean(node<T> * node) {
-  for (int i = 0; i < node->R; ++i) {
+template <class T, size_t R>
+void trie<T,R>::clean(std::unique_ptr<node<T,R>> node) {
+  for (int i = 0; i < node->r; ++i) {
     if (node->sons[i] != nullptr) clean(node->sons[i]);
   }
   delete node;
 }
 
-template <class T>
-bool trie<T>::contains(std::string key) {
+template <class T, size_t R>
+bool trie<T,R>::contains(std::string key) {
   return contains(root, key, 0);
 }
 
-template <class T>
-bool trie<T>::contains(node<T> * n,
+template <class T, size_t R>
+bool trie<T,R>::contains(std::unique_ptr<node<T,R>> n,
                        std::string key,
                        int d) {
   if (key.size() == d && n == nullptr) return false;
@@ -73,13 +73,13 @@ bool trie<T>::contains(node<T> * n,
   return false;
 }
 
-template <class T>
-void trie<T>::remove(std::string key) {
+template <class T, size_t R>
+void trie<T,R>::remove(std::string key) {
   remove(root, key, 0);
 }
 
-template <class T>
-bool trie<T>::remove(node<T> * n,
+template <class T, size_t R>
+bool trie<T,R>::remove(std::unique_ptr<node<T,R>> n,
                      std::string key,
                      int d) {
   if (key.size() == d && n != nullptr) {
@@ -105,30 +105,30 @@ bool trie<T>::remove(node<T> * n,
 }
 
 
-template <class T>
-std::vector<std::string> trie<T>::get_keys() {
-  std::vector<std::string> vec;
-  gather_keys(root, "", &vec);
-  return vec;
+template <class T, size_t R>
+std::vector<std::string> trie<T,R>::get_keys() {
+  std::unique_ptr<std::vector<std::string>> vec;
+  gather_keys(root, "", vec);
+  return *vec;
 }
 
-template <class T>
-std::vector<std::string> trie<T>::get_keys_with_prefix(std::string prefix) {
-  node<T> * n = root;
+template <class T, size_t R>
+std::vector<std::string> trie<T,R>::get_keys_with_prefix(std::string prefix) {
+  std::unique_ptr<node<T,R>>  n = root;
   for (int i = 0; i < prefix.size(); ++i)
     if (n->sons[prefix[i]] != nullptr)
       n = n->sons[prefix[i]];
     else
       return std::vector<std::string>();
-  std::vector<std::string> vec;
-  gather_keys(n, prefix, &vec);
-  return vec;
+  std::unique_ptr<std::vector<std::string>> vec;
+  gather_keys(n, prefix, vec);
+  return *vec;
 }
 
-template <class T>
-void trie<T>::gather_keys(node <T> * n,
-                          std::string prefix,
-                          std::vector<std::string> * v) {
+template <class T, size_t R>
+void trie<T,R>::gather_keys(std::unique_ptr<node<T,R>> n,
+			    std::string prefix,
+			    std::unique_ptr<std::vector<std::string>> v) {
   if (n->value != T()) {
     v->push_back(prefix);
   }
@@ -141,8 +141,8 @@ void trie<T>::gather_keys(node <T> * n,
   }
 }
 
-template <class T>
-void trie<T>::show() {
+template <class T, size_t R>
+void trie<T,R>::show() {
   std::cout << "new trie to show" << std::endl;
   for (auto key : get_keys()) {
     std::cout << key << std::endl;

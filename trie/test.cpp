@@ -4,7 +4,7 @@
 
 int main(int argc, char * argv[] ) {
 
-  trie<int> t;
+  trie<int, 256> t;
   std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
   
   t.put(hello, 1);
