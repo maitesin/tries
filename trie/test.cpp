@@ -8,7 +8,9 @@ int main(int argc, char * argv[] ) {
   std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
   
   t.put(hello, 1);
+  t.show();
   t.put(world, 2);
+  t.show();
   t.put(wololo, 3);
   
   std::cout << "Current size should be 3; size = " << t.size() << std::endl;
