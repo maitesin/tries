@@ -6,7 +6,7 @@
 
 template <class T, size_t R>
 const T & trie<T,R>::get(const std::string key) {
-  std::unique_ptr<node<T,R>> node (get(std::unique_ptr<node<T,R>>(root.get()), key, 0));
+  std::unique_ptr<node<T,R>> node (get(root, key, 0));
   if (node != nullptr)
     return node->value;
   else
@@ -15,20 +15,20 @@ const T & trie<T,R>::get(const std::string key) {
 }
 
 template <class T, size_t R>
-std::unique_ptr<node<T,R>> trie<T,R>::get(std::unique_ptr<node<T,R>> n,
+std::unique_ptr<node<T,R>> trie<T,R>::get(std::unique_ptr<node<T,R>> & n,
 					  const std::string & key,
 					  int d) {
   if (key.size() == d && n == nullptr) return nullptr;
-  if (key.size() == d) return n;
+  if (key.size() == d) return std::unique_ptr<node<T,R>>(n.get());
   if (n->sons[key[d]] != nullptr) {
-    return get(n->sons[key[d]].get(), key, d+1);
+    return get(n->sons[key[d]], key, d+1);
   }
 }
 
 template <class T, size_t R>
 void trie<T,R>::put(const std::string & key,
 		    const T & value) {
-  put(std::unique_ptr<node<T,R>>(root.get()), key, value, 0);
+  root = put(std::move(root), key, value, 0);
   ++s;
 }
 
@@ -45,13 +45,14 @@ std::unique_ptr<node<T,R>> trie<T,R>::put(std::unique_ptr<node<T,R>> n,
     n->sons[key[d]] = std::unique_ptr<node<T,R>>(new node<T,R>);
     ++n->s;
   }
-  return put(n->sons[key[d]].get(), key, value, d+1);
+  n->sons[key[d]] = put(std::move(n->sons[key[d]]), key, value, d+1);
+  return n;
 }
 
 template <class T, size_t R>
 void trie<T,R>::clean(std::unique_ptr<node<T,R>> n) {
   for (int i = 0; i < n->r; ++i) {
-    if (n->sons[i] != nullptr) clean(n->sons[i]);
+    if (n->sons[i] != nullptr) clean(std::move(n->sons[i]));
   }
   // delete n;
   n.reset();
@@ -59,11 +60,11 @@ void trie<T,R>::clean(std::unique_ptr<node<T,R>> n) {
 
 template <class T, size_t R>
 bool trie<T,R>::contains(const std::string & key) {
-  return contains(root.get(), key, 0);
+  return contains(root, key, 0);
 }
 
 template <class T, size_t R>
-bool trie<T,R>::contains(std::unique_ptr<node<T,R>> n,
+bool trie<T,R>::contains(std::unique_ptr<node<T,R>> & n,
                          const std::string & key,
                          int d) {
   if (key.size() == d && n == nullptr) return false;
@@ -74,6 +75,7 @@ bool trie<T,R>::contains(std::unique_ptr<node<T,R>> n,
   return false;
 }
 
+/*
 template <class T, size_t R>
 void trie<T,R>::remove(const std::string & key) {
   remove(root.get(), key, 0);
@@ -104,12 +106,13 @@ bool trie<T,R>::remove(std::unique_ptr<node<T,R>> n,
     }
   }
 }
-
+*/
 
 template <class T, size_t R>
 std::vector<std::string> trie<T,R>::get_keys() {
   std::unique_ptr<std::vector<std::string>> vec;
-  gather_keys(root, "", vec.get());
+  vec = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>(s));
+  gather_keys(root, "", vec);
   return *vec;
 }
 
@@ -118,25 +121,27 @@ std::vector<std::string> trie<T,R>::get_keys_with_prefix(const std::string & pre
   std::unique_ptr<node<T,R>>  n (root.get());
   for (int i = 0; i < prefix.size(); ++i)
     if (n->sons[prefix[i]] != nullptr)
-      n = n->sons[prefix[i]].get();
+      n = std::unique_ptr<node<T,R>>(n->sons[prefix[i]].get());
     else
       return std::vector<std::string>();
   std::unique_ptr<std::vector<std::string>> vec;
-  gather_keys(n.get(), prefix, vec.get());
+  vec = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>(s));
+  gather_keys(n, prefix, vec);
   return *vec;
 }
 
+
 template <class T, size_t R>
-void trie<T,R>::gather_keys(std::unique_ptr<node<T,R>> n,
+void trie<T,R>::gather_keys(std::unique_ptr<node<T,R>> & n,
 			    std::string prefix,
-			    std::unique_ptr<std::vector<std::string>> v) {
+			    std::unique_ptr<std::vector<std::string>> & v) {
   if (n->value != T()) {
     v->push_back(prefix);
   }
   if (n->s != 0) {
     for (int i = 0; i < n->r; ++i) {
       if (n->sons[i] != nullptr) {
-        gather_keys(n->sons[i].get(), prefix + static_cast<char>(i), v.get());
+        gather_keys(n->sons[i], prefix + static_cast<char>(i), v);
       }
     }
   }

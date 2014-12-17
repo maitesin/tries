@@ -7,15 +7,11 @@ int main(int argc, char * argv[] ) {
   trie<int, 256> t;
   std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
   
-  t.put(hello, 1);
-  t.show();
+  t.put(hello, 1);  
   t.put(world, 2);
-  t.show();
   t.put(wololo, 3);
-  
-  std::cout << "Current size should be 3; size = " << t.size() << std::endl;
-
   t.show();
+  std::cout << "Current size should be 3; size = " << t.size() << std::endl;
 
   std::cout << "Get Hello = " << t.get(hello) << std::endl;
   std::cout << "Get World = " << t.get(world) << std::endl;
@@ -43,11 +39,11 @@ int main(int argc, char * argv[] ) {
   for (auto key : t.get_keys_with_prefix("Hi")) {
     std::cout << key << std::endl;
   }
-  
+  /*
   t.remove(hello);
   t.show();
   t.remove(he);
   t.show();
-  
+  */
   return 0;
 }
