@@ -18,8 +18,16 @@ template <class T, size_t R>
 std::unique_ptr<node<T,R>> trie<T,R>::get(std::unique_ptr<node<T,R>> & n,
 					  const std::string & key,
 					  int d) {
-  if (key.size() == d && n == nullptr) return nullptr;
-  if (key.size() == d) return std::unique_ptr<node<T,R>>(n.get());
+  if (key.size() == d) {
+    if (n == nullptr) {
+      return nullptr;
+    } else {
+      if (n->value != T())
+	return std::unique_ptr<node<T,R>>(n.get());
+      else
+	return nullptr;
+    }
+  }
   if (n->sons[key[d]] != nullptr) {
     return get(n->sons[key[d]], key, d+1);
   }
@@ -42,7 +50,7 @@ std::unique_ptr<node<T,R>> trie<T,R>::put(std::unique_ptr<node<T,R>> n,
     return n;
   }
   if (n->sons[key[d]] == nullptr) {
-    n->sons[key[d]] = std::unique_ptr<node<T,R>>(new node<T,R>);
+    n->sons[key[d]] = std::unique_ptr<node<T,R>>(new node<T,R>());
     ++n->s;
   }
   n->sons[key[d]] = put(std::move(n->sons[key[d]]), key, value, d+1);
