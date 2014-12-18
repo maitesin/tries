@@ -12,7 +12,6 @@ const T & trie<T,R>::get(const std::string key) {
     node.release();
     return v;
   } else {
-    // review that
     return T();
   }
 }
@@ -80,12 +79,15 @@ template <class T, size_t R>
 bool trie<T,R>::contains(std::unique_ptr<node<T,R>> & n,
                          const std::string & key,
                          int d) {
-  if (key.size() == d && n == nullptr) return false;
-  if (key.size() == d && n->value != T()) return true;
-  if (n->sons[key[d]] != nullptr) {
-    return contains(n->sons[key[d]], key, d+1);
+  if (key.size() ==d) {
+    if (n == nullptr) return false;
+    if (n->value != T()) return true;
+  } else {
+    if (n->sons[key[d]] != nullptr) {
+      return contains(n->sons[key[d]], key, d+1);
+    }
+    return false;
   }
-  return false;
 }
 
 
@@ -172,4 +174,3 @@ void trie<T,R>::show() {
     std::cout << key << std::endl;
   }
 }
-
