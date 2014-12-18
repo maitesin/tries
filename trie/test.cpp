@@ -17,6 +17,7 @@ int main(int argc, char * argv[] ) {
   std::cout << "Get World = " << t.get(world) << std::endl;
   std::cout << "Get Wololo = " << t.get(wololo) << std::endl;
   std::cout << "Get Kthulu = " << t.get(kthulu) << std::endl;
+  t.show();
   t.put(kthulu, 4);
   t.show();
   std::cout << "Get Kthulu = " << t.get(kthulu) << std::endl;
