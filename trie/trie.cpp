@@ -7,11 +7,14 @@
 template <class T, size_t R>
 const T & trie<T,R>::get(const std::string key) {
   std::unique_ptr<node<T,R>> node (get(root, key, 0));
-  if (node != nullptr)
-    return node->value;
-  else
+  if (node != nullptr){
+    const T v = node->value;
+    node.release();
+    return v;
+  } else {
     // review that
     return T();
+  }
 }
 
 template <class T, size_t R>
