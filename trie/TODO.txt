@@ -1,4 +1,4 @@
-- use unique_ptr
-- use std::array
-- think about template <class T, size_t Radix> class trie {...}
-  somethink like using Radix = std::numeric_limits<char>::max();
+- use namespace
+- simplify stuff using the using sentence. For example: using node_ptr = std::unique_ptr<node<T,R>>;
+- put the node structure in the trie class
+- WRITE THE DOCU!!
