@@ -135,17 +135,43 @@ class trie {
    */
   void clean(std::unique_ptr<node<T,R>> n);
 
-  
+  /*
+   * Given a node it checks if the d-th position in
+   * the key exists. When the key length is equal to
+   * d we begin to delete all the nodes from that
+   * one up to the first node with at least one son.
+   */
   bool remove(std::unique_ptr<node<T,R>> & n,
               const std::string & key,
               int d);
+
+  /*
+   * Given a node it checks if the d-th position in
+   * the key exists. When the key length is equal to
+   * d we check if the value is different from the
+   * default value of T. If all that happens return
+   * true else return false.
+   */
   bool contains(std::unique_ptr<node<T,R>> & n,
                 const std::string & key,
                 int d);
+
+  /*
+   * Given a node it checks if the d-th position in
+   * the prefix exists. When the prefix length is
+   * equal to d then it calls gather keys to get
+   * all keys with that prefix.
+   */
   void get_keys_with_prefix(std::unique_ptr<node<T,R>> & n,
 			    std::string prefix,
 			    int d,
 			    std::unique_ptr<std::vector<std::string>> & v);
+
+  /*
+   * Given a node goes to all its sons to gather
+   * all the keys that are under the given node.
+   * All those keys are stored in the vector.
+   */
   void gather_keys(std::unique_ptr<node<T,R>> & n,
                    std::string prefix,
                    std::unique_ptr<std::vector<std::string>> & v);
