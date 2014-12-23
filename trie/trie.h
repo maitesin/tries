@@ -34,7 +34,7 @@ template <class T, size_t R>
 class trie {
  public:
   // Constructor
- trie() : r(R) {
+  explicit trie() : r(R) {
     root = std::unique_ptr<node<T,R>>(new node<T,R>);
     s = 0;
   }
@@ -108,14 +108,34 @@ class trie {
   int r;
   int s;
   // Methods
+  /*
+   * Given a node it checks if the d-th position in
+   * the key exists in the node's sons. If that is
+   * true call himself but with d+1. When the key
+   * length is equal to d we check if the value
+   * is diferent from the default value for T.
+   */
   std::unique_ptr<node<T,R>> get(std::unique_ptr<node<T,R>> & n,
                                  const std::string & key,
                                  int d);
+
+  /*
+   * Given a node it checks if the d-th position in
+   * the key exists, if not exists it is created.
+   * When the key length is equal to d we assign
+   * the value to the node's value.
+   */
   std::unique_ptr<node<T,R>> put(std::unique_ptr<node<T,R>> n,
                                  const std::string & key,
                                  const T & value,
                                  int d);
+
+  /*
+   * Given a node deleted everything under it.
+   */
   void clean(std::unique_ptr<node<T,R>> n);
+
+  
   bool remove(std::unique_ptr<node<T,R>> & n,
               const std::string & key,
               int d);
