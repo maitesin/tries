@@ -91,10 +91,15 @@ class trie {
   bool contains(const std::string & key);
 
   /*
-   *
-   *
+   * This method returns a vector of all keys in the
+   * with the prefix provided.
    */
   std::vector<std::string> get_keys_with_prefix(const std::string & prefix);
+
+  /*
+   * This method returns all the keys in the trie.
+   *
+   */
   std::vector<std::string> get_keys();
 
  private:
