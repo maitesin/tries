@@ -1,1 +1,2 @@
+- Use a Framework to create some unit test (something like Catch)
 - WRITE THE DOCU!!
