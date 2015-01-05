@@ -147,17 +147,43 @@ namespace Trie {
 		 */
 		void clean(node_ptr<T,R> n);
 		
-		
+		/*
+		 * Given a node it checks if the d-th position in
+		 * the key exists. When the key length is equal to
+		 * d we begin to delete all the nodes from that
+		 * one up to the first node with at least one son.
+		 */		
 		bool remove(node_ptr<T,R> & n,
 			    const std::string & key,
 			    unsigned int d);
+
+		/*
+		 * Given a node it checks if the d-th position in
+		 * the key exists. When the key length is equal to
+		 * d we check if the value is different from the
+		 * default value of T. If all that happens return
+		 * true else return false.
+		 */		
 		bool contains(node_ptr<T,R> & n,
 			      const std::string & key,
 			      unsigned int d);
+
+		/*
+		 * Given a node it checks if the d-th position in
+		 * the prefix exists. When the prefix length is
+		 * equal to d then it calls gather keys to get
+		 * all keys with that prefix.
+		 */		
 		void get_keys_with_prefix(node_ptr<T,R> & n,
 					  std::string prefix,
 					  unsigned int d,
 					  vec_ptr & v);
+
+		/*
+		 * Given a node goes to all its sons to gather
+		 * all the keys that are under the given node.
+		 * All those keys are stored in the vector.
+		 */		
 		void gather_keys(node_ptr<T,R> & n,
 				 std::string prefix,
 				 vec_ptr & v);
