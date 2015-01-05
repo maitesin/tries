@@ -2,7 +2,7 @@
 #include <iostream>
 #include "trie.cpp"
 
-int main(int argc, char * argv[] ) {
+int main(void) {
 
 	Trie::trie<int, 256> t;
 	std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";

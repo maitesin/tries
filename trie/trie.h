@@ -129,7 +129,7 @@ namespace Trie {
 		 */
 		node_ptr<T,R> get(node_ptr<T,R> & n,
 				  const std::string & key,
-				  int d);
+				  unsigned int d);
 		
 		/*
 		 * Given a node it checks if the d-th position in
@@ -138,9 +138,9 @@ namespace Trie {
 		 * the value to the node's value.
 		 */
 		node_ptr<T,R> put(node_ptr<T,R> n,
-			     const std::string & key,
-			     const T & value,
-			     int d);
+				  const std::string & key,
+				  const T & value,
+				  unsigned int d);
 		
 		/*
 		 * Given a node deleted everything under it.
@@ -150,13 +150,13 @@ namespace Trie {
 		
 		bool remove(node_ptr<T,R> & n,
 			    const std::string & key,
-			    int d);
+			    unsigned int d);
 		bool contains(node_ptr<T,R> & n,
 			      const std::string & key,
-			      int d);
+			      unsigned int d);
 		void get_keys_with_prefix(node_ptr<T,R> & n,
 					  std::string prefix,
-					  int d,
+					  unsigned int d,
 					  vec_ptr & v);
 		void gather_keys(node_ptr<T,R> & n,
 				 std::string prefix,
