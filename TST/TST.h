@@ -42,9 +42,9 @@ namespace TST {
 		}
 		
 		// Methods
-		const T & get (const std::string & key);
-		void put (const std::string & key,
-			  const T & value);
+		const T & get(const std::string & key);
+		void put(const std::string & key,
+			 const T & value);
 		unsigned int size() {return s;}
 		void show();
 		void remove(const std::string & key);
