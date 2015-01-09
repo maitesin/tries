@@ -24,7 +24,7 @@ Trie::node_ptr<T,R> Trie::trie<T,R>::get(Trie::node_ptr<T,R> & n,
 		if (n == nullptr) {
 			return nullptr;
 		} else {
-			if (n->value != T())
+			if (n->value != def)
 				return node_ptr<T,R>(n.get());
 			else
 				return nullptr;
@@ -81,7 +81,7 @@ bool Trie::trie<T,R>::contains(Trie::node_ptr<T,R> & n,
 			       unsigned int d) {
 	if (key.size() ==d) {
 		if (n == nullptr) return false;
-		if (n->value != T()) return true;
+		if (n->value != def) return true;
 		return false;
 	} else {
 		if (n->sons[key[d]] != nullptr) {
@@ -113,7 +113,7 @@ bool Trie::trie<T,R>::remove(Trie::node_ptr<T,R> & n,
 			if (deleted) {
 				n->sons[key[d]].reset();
 				--n->s;
-				if (n->s == 0 && n->value == T())
+				if (n->s == 0 && n->value == def)
 					return true;
 			}
 			return false;
@@ -156,7 +156,7 @@ template <class T, size_t R>
 void Trie::trie<T,R>::gather_keys(Trie::node_ptr<T,R> & n,
 				  std::string prefix,
 				  vec_ptr & v) {
-	if (n->value != T()) {
+	if (n->value != def) {
 		v->push_back(prefix);
 	}
 	if (n->s != 0) {

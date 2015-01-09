@@ -16,6 +16,7 @@ namespace TST {
 		struct node {
 			T value;
 			std::unique_ptr<node<T>> left, right, middle;
+			char c;
 			
 			explicit node(T v = T()) : value(v), left(nullptr), right(nullptr), middle(nullptr) {}
 		};
