@@ -4,7 +4,7 @@
 
 int main(void) {
 
-	TST::TST<int> t;
+	TST::tst<int> t;
 	std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
 	
 	t.put(hello, 1);  

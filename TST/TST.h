@@ -18,7 +18,7 @@ namespace TST {
 			std::unique_ptr<node<T>> left, right, middle;
 			char c;
 			
-			explicit node(T v = T()) : value(v), left(nullptr), right(nullptr), middle(nullptr) {}
+			explicit node(char ch, T v = T()) : c(ch), value(v), left(nullptr), right(nullptr), middle(nullptr) {}
 		};
 
 	/**
@@ -29,16 +29,16 @@ namespace TST {
 	using vec_ptr = std::unique_ptr<std::vector<std::string>>;
 	
 	/**
-	 * TST
+	 * Ternary Search Tree (TST)
 	 */
 	template <class T>
-		class TST {
+		class tst {
 	public:
 		// Constructor
-		explicit TST() : root(nullptr), s(0){}
+		explicit tst() : root(nullptr), s(0){}
 		
 		// Destructor
-		~TST() {
+		~tst() {
 			clean(std::move(root));
 		}
 		
@@ -66,6 +66,7 @@ namespace TST {
 				unsigned int d);
 		node_ptr<T> put(node_ptr<T> n,
 				const std::string & key,
+				const T & value,
 				unsigned int d);
 		void clean(node_ptr<T> n);
 		bool remove(node_ptr<T> & n,
