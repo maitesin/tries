@@ -5,7 +5,7 @@
 #include "./trie.h"
 
 template <class T, size_t R>
-const T & Trie::trie<T,R>::get(const std::string key) {
+const T & Trie::trie<T,R>::get(const std::string & key) {
 	node_ptr<T,R> node (get(root, key, 0));
 	if (node != nullptr){
 		aux_ret = node->value;

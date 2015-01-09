@@ -57,7 +57,7 @@ namespace Trie {
 		 * is no the key in the trie return default value for
 		 * the value type.
 		 */
-		const T & get(const std::string key);
+		const T & get(const std::string & key);
 		
 		/*
 		 * This method is used to add a new key to the trie.
@@ -74,7 +74,7 @@ namespace Trie {
 		 * This method return the amount of elements stored
 		 * in the trie.
 		 */
-		int size() {return s;}
+		unsigned int size() {return s;}
 		
 		/*
 		 * This is an auxiliary method to print in the screen
@@ -113,8 +113,8 @@ namespace Trie {
 	private:
 		// Atributes
 		node_ptr<T,R> root;
-		int r;
-		int s;
+		unsigned int r;
+		unsigned int s;
 		// Default value of T to return.
 		const T def = T();
 		// Auxiliar value to help return found values.
