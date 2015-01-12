@@ -100,7 +100,7 @@ namespace Trie {
 		
 		/*
 		 * This method returns a vector of all keys in the
-		 * with the prefix provided.
+		 * trie with the prefix provided.
 		 */
 		std::vector<std::string> get_keys_with_prefix(const std::string & prefix);
 		
