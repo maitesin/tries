@@ -94,14 +94,20 @@ bool Trie::trie<T,R>::contains(Trie::node_ptr<T,R> & n,
 
 template <class T, size_t R>
 void Trie::trie<T,R>::remove(const std::string & key) {
-	remove(root, key, 0);
+	bool decrease = false;
+	remove(root, key, 0, decrease);
+	if (decrease)
+		--s;
 }
 
 template <class T, size_t R>
 bool Trie::trie<T,R>::remove(Trie::node_ptr<T,R> & n,
 			     const std::string & key,
-			     unsigned int d) {
+			     unsigned int d,
+			     bool & decrease) {
 	if (key.size() == d && n != nullptr) {
+		if (n->value != def)
+			decrease = true;
 		n->value = T();
 		if (n->s == 0) {
 			return true;
@@ -109,7 +115,7 @@ bool Trie::trie<T,R>::remove(Trie::node_ptr<T,R> & n,
 		return false;
 	} else {
 		if (n->sons[key[d]] != nullptr) {
-			bool deleted = remove(n->sons[key[d]], key, d+1);
+			bool deleted = remove(n->sons[key[d]], key, d+1, decrease);
 			if (deleted) {
 				n->sons[key[d]].reset();
 				--n->s;

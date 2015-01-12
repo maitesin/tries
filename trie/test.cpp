@@ -24,7 +24,8 @@ int main(void) {
 	std::cout << "Get He = " << t.get(he) << std::endl;
 	t.put(he, 5);
 	std::cout << "Get He = " << t.get(he) << std::endl;
-	
+
+	std::cout << "Current size should be 5; size = " << t.size() << std::endl;
 	t.show();
 	
 	std::cout << "Contains He? " << t.contains(he) << std::endl;
@@ -43,12 +44,15 @@ int main(void) {
 	
 	std::cout << "Removing Hello" << std::endl;
 	t.remove(hello);
+	std::cout << "Current size should be 4; size = " << t.size() << std::endl;
 	t.show();
 	std::cout << "Removing He" << std::endl;
 	t.remove(he);
+	std::cout << "Current size should be 3; size = " << t.size() << std::endl;
 	t.show();
 	std::cout << "Removing no" << std::endl;
 	t.remove(no);
+	std::cout << "Current size should be 3; size = " << t.size() << std::endl;
 	t.show();
 	return 0;
 }
