@@ -154,7 +154,8 @@ namespace TST {
 		 */		
 		bool remove(node_ptr<T> & n,
 			    const std::string & key,
-			    unsigned int d);
+			    unsigned int d,
+			    bool & decrease);
 
 		/*
 		 * Given a node it checks if the d-th position in

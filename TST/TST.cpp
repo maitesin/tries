@@ -118,14 +118,20 @@ bool TST::tst<T>::contains(TST::node_ptr<T> & n,
 
 template <class T>
 void TST::tst<T>::remove(const std::string & key) {
-	remove(root, key, 0);
+	bool decrease = false;
+	remove(root, key, 0, decrease);
+	if (decrease)
+		--s;
 }
 
 template <class T>
 bool TST::tst<T>::remove(TST::node_ptr<T> & n,
-		      const std::string & key,
-		      unsigned int d) {
+			 const std::string & key,
+			 unsigned int d,
+			 bool & decrease) {
 	if (key.size() == d && n != nullptr) {
+		if (n->value != def)
+			decrease = true;
 		n->value = T();
 		if (n->left == nullptr &&
 		    n->middle == nullptr &&
@@ -134,7 +140,7 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 		return false;
 	} else {
 		if (n->left != nullptr && n->c < key[d]) {
-			bool deleted = remove(n->left, key, d);
+			bool deleted = remove(n->left, key, d, decrease);
 			if (deleted) {
 				n->left.reset();
 				if (n->left == nullptr &&
@@ -146,7 +152,7 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 			return false;
 		}
 		if (n->middle != nullptr && n->c == key[d]) {
-			bool deleted = remove(n->middle, key, d+1);
+			bool deleted = remove(n->middle, key, d+1, decrease);
 			if (deleted) {
 				n->middle.reset();
 				if (n->left == nullptr &&
@@ -158,7 +164,7 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 			return false;
 		}
 		if (n->right != nullptr && n->c > key[d]) {
-			bool deleted = remove(n->right, key, d);
+			bool deleted = remove(n->right, key, d, decrease);
 			if (deleted) {
 				n->right.reset();
 				if (n->left == nullptr &&
