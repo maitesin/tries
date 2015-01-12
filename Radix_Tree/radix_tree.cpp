@@ -32,19 +32,42 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::clean(RadixTree::node_ptr<T,R> n) {
-	// TODO
+	for (unsigned int i = 0; i < n->r; ++i) {
+		if (n->sons[i] != nullptr) clean(std::move(n->sons[i]));
+	}
+	n.reset();
 }
 
 template <class T, size_t R>
 bool RadixTree::radix_tree<T,R>::contains(const std::string & key) {
-	// TODO
+	return contains(root, key, 0);
 }
 
 template <class T, size_t R>
 bool RadixTree::radix_tree<T,R>::contains(RadixTree::node_ptr<T,R> & n,
 					  const std::string & key,
 					  unsigned int d) {
-	// TODO
+	if (n != nullptr) {
+		if (key.size() - d < n->key.size()) {
+			return false;
+		}
+		else {
+			std::string sub = key.substr(d, n->key.size());
+			if (n->key() == sub) {
+				if (key().size() > d + n->key.size()) {
+					// Call it again
+					return contains(n->sons[d+n->key.size()], key, d+n->key.size());
+				}
+				else {
+					// We found it
+					if (n->value != T()) {
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
 
 

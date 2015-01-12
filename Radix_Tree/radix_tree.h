@@ -17,7 +17,7 @@ namespace RadixTree {
 			std::string key;
 			unsigned int s;
 			unsigned int r;
-			std::array<std::unique_ptr<node<T,R>, R> sons;
+			std::array<std::unique_ptr<node<T,R>>, R> sons;
 
 			explicit node(T v = T()) : value(v), s(0), r(R) {
 				sons = std::array<std::unique_ptr<node<T,R>>, R>();
