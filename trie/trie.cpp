@@ -64,7 +64,7 @@ Trie::node_ptr<T,R> Trie::trie<T,R>::put(Trie::node_ptr<T,R> n,
 
 template <class T, size_t R>
 void Trie::trie<T,R>::clean(Trie::node_ptr<T,R> n) {
-	for (int i = 0; i < n->r; ++i) {
+	for (unsigned int i = 0; i < n->r; ++i) {
 		if (n->sons[i] != nullptr) clean(std::move(n->sons[i]));
 	}
 	n.reset();
@@ -166,7 +166,7 @@ void Trie::trie<T,R>::gather_keys(Trie::node_ptr<T,R> & n,
 		v->push_back(prefix);
 	}
 	if (n->s != 0) {
-		for (int i = 0; i < n->r; ++i) {
+		for (unsigned int i = 0; i < n->r; ++i) {
 			if (n->sons[i] != nullptr) {
 				gather_keys(n->sons[i], prefix + static_cast<char>(i), v);
 			}

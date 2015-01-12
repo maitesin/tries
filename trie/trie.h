@@ -15,16 +15,14 @@ namespace Trie {
 		struct node {
 			T value;
 			std::array<std::unique_ptr<node<T,R>>, R> sons;
-			int s;
-			int r;
+			unsigned int s;
+			unsigned int r;
 			
-			explicit node(T v = T()) : r(R) {
+			explicit node(T v = T()) : value(v), s(0), r(R) {
 				sons = std::array<std::unique_ptr<node<T,R>>, R>();
-				for (int i = 0; i < r; ++i) {
+				for (unsigned int i = 0; i < r; ++i) {
 					sons[i] = nullptr;
 				}
-				s = 0;
-				value = v;
 			}
 		};
 
@@ -42,9 +40,8 @@ namespace Trie {
 		class trie {
 	public:
 		// Constructor
-		explicit trie() : r(R) {
+		explicit trie() : r(R), s(0) {
 			root = node_ptr<T,R>(new node<T,R>);
-			s = 0;
 		}
 		// Destructor
 		~trie() {
