@@ -33,16 +33,25 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 							 const T & value,
 							 unsigned int d) {
 	if (n != nullptr) {
-		if (key.size() < d + n->key.size()) {
+		if (key.size() < d + n->path.size()) {
 			// We have to split this node
-			// TODO
+			std::string sub_key = key.substr(d, key.size()-d);
+			std::string sub_path = n->path.substr(0, sub_key.size());
+			if (sub_key == sub_path) {
+				// The path for the key already exists, now split a this point.
+				// TODO
+			}
+			else {
+				// The path does not match. Find where begin the difference and split there
+				// TODO
+			}
 		}
 		else {
-			std::string sub = key.substr(d, n->key.size());
-			if (n->key() == sub) {
-				if (key().size() > d + n->key.size()) {
-					// Call it again
-					n->sons[d+n->key.size()] = put(std::move(n->sons[d+n->key.size()]), key, value, d+n->key.size());
+			std::string sub_key = key.substr(d, n->path.size());
+			if (n->path == sub_key) {
+				if (key.size() > d + n->path.size()) {
+					// Call it again with the right son and updating the depth
+					n->sons[d+n->path.size()] = put(std::move(n->sons[d+n->path.size()]), key, value, d+n->path.size());
 					return n;
 				}
 				else {
@@ -52,7 +61,7 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 				}
 			}
 			else {
-				// Does not match. Find where begin the difference and split there
+				// The path does not match. Find where begin the difference and split there
 				// TODO
 				
 			}
@@ -82,15 +91,15 @@ bool RadixTree::radix_tree<T,R>::contains(RadixTree::node_ptr<T,R> & n,
 					  const std::string & key,
 					  unsigned int d) {
 	if (n != nullptr) {
-		if (key.size() < d + n->key.size()) {
+		if (key.size() < d + n->path.size()) {
 			return false;
 		}
 		else {
-			std::string sub = key.substr(d, n->key.size());
-			if (n->key() == sub) {
-				if (key().size() > d + n->key.size()) {
+			std::string sub = key.substr(d, n->path.size());
+			if (n->path == sub) {
+				if (key.size() > d + n->path.size()) {
 					// Call it again
-					return contains(n->sons[d+n->key.size()], key, d+n->key.size());
+					return contains(n->sons[d+n->path.size()], key, d+n->path.size());
 				}
 				else {
 					// We found it

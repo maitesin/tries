@@ -14,12 +14,12 @@ namespace RadixTree {
 	template <class T, size_t R>
 		struct node {
 			T value;
-			std::string key;
+			std::string path;
 			unsigned int s;
 			unsigned int r;
 			std::array<std::unique_ptr<node<T,R>>, R> sons;
 
-			explicit node(std::string k, T v = T()) : value(v), key(k), s(0), r(R) {
+			explicit node(std::string p, T v = T()) : value(v), path(p), s(0), r(R) {
 				sons = std::array<std::unique_ptr<node<T,R>>, R>();
 				for (unsigned int i = 0; i < r; ++i) {
 					sons[i] = nullptr;
