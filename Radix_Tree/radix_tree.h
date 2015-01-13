@@ -19,7 +19,7 @@ namespace RadixTree {
 			unsigned int r;
 			std::array<std::unique_ptr<node<T,R>>, R> sons;
 
-			explicit node(T v = T()) : value(v), s(0), r(R) {
+			explicit node(std::string k, T v = T()) : value(v), key(k), s(0), r(R) {
 				sons = std::array<std::unique_ptr<node<T,R>>, R>();
 				for (unsigned int i = 0; i < r; ++i) {
 					sons[i] = nullptr;
@@ -42,9 +42,7 @@ namespace RadixTree {
 		class radix_tree {
 	public:
 		// Constructor
-		explicit radix_tree() : r(R), s(0) {
-			root = node_ptr<T,R>(new node<T,R>);
-		}
+		explicit radix_tree() : r(R), s(0), root(nullptr) {}
 		// Destructor
 		~radix_tree() {
 			clean(std::move(root));
