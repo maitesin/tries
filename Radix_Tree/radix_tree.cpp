@@ -39,11 +39,11 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 			std::string sub_path = n->path.substr(0, sub_key.size());
 			if (sub_key == sub_path) {
 				// The path for the key already exists, now split a this point.
-				// TODO
+				split(n, value, sub_path.size());
 			}
 			else {
 				// The path does not match. Find where begin the difference and split there
-				// TODO
+				find_diff_and_split(n, key, value);
 			}
 		}
 		else {
@@ -62,8 +62,7 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 			}
 			else {
 				// The path does not match. Find where begin the difference and split there
-				// TODO
-				
+				find_diff_and_split(n, key, value);
 			}
 		}
 	}
@@ -72,6 +71,33 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 		return node_ptr<T,R>(new node<T,R>(key.substr(d, key.size()-d), value));
 	}
 }
+
+template <class T, size_t R>
+void RadixTree::radix_tree<T,R>::split(RadixTree::node_ptr<T,R> & n,
+				       const T & value,
+				       unsigned int p) {
+	std::string upper_path = n->path.substr(0, p);
+	std::string lower_path = n->path.substr(p, n->path.size()-p);
+	n->sons[lower_path[0]] = node_ptr<T,R>(new node<T,R>(lower_path, n->value));
+	n->value = value;
+	n->path = upper_path;
+}
+
+template <class T, size_t R>
+void RadixTree::radix_tree<T,R>::find_diff_and_split(RadixTree::node_ptr<T,R> & n,
+						     const std::string & key,
+						     const T & value) {
+	unsigned int p_s = n->path.size();
+	unsigned int k_s = key.size();
+	unsigned int len = p_s < k_s ? p_s : k_s; // Take the min of both sizes
+	for (unsigned int i = 0; i < len; ++i) {
+		if (n->path[i] != key[i]){
+			split(n, value, i);
+			return ;
+		}
+	}
+}
+						     
 
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::clean(RadixTree::node_ptr<T,R> n) {

@@ -139,7 +139,23 @@ namespace RadixTree {
 				  const std::string & key,
 				  const T & value,
 				  unsigned int d);
-		
+
+		/*
+		 * Auxiliar method to split a node in two from
+		 * the given position in the path.
+		 */
+		void split(node_ptr<T,R> & n,
+			   const T & value,
+			   unsigned int p);
+
+		/*
+		 * Auxiliar method that find where begins the
+		 * difference and splits there
+		 */
+		void find_diff_and_split(node_ptr<T,R> & n,
+					 const std::string & key,
+					 const T & value);
+			
 		/*
 		 * Given a node deleted everything under it.
 		 */
