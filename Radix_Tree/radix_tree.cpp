@@ -77,7 +77,9 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 			if (n->path == sub_key) {
 				if (key.size() > d + n->path.size()) {
 					// Call it again with the right son and updating the depth
-					n->sons[d+n->path.size()] = put(std::move(n->sons[d+n->path.size()]), key, value, d+n->path.size());
+					n->s += n->sons[key[d+n->path.size()]] != nullptr ? 1 : 0;
+					// Added 1 to the size of n if the right son is null
+					n->sons[key[d+n->path.size()]] = put(std::move(n->sons[key[d+n->path.size()]]), key, value, d+n->path.size());
 					return n;
 				}
 				else {
@@ -108,6 +110,7 @@ void RadixTree::radix_tree<T,R>::split(RadixTree::node_ptr<T,R> & n,
 	n->sons[lower_path[0]] = node_ptr<T,R>(new node<T,R>(lower_path, n->value));
 	n->value = value;
 	n->path = upper_path;
+	++n->s;
 }
 
 template <class T, size_t R>
@@ -122,6 +125,7 @@ void RadixTree::radix_tree<T,R>::find_diff_and_split(RadixTree::node_ptr<T,R> & 
 			split(n, T(), i);
 			std::string branch = key.substr(i, key.size()-i);
 			n->sons[branch[0]] = node_ptr<T,R>(new node<T,R>(branch, value));
+			++n->s;
 			return ;
 		}
 	}
@@ -188,7 +192,12 @@ bool RadixTree::radix_tree<T,R>::remove(RadixTree::node_ptr<T,R> & n,
 
 template <class T, size_t R>
 std::vector<std::string> RadixTree::radix_tree<T,R>::get_keys() {
-	// TODO
+	vec_ptr vec;
+	vec = vec_ptr(new std::vector<std::string>());
+	for (unsigned int i = 0; i < r; ++i)
+		if (roots[i] != nullptr)
+			gather_keys(roots[i], "", vec);
+	return *vec;
 }
 
 template <class T, size_t R>
@@ -208,10 +217,22 @@ template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::gather_keys(RadixTree::node_ptr<T,R> & n,
 					     std::string prefix,
 					     vec_ptr & v) {
-	// TODO
+	if (n->value != def) {
+		v->push_back(prefix);
+	}
+	if (n->s != 0) {
+		for (unsigned int i = 0; i < n->r; ++i) {
+			if (n->sons[i] != nullptr) {
+				gather_keys(n->sons[i], prefix + n->path, v);
+			}
+		}
+	}
 }
 
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::show() {
-	// TODO
+	std::cout << "new radix tree to show" << std::endl;
+	for (auto key : get_keys()) {
+		std::cout << key << std::endl;
+	}
 }
