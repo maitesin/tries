@@ -42,10 +42,17 @@ namespace RadixTree {
 		class radix_tree {
 	public:
 		// Constructor
-		explicit radix_tree() : r(R), s(0), root(nullptr) {}
+		explicit radix_tree() : r(R), s(0) {
+			roots = std::array<node_ptr<T,R>, R>();
+			for (unsigned int i = 0; i < r; ++i) {
+				roots[i] = nullptr;
+			}				
+		}
 		// Destructor
 		~radix_tree() {
-			clean(std::move(root));
+			for (unsigned int i = 0; i < r; ++i) {
+				clean(std::move(roots[i]));
+			}
 		}
 
 		// Methods
@@ -110,7 +117,7 @@ namespace RadixTree {
 		
 	private:
 		// Atributes
-		node_ptr<T,R> root;
+		std::array<node_ptr<T,R>, R> roots;
 		unsigned int r;
 		unsigned int s;
 		// Default value of T to return.

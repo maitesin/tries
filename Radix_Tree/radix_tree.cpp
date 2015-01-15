@@ -6,25 +6,49 @@
 
 template <class T, size_t R>
 const T & RadixTree::radix_tree<T,R>::get(const std::string & key) {
-	// TODO
+	if (roots[key[0]] != nullptr){
+		node_ptr<T,R> node (get(roots[key[0]], key, 0));
+		if (node != nullptr){
+			aux_ret = node->value;
+			node.release();
+			return aux_ret;
+		}
+	}
+	return def;
 }
 
 template <class T, size_t R>
 RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::get(RadixTree::node_ptr<T,R> & n,
 							 const std::string & key,
 							 unsigned int d) {
-	// TODO
+	if (n != nullptr) {
+		if (key.size() < d + n->path.size()) {
+			return nullptr;
+		}
+		else {
+			std::string sub = key.substr(d, n->path.size());
+			if (n->path == sub) {
+				if (key.size() > d + n->path.size()) {
+					// Call it again
+					return get(n->sons[d+n->path.size()], key, d+n->path.size());
+				}
+				else {
+					// We found it
+					if (n->value != T()) {
+						return node_ptr<T,R>(n.get());
+					}
+				}
+			}
+		}
+	}
+	return nullptr;
 }
 
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::put(const std::string & key,
 				     const T & value) {
-	if (root == nullptr) {
-		root = node_ptr<T,R>(new node<T,R>(key, value));
-	}
-	else {
-		root = put(std::move(root), key, value, 0);
-	}
+	roots[key[0]] = put(std::move(roots[key[0]]), key, value, 0);
+	++s;
 }
 
 template <class T, size_t R>
@@ -92,7 +116,9 @@ void RadixTree::radix_tree<T,R>::find_diff_and_split(RadixTree::node_ptr<T,R> & 
 	unsigned int len = p_s < k_s ? p_s : k_s; // Take the min of both sizes
 	for (unsigned int i = 0; i < len; ++i) {
 		if (n->path[i] != key[i]){
-			split(n, value, i);
+			split(n, T(), i);
+			std::string branch = key.substr(i, key.size()-i);
+			n->sons[branch[0]] = node_ptr<T,R>(new node<T,R>(branch, value));
 			return ;
 		}
 	}
@@ -109,7 +135,10 @@ void RadixTree::radix_tree<T,R>::clean(RadixTree::node_ptr<T,R> n) {
 
 template <class T, size_t R>
 bool RadixTree::radix_tree<T,R>::contains(const std::string & key) {
-	return contains(root, key, 0);
+	if (roots[key[0]] != nullptr) {
+		contains(roots[key[0]], key, 0);
+	}
+	return false;
 }
 
 template <class T, size_t R>
