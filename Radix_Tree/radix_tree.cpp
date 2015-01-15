@@ -30,7 +30,7 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::get(RadixTree::node_ptr<T,R
 			if (n->path == sub) {
 				if (key.size() > d + n->path.size()) {
 					// Call it again
-					return get(n->sons[d+n->path.size()], key, d+n->path.size());
+					return get(n->sons[key[d+n->path.size()]], key, d+n->path.size());
 				}
 				else {
 					// We found it
@@ -64,10 +64,12 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 			if (sub_key == sub_path) {
 				// The path for the key already exists, now split a this point.
 				split(n, value, sub_path.size());
+				return n;
 			}
 			else {
 				// The path does not match. Find where begin the difference and split there
 				find_diff_and_split(n, key, value);
+				return n;
 			}
 		}
 		else {
@@ -87,6 +89,7 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 			else {
 				// The path does not match. Find where begin the difference and split there
 				find_diff_and_split(n, key, value);
+				return n;
 			}
 		}
 	}
@@ -136,7 +139,7 @@ void RadixTree::radix_tree<T,R>::clean(RadixTree::node_ptr<T,R> n) {
 template <class T, size_t R>
 bool RadixTree::radix_tree<T,R>::contains(const std::string & key) {
 	if (roots[key[0]] != nullptr) {
-		contains(roots[key[0]], key, 0);
+		return contains(roots[key[0]], key, 0);
 	}
 	return false;
 }
@@ -154,7 +157,7 @@ bool RadixTree::radix_tree<T,R>::contains(RadixTree::node_ptr<T,R> & n,
 			if (n->path == sub) {
 				if (key.size() > d + n->path.size()) {
 					// Call it again
-					return contains(n->sons[d+n->path.size()], key, d+n->path.size());
+					return contains(n->sons[key[d+n->path.size()]], key, d+n->path.size());
 				}
 				else {
 					// We found it
