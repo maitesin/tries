@@ -202,7 +202,11 @@ std::vector<std::string> RadixTree::radix_tree<T,R>::get_keys() {
 
 template <class T, size_t R>
 std::vector<std::string> RadixTree::radix_tree<T,R>::get_keys_with_prefix(const std::string & prefix) {
-	// TODO
+	vec_ptr vec;
+	vec = vec_ptr(new std::vector<std::string>());
+	if (roots[prefix[0]] != nullptr)
+		(roots[prefix[0]], prefix, vec);
+	return *vec;
 }
 
 template <class T, size_t R>
@@ -210,7 +214,22 @@ void RadixTree::radix_tree<T,R>::get_keys_with_prefix(RadixTree::node_ptr<T,R> &
 						      std::string prefix,
 						      unsigned int d,
 						      vec_ptr & v) {
-	// TODO
+	if (prefix.size() < d + n->path.size()) {
+		return nullptr;
+	}
+	else {
+		std::string sub = prefix.substr(d, n->path.size());
+		if (n->path == sub) {
+			if (prefix.size() > d + n->path.size()) {
+				// Call it again
+				return get_keys_with_prefix(n->sons[prefix[d+n->path.size()]], prefix, d+n->path.size(), v);
+			}
+			else {
+				// We found it
+				return gather_keys(n, prefix, v);
+			}
+		}
+	}
 }
 
 template <class T, size_t R>
@@ -218,7 +237,7 @@ void RadixTree::radix_tree<T,R>::gather_keys(RadixTree::node_ptr<T,R> & n,
 					     std::string prefix,
 					     vec_ptr & v) {
 	if (n->value != def) {
-		v->push_back(prefix);
+		v->push_back(prefix + n->path);
 	}
 	if (n->s != 0) {
 		for (unsigned int i = 0; i < n->r; ++i) {
