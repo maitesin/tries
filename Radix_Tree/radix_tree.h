@@ -201,6 +201,9 @@ namespace RadixTree {
 					  unsigned int d,
 					  vec_ptr & v);
 
+		std::string get_prefix_cut(std::string & prefix,
+					   unsigned int d);
+
 		/*
 		 * Given a node goes to all its sons to gather
 		 * all the keys that are under the given node.

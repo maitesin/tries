@@ -220,21 +220,30 @@ void RadixTree::radix_tree<T,R>::get_keys_with_prefix(RadixTree::node_ptr<T,R> &
 				return;
 		}
 		// Is sure the begining is equal
-		return gather_keys(n, prefix + n->path, v);
+		return gather_keys(n, get_prefix_cut(prefix, d), v);
 	}
 	else {
 		std::string sub = prefix.substr(d, n->path.size());
 		if (n->path == sub) {
 			if (prefix.size() > d + n->path.size()) {
 				// Call it again
-				return get_keys_with_prefix(n->sons[prefix[d+n->path.size()]], prefix, d+n->path.size(), v);
+				return get_keys_with_prefix(n->sons[prefix[d+n->path.size()]], get_prefix_cut(prefix, d), d+n->path.size(), v);
 			}
 			else {
 				// We found it
-				return gather_keys(n, prefix, v);
+				return gather_keys(n, get_prefix_cut(prefix, d), v);
 			}
 		}
 	}
+}
+
+template <class T, size_t R>
+std::string RadixTree::radix_tree<T,R>::get_prefix_cut(std::string & prefix, unsigned int d) {
+	std::string cut = "";
+	for (unsigned int i = 0; i < d; ++i) {
+		cut += prefix[i];
+	}
+	return cut;
 }
 
 template <class T, size_t R>
