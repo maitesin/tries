@@ -215,7 +215,12 @@ void RadixTree::radix_tree<T,R>::get_keys_with_prefix(RadixTree::node_ptr<T,R> &
 						      unsigned int d,
 						      vec_ptr & v) {
 	if (prefix.size() < d + n->path.size()) {
-		return;
+		for (unsigned int i = d; i < prefix.size(); ++i){
+			if (prefix[i] != n->path[i-d])
+				return;
+		}
+		// Is sure the begining is equal
+		return gather_keys(n, prefix + n->path, v);
 	}
 	else {
 		std::string sub = prefix.substr(d, n->path.size());
