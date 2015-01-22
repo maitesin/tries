@@ -51,7 +51,8 @@ namespace RadixTree {
 		// Destructor
 		~radix_tree() {
 			for (unsigned int i = 0; i < r; ++i) {
-				clean(std::move(roots[i]));
+				if (roots[i] != nullptr)
+					clean(std::move(roots[i]));
 			}
 		}
 
