@@ -48,6 +48,7 @@ template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::put(const std::string & key,
 				     const T & value) {
 	roots[key[0]] = put(std::move(roots[key[0]]), key, value, 0);
+	// TODO not always has to increment s. If the put is to update a value does not have to increment s.
 	++s;
 }
 
@@ -111,6 +112,7 @@ void RadixTree::radix_tree<T,R>::split(RadixTree::node_ptr<T,R> & n,
 	n->value = value;
 	n->path = upper_path;
 	++n->s;
+	// TODO copy ALL atributes from the splitted node. 
 }
 
 template <class T, size_t R>
