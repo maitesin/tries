@@ -205,7 +205,7 @@ std::vector<std::string> RadixTree::radix_tree<T,R>::get_keys_with_prefix(const 
 	vec_ptr vec;
 	vec = vec_ptr(new std::vector<std::string>());
 	if (roots[prefix[0]] != nullptr)
-		(roots[prefix[0]], prefix, vec);
+		get_keys_with_prefix(roots[prefix[0]], prefix, 0, vec);
 	return *vec;
 }
 
@@ -215,7 +215,7 @@ void RadixTree::radix_tree<T,R>::get_keys_with_prefix(RadixTree::node_ptr<T,R> &
 						      unsigned int d,
 						      vec_ptr & v) {
 	if (prefix.size() < d + n->path.size()) {
-		return nullptr;
+		return;
 	}
 	else {
 		std::string sub = prefix.substr(d, n->path.size());
