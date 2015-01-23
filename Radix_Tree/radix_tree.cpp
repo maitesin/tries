@@ -34,7 +34,7 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::get(RadixTree::node_ptr<T,R
 				}
 				else {
 					// We found it
-					if (n->value != T()) {
+					if (n->value != def) {
 						return node_ptr<T,R>(n.get());
 					}
 				}
@@ -47,9 +47,9 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::get(RadixTree::node_ptr<T,R
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::put(const std::string & key,
 				     const T & value) {
+	if (!contains(key)) // Try to optimize that call maybe using a boolean parameter in put to see if there was a change
+		++s;
 	roots[key[0]] = put(std::move(roots[key[0]]), key, value, 0);
-	// TODO not always has to increment s. If the put is to update a value does not have to increment s.
-	++s;
 }
 
 template <class T, size_t R>
@@ -109,10 +109,10 @@ void RadixTree::radix_tree<T,R>::split(RadixTree::node_ptr<T,R> & n,
 	std::string upper_path = n->path.substr(0, p);
 	std::string lower_path = n->path.substr(p, n->path.size()-p);
 	n->sons[lower_path[0]] = node_ptr<T,R>(new node<T,R>(lower_path, n->value));
+	n->sons[lower_path[0]]->s = n->s;
 	n->value = value;
 	n->path = upper_path;
 	++n->s;
-	// TODO copy ALL atributes from the splitted node. 
 }
 
 template <class T, size_t R>
@@ -167,7 +167,7 @@ bool RadixTree::radix_tree<T,R>::contains(RadixTree::node_ptr<T,R> & n,
 				}
 				else {
 					// We found it
-					if (n->value != T()) {
+					if (n->value != def) {
 						return true;
 					}
 				}
@@ -180,7 +180,11 @@ bool RadixTree::radix_tree<T,R>::contains(RadixTree::node_ptr<T,R> & n,
 
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::remove(const std::string & key) {
-	// TODO
+	bool decrease = false;
+	if (roots[key[0]] != nullptr)
+		remove(roots[key[0]], key, 0, decrease);
+	if (decrease)
+		--s;
 }
 
 template <class T, size_t R>
@@ -188,9 +192,69 @@ bool RadixTree::radix_tree<T,R>::remove(RadixTree::node_ptr<T,R> & n,
 					const std::string & key,
 					unsigned int d,
 					bool & decrease) {
-	// TODO
+	if (n != nullptr) {
+		if (key.size() < d + n->path.size()) {
+			return false;
+		}
+		else {
+			std::string sub = key.substr(d, n->path.size());
+			if (n->path == sub) {
+				if (key.size() > d + n->path.size()) {
+					// Call it again
+					bool deleted = remove(n->sons[key[d+n->path.size()]], key, d+n->path.size(), decrease);
+					if (deleted) {
+						n->sons[key[d+n->path.size()]].reset();
+						--n->s;
+						if (n->s == 1) {
+							merge_with_only_son(n);
+							return true;
+						}
+					}
+					return false;
+				}
+				else {
+					// We found it
+					if (n->value != def) {
+						decrease = true;
+						n->value = T();
+						if (n->s == 0) {
+							return true;
+						}
+						if (n->s == 1) {
+							merge_with_only_son(n);
+							return true;
+						}
+						return false;
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
 
+template <class T, size_t R>
+void RadixTree::radix_tree<T,R>::merge_with_only_son(RadixTree::node_ptr<T,R> & n) {
+	if (n->s == 1){
+		for (unsigned int i = 0; i < r; ++i) {
+			if (n->sons[i] != nullptr) {
+				merge(n, n->sons[i]);
+				break;
+			}
+		}
+	}
+}
+
+template <class T, size_t R>
+void RadixTree::radix_tree<T,R>::merge(RadixTree::node_ptr<T,R> & father,
+				       RadixTree::node_ptr<T,R> & son) {
+	father->value = son->value;
+	father->s = son->s;
+	father->path += son->path;
+	for(unsigned int i = 0; i < r; ++i) {
+		father->sons[i] = std::move(son->sons[i]);
+	}
+}
 
 template <class T, size_t R>
 std::vector<std::string> RadixTree::radix_tree<T,R>::get_keys() {

@@ -180,6 +180,10 @@ namespace RadixTree {
 			    unsigned int d,
 			    bool & decrease);
 
+		void merge_with_only_son(node_ptr<T,R> & n);
+		void merge(node_ptr<T,R> & father,
+			   node_ptr<T,R> & son);
+
 		/*
 		 * Given a node it checks if the d-th position in
 		 * the key exists. When the key length is equal to
