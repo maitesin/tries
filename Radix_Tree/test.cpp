@@ -5,7 +5,7 @@
 int main(void) {
 
 	RadixTree::radix_tree<int, 256> t;
-	std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
+	std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes", hell = "Hell";
 	
 	t.put(hello, 1);  
 	t.put(world, 2);
@@ -25,7 +25,8 @@ int main(void) {
 	t.put(he, 5);
 	std::cout << "Get He = " << t.get(he) << std::endl;
 
-	std::cout << "Current size should be 5; size = " << t.size() << std::endl;
+	t.put(hell, 6);
+	std::cout << "Current size should be 6; size = " << t.size() << std::endl;
 	t.show();
 	
 	std::cout << "Contains He? " << t.contains(he) << std::endl;
@@ -41,18 +42,18 @@ int main(void) {
 	for (auto key : t.get_keys_with_prefix("Hi")) {
 		std::cout << key << std::endl;
 	}
-	
+
 	std::cout << "Removing Hello" << std::endl;
 	t.remove(hello);
-	std::cout << "Current size should be 4; size = " << t.size() << std::endl;
+	std::cout << "Current size should be 5; size = " << t.size() << std::endl;
 	t.show();
 	std::cout << "Removing He" << std::endl;
 	t.remove(he);
-	std::cout << "Current size should be 3; size = " << t.size() << std::endl;
+	std::cout << "Current size should be 4; size = " << t.size() << std::endl;
 	t.show();
 	std::cout << "Removing no" << std::endl;
 	t.remove(no);
-	std::cout << "Current size should be 3; size = " << t.size() << std::endl;
+	std::cout << "Current size should be 4; size = " << t.size() << std::endl;
 	t.show();
 	return 0;
 }
