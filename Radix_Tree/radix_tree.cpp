@@ -47,16 +47,18 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::get(RadixTree::node_ptr<T,R
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::put(const std::string & key,
 				     const T & value) {
-	if (!contains(key)) // Try to optimize that call maybe using a boolean parameter in put to see if there was a change
+	bool created = false;
+	roots[key[0]] = put(std::move(roots[key[0]]), key, value, 0, created);
+	if (created)
 		++s;
-	roots[key[0]] = put(std::move(roots[key[0]]), key, value, 0);
 }
 
 template <class T, size_t R>
 RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R> n,
 							 const std::string & key,
 							 const T & value,
-							 unsigned int d) {
+							 unsigned int d,
+							 bool & created) {
 	if (n != nullptr) {
 		if (key.size() < d + n->path.size()) {
 			// We have to split this node
@@ -64,11 +66,13 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 			std::string sub_path = n->path.substr(0, sub_key.size());
 			if (sub_key == sub_path) {
 				// The path for the key already exists, now split a this point.
+				created = true;
 				split(n, value, sub_path.size());
 				return n;
 			}
 			else {
 				// The path does not match. Find where begin the difference and split there
+				created = true;
 				find_diff_and_split(n, key, value);
 				return n;
 			}
@@ -80,17 +84,20 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 					// Call it again with the right son and updating the depth
 					n->s += n->sons[key[d+n->path.size()]] != nullptr ? 1 : 0;
 					// Added 1 to the size of n if the right son is null
-					n->sons[key[d+n->path.size()]] = put(std::move(n->sons[key[d+n->path.size()]]), key, value, d+n->path.size());
+					n->sons[key[d+n->path.size()]] = put(std::move(n->sons[key[d+n->path.size()]]), key, value, d+n->path.size(), created);
 					return n;
 				}
 				else {
 					// We found it
+					if (n->value == def)
+						created = true;
 					n->value = value;
 					return n;
 				}
 			}
 			else {
 				// The path does not match. Find where begin the difference and split there
+				created = true;
 				find_diff_and_split(n, key, value);
 				return n;
 			}
@@ -98,6 +105,7 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 	}
 	else {
 		// Create a new node with the information remaining
+		created = true;
 		return node_ptr<T,R>(new node<T,R>(key.substr(d, key.size()-d), value));
 	}
 }
