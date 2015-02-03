@@ -137,7 +137,8 @@ namespace Trie {
 		node_ptr<T,R> put(node_ptr<T,R> n,
 				  const std::string & key,
 				  const T & value,
-				  unsigned int d);
+				  unsigned int d,
+				  bool & created);
 		
 		/*
 		 * Given a node deleted everything under it.

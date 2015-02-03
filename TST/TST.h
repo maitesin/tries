@@ -138,7 +138,8 @@ namespace TST {
 		node_ptr<T> put(node_ptr<T> n,
 				const std::string & key,
 				const T & value,
-				unsigned int d);
+				unsigned int d,
+				bool & created);
 
 		/*
 		 * Given a node deleted everything under it.

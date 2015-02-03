@@ -45,33 +45,38 @@ void TST::tst<T>::put(const std::string & key,
 		      const T & value) {
 	if (root == nullptr)
 		root = TST::node_ptr<T>(new node<T>(key[0]));
-	root = put(std::move(root), key, value, 0);
-	++s;
+	bool created = false;
+	root = put(std::move(root), key, value, 0, created);
+	if (created)
+		++s;
 }
 
 template <class T>
 TST::node_ptr<T> TST::tst<T>::put(TST::node_ptr<T> n,
 				  const std::string & key,
 				  const T & value,
-				  unsigned int d) {
+				  unsigned int d,
+				  bool & created) {
 	if (key.size() == d) {
+		if (n->value == def)
+			created = true;
 		n->value = value;
 		return n;
 	} else {
 		if (n->c < key[d]) {
 			if (n->left == nullptr)
 				n->left = TST::node_ptr<T>(new node<T>(key[d]));
-			n->left = put(std::move(n->left), key, value, d);
+			n->left = put(std::move(n->left), key, value, d, created);
 		}
 		if (n->c == key[d]) {
 			if (n->middle == nullptr)
 				n->middle = TST::node_ptr<T>(new node<T>(key[d]));
-			n->middle = put(std::move(n->middle), key, value, d+1);
+			n->middle = put(std::move(n->middle), key, value, d+1, created);
 		}
 		if (n->c > key[d]) {
 			if (n->right == nullptr)
 				n->right = TST::node_ptr<T>(new node<T>(key[d]));
-			n->right = put(std::move(n->right), key, value, d);
+			n->right = put(std::move(n->right), key, value, d, created);
 		}
 		return n;
 	}

@@ -41,7 +41,13 @@ int main(void) {
 	for (auto key : t.get_keys_with_prefix("Hi")) {
 		std::cout << key << std::endl;
 	}
-	
+
+	std::cout << "Keys with prefix H" << std::endl;
+	for (auto key : t.get_keys_with_prefix("H")) {
+		std::cout << key << std::endl;
+	}
+
+	t.put(he, 7);
 	std::cout << "Removing Hello" << std::endl;
 	t.remove(hello);
 	std::cout << "Current size should be 4; size = " << t.size() << std::endl;
