@@ -4,18 +4,18 @@
 
 // Conditional include for dependencies
 #ifdef TRIE
-#include <../trie/trie.cpp>
+#include <trie.cpp>
 #endif
-#ifdef TST
-#include <../TST/TST.cpp>
+#ifdef TERNARY
+#include <TST.cpp>
 #endif
 #ifdef RADIX
-#include <../Radix_Tree/radix_tree.cpp>
+#include <radix_tree.cpp>
 #endif
 
 // Definition of the default parameters
 #ifndef MIN_SIZE
-#define MIN_SIZE 100
+#define MIN_SIZE 10
 #endif
 #ifndef MAX_SIZE
 #define MAX_SIZE 100000000
@@ -27,6 +27,14 @@
 #define SALT 0
 #endif
 
+std::string get_random_string(int len) {
+	std::string result = "";
+	for (unsigned int i = 0; i < len; ++i){
+		result += static_cast<char>(rand()%256);
+	}
+	return result;
+}
+
 int main(void) {
 	time_t t_init;
 	float us;
@@ -36,19 +44,21 @@ int main(void) {
 
 	for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
 #ifdef TRIE
-		trie<int, 256> t;
+		Trie::trie<int, 256> t;
 #endif
-#ifdef TST
-		tst<int, 256> t;
+#ifdef TERNARY
+		TST::tst<int> t;
 #endif
 #ifdef RADIX
-		radix_tree<int, 256> t;
+		RadixTree::radix_tree<int, 256> t;
 #endif
 		counter = 0;
 		t_init = clock();
-
+		std::string key;
+		unsigned int length;
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
-			//DO WORK
+			t.put(get_random_string(rand()%size), 1);
+			++counter;
 		}
 		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
 		std::cout << size << "\t" << us/counter << std::endl;
