@@ -12,6 +12,12 @@
 #ifdef RADIX
 #include <radix_tree.cpp>
 #endif
+#ifdef MAP
+#include <map>
+#endif
+#ifdef UMAP
+#include <unordered_map>
+#endif
 
 // Definition of the default parameters
 #ifndef MIN_SIZE
@@ -62,10 +68,21 @@ int main(void) {
 #ifdef RADIX
 		RadixTree::radix_tree<int, 256> t;
 #endif
+#ifdef MAP
+		std::map<std::string, int> m;
+#endif
+#ifdef UMAP
+#define MAP
+		std::unordered_map<std::string, int> m;
+#endif
 		counter = 0;
 		t_init = clock();
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
+#ifndef MAP
 			t.put(get_random_string(rand()%size), 1);
+#else
+			m.insert(std::pair<std::string, int>(get_random_string(rand()%size), 1));
+#endif
 			++counter;
 		}
 		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
