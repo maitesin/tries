@@ -26,11 +26,21 @@
 #ifndef SALT
 #define SALT 0
 #endif
+#ifdef ALPHANUM
+#define ALPHABET "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#define LENGTH 62
+#else
+#define LENGTH 256
+#endif
 
-std::string get_random_string(int len) {
+std::string get_random_string(unsigned int len) {
 	std::string result = "";
 	for (unsigned int i = 0; i < len; ++i){
-		result += static_cast<char>(rand()%256);
+		#ifdef ALPHANUM
+		result += ALPHABET[rand()%LENGTH];
+		#else
+		result += static_cast<char>(rand()%LENGTH);
+		#endif
 	}
 	return result;
 }
@@ -38,7 +48,7 @@ std::string get_random_string(int len) {
 int main(void) {
 	time_t t_init;
 	float us;
-	int size, counter, operation;
+	int size, counter;
 
 	srand(SALT);
 
@@ -54,8 +64,6 @@ int main(void) {
 #endif
 		counter = 0;
 		t_init = clock();
-		std::string key;
-		unsigned int length;
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
 			t.put(get_random_string(rand()%size), 1);
 			++counter;
