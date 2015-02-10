@@ -87,8 +87,8 @@ int main(void) {
 #endif
 			++counter;
 		}
-		getrusage(RUSAGE_SELF,&usage);
 		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
+		getrusage(RUSAGE_SELF,&usage);
 		std::cout << size << "\t" << us/counter << "\t" << usage.ru_maxrss<< std::endl;
 	}
 
