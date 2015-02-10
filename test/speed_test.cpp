@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include <sys/resource.h>
 
 // Conditional include for dependencies
 #ifdef TRIE
@@ -55,7 +56,8 @@ int main(void) {
 	time_t t_init;
 	float us;
 	int size, counter;
-
+	struct rusage usage;
+	
 	srand(SALT);
 
 	for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
@@ -85,8 +87,9 @@ int main(void) {
 #endif
 			++counter;
 		}
+		getrusage(RUSAGE_SELF,&usage);
 		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
-		std::cout << size << "\t" << us/counter << std::endl;
+		std::cout << size << "\t" << us/counter << "\t" << usage.ru_maxrss<< std::endl;
 	}
 
 	return 0;
