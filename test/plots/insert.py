@@ -6,11 +6,11 @@ from matplotlib import rc, rcParams
 
 rc('font',**{'family':'serif','serif':['Computer Modern']})
 
-trie = genfromtxt('../trie.output')
-tst = genfromtxt('../tst.output')
-radix = genfromtxt('../radix.output')
-_map = genfromtxt('../map.output')
-umap  = genfromtxt('../umap.output')
+trie = genfromtxt('../trie_insert.output')
+tst = genfromtxt('../tst_insert.output')
+radix = genfromtxt('../radix_insert.output')
+_map = genfromtxt('../map_insert.output')
+umap  = genfromtxt('../umap_insert.output')
 
 ######## TIME ########
 plot(trie[:,0], trie[:,1], '-o', label='Trie')
@@ -22,10 +22,10 @@ plot(umap[:,0], umap[:,1], '-o', label='STL unordered Map')
 
 xlabel('Max length of the string')
 ylabel('Time(ms)')
-title('Insertion test')
+title('Insert test')
 legend(loc='best')
 grid(True)
-savefig('speed_time_ALL.eps')
+savefig('insert_time_ALL.eps')
 
 hold(False)
 plot(tst[:,0], tst[:,1], '-o', label='Ternary Search Tree')
@@ -36,10 +36,10 @@ plot(umap[:,0], umap[:,1], '-o', label='STL unordered Map')
 
 xlabel('Max length of the string')
 ylabel('Time(ms)')
-title('Insertion test')
+title('Insert test')
 legend(loc='best')
 grid(True)
-savefig('speed_time_TRMU.eps')
+savefig('insert_time_TRMU.eps')
 
 hold(False)
 plot(radix[:,0], radix[:,1], '-o', label='Radix Tree')
@@ -49,10 +49,10 @@ plot(umap[:,0], umap[:,1], '-o', label='STL unordered Map')
 
 xlabel('Max length of the string')
 ylabel('Time(ms)')
-title('Insertion test')
+title('Insert test')
 legend(loc='best')
 grid(True)
-savefig('speed_time_RMU.eps')
+savefig('insert_time_RMU.eps')
 
 ###### MEMORY ######
 hold(False)
@@ -65,7 +65,7 @@ plot(umap[:,0], umap[:,2], '-o', label='STL unordered Map')
 
 xlabel('Max length of the string')
 ylabel('Size in memory(Kb)')
-title('Insertion test')
+title('Memory test')
 legend(loc='best')
 grid(True)
-savefig('speed_memory.eps')
+savefig('memory.eps')
