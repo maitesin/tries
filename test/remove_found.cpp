@@ -1,7 +1,6 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
-#include <vector>
 
 // Conditional include for dependencies
 #ifdef TRIE
@@ -56,8 +55,6 @@ int main(void) {
 	time_t t_init;
 	float us;
 	int size, counter;
-	
-	srand(SALT);
 
 	for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
 #ifdef TRIE
@@ -76,14 +73,12 @@ int main(void) {
 #define MAP
 		std::unordered_map<std::string, int> m;
 #endif
-		std::vector<std::string> elems;
 		std::string aux;
 		counter = 0;
-
-		for (unsigned int i = 0; i < 5000000; ++i) {
+		srand(SALT);
+		t_init = clock();
+		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
 			aux = get_random_string(rand()%size);
-			if (i%1000 == 0)
-				elems.push_back(aux);
 #ifndef MAP
 			t.put(aux, 1);
 #else
@@ -91,13 +86,14 @@ int main(void) {
 #endif
 		}
 
-		
+		srand(SALT);
 		t_init = clock();
-		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC && counter < elems.size()) {
+		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
+		  aux = get_random_string(rand()%size);
 #ifndef MAP
-			t.remove(elems[counter]);
+			t.remove(aux);
 #else
-			m.erase(elems[counter]);
+			m.erase(aux);
 #endif
 			++counter;			
 		}
