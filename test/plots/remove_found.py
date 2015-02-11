@@ -6,11 +6,11 @@ from matplotlib import rc, rcParams
 
 rc('font',**{'family':'serif','serif':['Computer Modern']})
 
-trie = genfromtxt('../trie_remove.output')
-tst = genfromtxt('../tst_remove.output')
-radix = genfromtxt('../radix_remove.output')
-_map = genfromtxt('../map_remove.output')
-umap  = genfromtxt('../umap_remove.output')
+trie = genfromtxt('../trie_remove_found.output')
+tst = genfromtxt('../tst_remove_found.output')
+radix = genfromtxt('../radix_remove_found.output')
+_map = genfromtxt('../map_remove_found.output')
+umap  = genfromtxt('../umap_remove_found.output')
 
 ######## TIME ########
 plot(trie[:,0], trie[:,1], '-o', label='Trie')
@@ -22,10 +22,10 @@ plot(umap[:,0], umap[:,1], '-o', label='STL unordered Map')
 
 xlabel('Max length of the string')
 ylabel('Time(ms)')
-title('Remove test')
+title('Remove test (found)')
 legend(loc='best')
 grid(True)
-savefig('remove_time_ALL.eps')
+savefig('remove_found_time_ALL.eps')
 
 hold(False)
 plot(tst[:,0], tst[:,1], '-o', label='Ternary Search Tree')
@@ -36,10 +36,10 @@ plot(umap[:,0], umap[:,1], '-o', label='STL unordered Map')
 
 xlabel('Max length of the string')
 ylabel('Time(ms)')
-title('Remove test')
+title('Remove test (found)')
 legend(loc='best')
 grid(True)
-savefig('remove_time_TRMU.eps')
+savefig('remove_found_time_TRMU.eps')
 
 hold(False)
 plot(radix[:,0], radix[:,1], '-o', label='Radix Tree')
@@ -49,7 +49,7 @@ plot(umap[:,0], umap[:,1], '-o', label='STL unordered Map')
 
 xlabel('Max length of the string')
 ylabel('Time(ms)')
-title('Remove test')
+title('Remove test (found)')
 legend(loc='best')
 grid(True)
-savefig('remove_time_RMU.eps')
+savefig('remove_found_time_RMU.eps')
