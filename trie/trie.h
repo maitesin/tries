@@ -49,6 +49,17 @@ namespace Trie {
 		}
 		// Methods
 		/*
+		 * This method is to allow the user to clean the
+		 * content of the trie. Basically does the same
+		 * as the destructor.
+		 */
+		void clean() {
+		  clean(std::move(root));
+		  s = 0;
+		  root = node_ptr<T,R>(new node<T,R>);
+		}
+		
+		/*
 		 * This method return the value stored in the trie
 		 * for a specific key provided as parameter. If there
 		 * is no the key in the trie return default value for
