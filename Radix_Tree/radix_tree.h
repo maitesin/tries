@@ -58,6 +58,22 @@ namespace RadixTree {
 
 		// Methods
 		/*
+		 * This method is to allow the user to clean the
+		 * content of the trie. Basically does the same
+		 * as the destructor.
+		 */
+		void clean() {
+		  for (unsigned int i = 0; i < r; ++i) {
+		    if (roots[i] != nullptr)
+		      clean(std::move(roots[i]));
+		  }
+		  s = 0;
+		  roots = std::array<node_ptr<T,R>, R>();
+		  for (unsigned int i = 0; i < r; ++i) {
+		    roots[i] = nullptr;
+		  }				
+		}
+		/*
 		 * This method return the value stored in the radix tree
 		 * for a specific key provided as parameter. If there
 		 * is no the key in the radix tree return default value

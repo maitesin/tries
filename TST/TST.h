@@ -42,6 +42,17 @@ namespace TST {
 		}
 		
 		// Methods
+				/*
+		 * This method is to allow the user to clean the
+		 * content of the trie. Basically does the same
+		 * as the destructor.
+		 */
+		void clean() {
+		  clean(std::move(root));
+		  s = 0;
+		  root = nullptr;
+		}
+
 		/*
 		 * This method return the value stored in the TST
 		 * for a specific key provided as parameter. If there
