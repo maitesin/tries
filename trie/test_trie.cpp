@@ -32,8 +32,142 @@ TEST_F(TrieTest, MethodClean) {
   EXPECT_EQ(0, t.get(key)) << "This should be 0 due we just cleaned the trie";
 }
 
-// This should have more test
+TEST_F(TrieTest, MethodGetRemove) {
+  std::string hello = "Hello", he = "He", hes = "Hes";
+  t.put(hello, 1);
+  t.put(he, 2);
+  t.put(hes, 3);
+  EXPECT_EQ(3, t.size()) << "This should be 3";
+  EXPECT_EQ(1, t.get(hello)) << "This should be 1";
+  EXPECT_EQ(2, t.get(he)) << "This should be 2";
+  EXPECT_EQ(3, t.get(hes)) << "This should be 3";
+  t.remove(he);
+  EXPECT_EQ(2, t.size()) << "This should be 2";
+  EXPECT_EQ(1, t.get(hello)) << "This should be 1";
+  EXPECT_EQ(0, t.get(he)) << "This should be 0";
+  EXPECT_EQ(3, t.get(hes)) << "This should be 3";
+  t.remove(hes);
+  EXPECT_EQ(1, t.size()) << "This should be 1";
+  EXPECT_EQ(1, t.get(hello)) << "This should be 1";
+  EXPECT_EQ(0, t.get(he)) << "This should be 0";
+  EXPECT_EQ(0, t.get(hes)) << "This should be 0";
+  t.put(hes, 3);
+  EXPECT_EQ(2, t.size()) << "This should be 2";
+  EXPECT_EQ(1, t.get(hello)) << "This should be 1";
+  EXPECT_EQ(0, t.get(he)) << "This should be 0";
+  EXPECT_EQ(3, t.get(hes)) << "This should be 3";
+  t.put(he, 2);
+  EXPECT_EQ(3, t.size()) << "This should be 3";
+  EXPECT_EQ(1, t.get(hello)) << "This should be 1";
+  EXPECT_EQ(2, t.get(he)) << "This should be 2";
+  EXPECT_EQ(3, t.get(hes)) << "This should be 3";
+  t.remove(hello);
+  EXPECT_EQ(2, t.size()) << "This should be 2";
+  EXPECT_EQ(0, t.get(hello)) << "This should be 0";
+  EXPECT_EQ(2, t.get(he)) << "This should be 2";
+  EXPECT_EQ(3, t.get(hes)) << "This should be 3";
+  t.put(hello, 1);
+  EXPECT_EQ(3, t.size()) << "This should be 3";
+  EXPECT_EQ(1, t.get(hello)) << "This should be 1";
+  EXPECT_EQ(2, t.get(he)) << "This should be 2";
+  EXPECT_EQ(3, t.get(hes)) << "This should be 3";
+  // Check things are not in the trie
+  EXPECT_EQ(0, t.get("HelloS")) << "This should be 0";
+  EXPECT_EQ(0, t.get("H")) << "This should be 0";
+  EXPECT_EQ(0, t.get("Hel")) << "This should be 0";
+}
 
+TEST_F(TrieTest, MethodContains) {
+  std::string hello = "Hello", he = "He", hes = "Hes";
+  t.put(hello, 1);
+  t.put(he, 2);
+  t.put(hes, 3);
+  EXPECT_EQ(3, t.size()) << "This should be 3";
+  EXPECT_EQ(1, t.get(hello)) << "This should be 1";
+  EXPECT_EQ(2, t.get(he)) << "This should be 2";
+  EXPECT_EQ(3, t.get(hes)) << "This should be 3";
+  EXPECT_EQ(true, t.contains(hello)) << "This should contain 'Hello'";
+  EXPECT_EQ(true, t.contains(he)) << "This should contain 'He'";
+  EXPECT_EQ(true, t.contains(hes)) << "This should contain 'Hes'";
+  EXPECT_EQ(false, t.contains("he")) << "This should NOT contain 'he'";
+  EXPECT_EQ(false, t.contains("Hel")) << "This should NOT contain 'Hel'";
+  EXPECT_EQ(false, t.contains("HelloS")) << "This should NOT contain 'HelloS'";
+}
+
+TEST_F(TrieTest, MethodGetKeys) {
+  std::string hello = "Hello", he = "He", hes = "Hes";
+  t.put(hello, 1);
+  t.put(he, 2);
+  t.put(hes, 3);
+  EXPECT_EQ(3, t.size()) << "This should be 3";
+  EXPECT_EQ(1, t.get(hello)) << "This should be 1";
+  EXPECT_EQ(2, t.get(he)) << "This should be 2";
+  EXPECT_EQ(3, t.get(hes)) << "This should be 3";
+  std::vector<std::string> vec;
+  vec = t.get_keys();
+  EXPECT_EQ(3, vec.size()) << "This should be 3";
+  EXPECT_EQ(he, vec[0]) << "This should be 'He'";
+  EXPECT_EQ(hello, vec[1]) << "This should be 'Hello'";
+  EXPECT_EQ(hes, vec[2]) << "This should be 'Hes'";
+  t.remove(he);
+  vec = t.get_keys();
+  EXPECT_EQ(2, vec.size()) << "This should be 2";
+  EXPECT_EQ(hello, vec[0]) << "This should be 'Hello'";
+  EXPECT_EQ(hes, vec[1]) << "This should be 'Hes'";
+  t.put(he, 2);
+  vec = t.get_keys();
+  EXPECT_EQ(3, vec.size()) << "This should be 3";
+  EXPECT_EQ(he, vec[0]) << "This should be 'He'";
+  EXPECT_EQ(hello, vec[1]) << "This should be 'Hello'";
+  EXPECT_EQ(hes, vec[2]) << "This should be 'Hes'";
+  t.remove(hello);
+  vec = t.get_keys();
+  EXPECT_EQ(2, vec.size()) << "This should be 2";
+  EXPECT_EQ(he, vec[0]) << "This should be 'He'";
+  EXPECT_EQ(hes, vec[1]) << "This should be 'Hes'";  
+}
+
+TEST_F(TrieTest, MethodGetKeyWithPrefix) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.put(hello, 1);  
+  t.put(world, 2);
+  t.put(wololo, 3);
+  t.put(he, 4);
+  t.put(kthulu, 5);
+  t.put(no, 6);
+  t.put(hes, 7);
+  EXPECT_EQ(7, t.size()) << "This should be 7";
+
+  std::vector<std::string> vec;
+  // With prefix Hel
+  vec = t.get_keys_with_prefix("Hel");
+  EXPECT_EQ(1, vec.size()) << "This should be 1";
+  EXPECT_EQ(hello, vec[0]) << "This should be 'Hello'";
+  // With prefix N
+  vec = t.get_keys_with_prefix("N");
+  EXPECT_EQ(1, vec.size()) << "This should be 1";
+  EXPECT_EQ(no, vec[0]) << "This should be 'No'";
+  // With prefix No
+  vec = t.get_keys_with_prefix("No");
+  EXPECT_EQ(1, vec.size()) << "This should be 1";
+  EXPECT_EQ(no, vec[0]) << "This should be 'No'";
+  // With prefix Nos
+  vec = t.get_keys_with_prefix("Nos");
+  EXPECT_EQ(0, vec.size()) << "This should be 0";
+  // With prefix W
+  vec = t.get_keys_with_prefix("W");
+  EXPECT_EQ(2, vec.size()) << "This should be 2";
+  EXPECT_EQ(wololo, vec[0]) << "This should be 'Wololo'";
+  EXPECT_EQ(world, vec[1]) << "This should be 'World'";
+  // With prefix Wo
+  vec = t.get_keys_with_prefix("Wo");
+  EXPECT_EQ(2, vec.size()) << "This should be 2";
+  EXPECT_EQ(wololo, vec[0]) << "This should be 'Wololo'";
+  EXPECT_EQ(world, vec[1]) << "This should be 'World'";
+  // With prefix Wou
+  vec = t.get_keys_with_prefix("Wou");
+  EXPECT_EQ(0, vec.size()) << "This should be 0";
+}
 
 TEST_F(TrieTest, LongTest) {
   std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
