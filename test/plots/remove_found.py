@@ -6,11 +6,11 @@ from matplotlib import rc, rcParams
 
 rc('font',**{'family':'serif','serif':['Computer Modern']})
 
-trie = genfromtxt('../trie_remove_found.output')
-tst = genfromtxt('../tst_remove_found.output')
-radix = genfromtxt('../radix_remove_found.output')
-_map = genfromtxt('../map_remove_found.output')
-umap  = genfromtxt('../umap_remove_found.output')
+trie = genfromtxt('../data/trie_remove_found.output')
+tst = genfromtxt('../data/tst_remove_found.output')
+radix = genfromtxt('../data/radix_remove_found.output')
+_map = genfromtxt('../data/map_remove_found.output')
+umap  = genfromtxt('../data/umap_remove_found.output')
 
 ######## TIME ########
 plot(trie[:,0], trie[:,1], '-o', label='Trie')

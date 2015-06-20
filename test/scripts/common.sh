@@ -1,6 +1,6 @@
 exec_test() {
     local exec=$1; shift
-    ./${exec} | tee ${exec}.output
+    ./${exec} | tee ../data/${exec}.output
 }
 
 traverse() {
