@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-O3 -DALPHANUM -DMAX_SIZE=10000 --std=c++11
+CXXFLAGS=-O2 -DALPHANUM -DMAX_SIZE=10000 --std=c++11
 TRIE_SOURCE=../trie
 RADIX_SOURCE=../Radix_Tree
 TST_SOURCE=../TST
@@ -11,9 +11,9 @@ SEARCH_NOT_FOUND=search_not_found.cpp
 
 
 all:
-	make insert
-	make remove
-	make search
+	$(MAKE) insert
+	$(MAKE) remove
+	$(MAKE) search
 
 clean:
 	rm *_insert; rm *_remove_found; rm *_remove_not_found; rm *_search_found; rm *_search_not_found; rm *~;
@@ -40,8 +40,8 @@ remove_not_found: $(REMOVE_NOT_FOUND)
 	$(CXX) $(REMOVE_NOT_FOUND) $(CXXFLAGS) -DUMAP -o umap_remove_not_found
 
 remove:
-	make remove_found
-	make remove_not_found
+	$(MAKE) remove_found
+	$(MAKE) remove_not_found
 
 search_found: $(SEARCH_FOUND)
 	$(CXX) $(SEARCH_FOUND) $(CXXFLAGS) -I$(TRIE_SOURCE) -DTRIE -o trie_search_found
@@ -58,5 +58,5 @@ search_not_found: $(SEARCH_NOT_FOUND)
 	$(CXX) $(SEARCH_NOT_FOUND) $(CXXFLAGS) -DUMAP -o umap_search_not_found
 
 search:
-	make search_found
-	make search_not_found
+	$(MAKE) search_found
+	$(MAKE) search_not_found
