@@ -32,9 +32,9 @@ TST::node_ptr<T> TST::tst<T>::get(TST::node_ptr<T> & n,
 		}
 	} else {
 		if (n != nullptr) {
-			if (n->c <  key[d]) return get(n->left,   key, d);
+			if (n->c >  key[d]) return get(n->left,   key, d);
 			if (n->c == key[d]) return get(n->middle, key, d+1);
-			if (n->c >  key[d]) return get(n->right,  key, d);
+			if (n->c <  key[d]) return get(n->right,  key, d);
 		}
 	}
 	return nullptr;
@@ -63,7 +63,7 @@ TST::node_ptr<T> TST::tst<T>::put(TST::node_ptr<T> n,
 		n->value = value;
 		return n;
 	} else {
-		if (n->c < key[d]) {
+		if (n->c > key[d]) {
 			if (n->left == nullptr)
 				n->left = TST::node_ptr<T>(new node<T>(key[d]));
 			n->left = put(std::move(n->left), key, value, d, created);
@@ -73,7 +73,7 @@ TST::node_ptr<T> TST::tst<T>::put(TST::node_ptr<T> n,
 				n->middle = TST::node_ptr<T>(new node<T>(key[d]));
 			n->middle = put(std::move(n->middle), key, value, d+1, created);
 		}
-		if (n->c > key[d]) {
+		if (n->c < key[d]) {
 			if (n->right == nullptr)
 				n->right = TST::node_ptr<T>(new node<T>(key[d]));
 			n->right = put(std::move(n->right), key, value, d, created);
@@ -105,7 +105,7 @@ bool TST::tst<T>::contains(TST::node_ptr<T> & n,
 		return false;
 	}
 	else {
-		if (n->c < key[d]) {
+		if (n->c > key[d]) {
 			if (n->left != nullptr) return contains(n->left, key, d);
 			return false;
 		}
@@ -113,7 +113,7 @@ bool TST::tst<T>::contains(TST::node_ptr<T> & n,
 			if (n->middle != nullptr) return contains(n->middle, key, d+1);
 			return false;
 		}
-		if (n->c > key[d]) {
+		if (n->c < key[d]) {
 			if (n->right != nullptr) return contains(n->right, key, d);
 			return false;
 		}
@@ -144,7 +144,7 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 			return true;
 		return false;
 	} else {
-		if (n->left != nullptr && n->c < key[d]) {
+		if (n->left != nullptr && n->c > key[d]) {
 			bool deleted = remove(n->left, key, d, decrease);
 			if (deleted) {
 				n->left.reset();
@@ -168,7 +168,7 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 			}
 			return false;
 		}
-		if (n->right != nullptr && n->c > key[d]) {
+		if (n->right != nullptr && n->c < key[d]) {
 			bool deleted = remove(n->right, key, d, decrease);
 			if (deleted) {
 				n->right.reset();
@@ -208,11 +208,11 @@ void TST::tst<T>::get_keys_with_prefix(TST::node_ptr<T> & n,
 	if (prefix.size() == d) {
 		gather_keys(n, prefix, v);
 	} else {
-		if (n->c < prefix[d] && n->left != nullptr)
+		if (n->c > prefix[d] && n->left != nullptr)
 			get_keys_with_prefix(n->left, prefix, d, v);
 		if (n->c == prefix[d] && n->middle != nullptr)
 			get_keys_with_prefix(n->middle, prefix, d+1, v);
-		if (n->c > prefix[d] && n->right != nullptr)
+		if (n->c < prefix[d] && n->right != nullptr)
 			get_keys_with_prefix(n->right, prefix, d, v);
 	}
 }

@@ -38,7 +38,8 @@ namespace TST {
 		
 		// Destructor
 		~tst() {
-			clean(std::move(root));
+		        if (root != nullptr)
+			        clean(std::move(root));
 		}
 		
 		// Methods
@@ -48,9 +49,10 @@ namespace TST {
 		 * as the destructor.
 		 */
 		void clean() {
-		  clean(std::move(root));
-		  s = 0;
-		  root = nullptr;
+		        if (root != nullptr)
+			        clean(std::move(root));
+			s = 0;
+			root = nullptr;
 		}
 
 		/*

@@ -85,6 +85,7 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::put(RadixTree::node_ptr<T,R
 					n->s += n->sons[key[d+n->path.size()]] != nullptr ? 1 : 0;
 					// Added 1 to the size of n if the right son is null
 					n->sons[key[d+n->path.size()]] = put(std::move(n->sons[key[d+n->path.size()]]), key, value, d+n->path.size(), created);
+					++n->s;
 					return n;
 				}
 				else {
@@ -213,7 +214,7 @@ bool RadixTree::radix_tree<T,R>::remove(RadixTree::node_ptr<T,R> & n,
 					if (deleted) {
 						n->sons[key[d+n->path.size()]].reset();
 						--n->s;
-						if (n->s == 1) {
+						if (n->s == 1 && n->value == T()) {
 							merge_with_only_son(n);
 							return true;
 						}
@@ -259,8 +260,14 @@ void RadixTree::radix_tree<T,R>::merge(RadixTree::node_ptr<T,R> & father,
 	father->value = son->value;
 	father->s = son->s;
 	father->path += son->path;
-	for(unsigned int i = 0; i < r; ++i) {
-		father->sons[i] = std::move(son->sons[i]);
+	if (father->s != 0) {
+	        unsigned int left = 0;
+	        for(unsigned int i = 0; i < r && left < father->s; ++i) {
+		        if (son->sons[i] != nullptr) {
+		                father->sons[i] = std::move(son->sons[i]);
+				++left;
+		        }
+		}
 	}
 }
 
@@ -301,11 +308,15 @@ void RadixTree::radix_tree<T,R>::get_keys_with_prefix(RadixTree::node_ptr<T,R> &
 		if (n->path == sub) {
 			if (prefix.size() > d + n->path.size()) {
 				// Call it again
-				return get_keys_with_prefix(n->sons[prefix[d+n->path.size()]], get_prefix_cut(prefix, d), d+n->path.size(), v);
+			        if (n->sons[prefix[d+n->path.size()]] != nullptr) {
+				  get_keys_with_prefix(n->sons[prefix[d+n->path.size()]], get_prefix_cut(prefix, d+n->path.size()), d+n->path.size(), v);
+				}
+				return;
 			}
 			else {
 				// We found it
-				return gather_keys(n, get_prefix_cut(prefix, d), v);
+				gather_keys(n, get_prefix_cut(prefix, d), v);
+				return;
 			}
 		}
 	}
