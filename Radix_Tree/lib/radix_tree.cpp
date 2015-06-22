@@ -349,8 +349,56 @@ void RadixTree::radix_tree<T,R>::gather_keys(RadixTree::node_ptr<T,R> & n,
 
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::show() {
-	std::cout << "new radix tree to show" << std::endl;
-	for (auto key : get_keys()) {
-		std::cout << key << std::endl;
+          std::cout << "graph graphName{" << std::endl;
+	// Node labels
+	int label = 0;
+	std::cout << label << " [label=\"Root\"]" << std::endl;;
+	for (unsigned int i = 0; i < r; ++i) {
+	        if (roots[i] != nullptr) {
+			++label;
+			show_label(roots[i], label);
+		}
+	}
+	// Node hierarchy
+	label = 0;
+	for (unsigned int i = 0; i < r; ++i) {
+	        if (roots[i] != nullptr) {
+                        std::cout << 0 << "--";
+			++label;
+			show(roots[i], label);
+		}
+	}
+	std::cout << "}"<< std::endl;
+}
+
+template <class T, size_t R>
+void RadixTree::radix_tree<T,R>::show_label(RadixTree::node_ptr<T,R> & n,
+					    int & label) {
+         std::cout << label << " [label=\"" << n->path;
+	 if (n->value != T())
+	         std::cout << "," << n->value;
+	 std::cout << "\"";
+	 if (n->value != T())
+	         std::cout << "color=\"blue\"";
+	 std:: cout << "]" << std::endl;
+         for (unsigned int i = 0; i < n->r; ++i) {
+	        if (n->sons[i] != nullptr) {
+		        ++label;
+			show_label(n->sons[i], label);
+		}
+	}
+}
+
+template <class T, size_t R>
+void RadixTree::radix_tree<T,R>::show(RadixTree::node_ptr<T,R> & n,
+				      int & label) {
+         std::cout << label << std::endl;
+	 int copy_label = label;
+         for (unsigned int i = 0; i < n->r; ++i) {
+	        if (n->sons[i] != nullptr) {
+		        std::cout << copy_label << "--";
+			++label;
+			show(n->sons[i], label);
+		}
 	}
 }

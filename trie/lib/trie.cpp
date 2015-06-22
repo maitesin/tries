@@ -181,7 +181,7 @@ void Trie::trie<T,R>::gather_keys(Trie::node_ptr<T,R> & n,
 
 template <class T, size_t R>
 void Trie::trie<T,R>::show() {
-	std::cout << "graph graphName{" << std::endl;
+        std::cout << "graph graphName{" << std::endl;
 	// Node labels
 	int label = 0;
 	std::cout << label << " [label=\"Root\"]" << std::endl;;
