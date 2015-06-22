@@ -181,8 +181,55 @@ void Trie::trie<T,R>::gather_keys(Trie::node_ptr<T,R> & n,
 
 template <class T, size_t R>
 void Trie::trie<T,R>::show() {
-	std::cout << "new trie to show" << std::endl;
-	for (auto key : get_keys()) {
-		std::cout << key << std::endl;
+	std::cout << "graph graphName{" << std::endl;
+	// Node labels
+	int label = 0;
+	std::cout << label << " [label=\"Root\"]" << std::endl;;
+	for (unsigned int i = 0; i < root->r; ++i) {
+	        if (root->sons[i] != nullptr) {
+			++label;
+			show_label(root->sons[i], i, label);
+		}
+	}
+	// Node hierarchy
+	label = 0;
+	for (unsigned int i = 0; i < root->r; ++i) {
+	        if (root->sons[i] != nullptr) {
+                        std::cout << 0 << "--";
+			++label;
+			show(root->sons[i], i, label);
+		}
+	}
+	std::cout << "}"<< std::endl;
+}
+
+
+template <class T, size_t R>
+void Trie::trie<T,R>::show_label(Trie::node_ptr<T,R> & n, int pos, int & label) {
+         std::cout << label << " [label=\"" << static_cast<char>(pos);
+	 if (n->value != T())
+	         std::cout << "," << n->value;
+	 std::cout << "\"";
+	 if (n->value != T())
+	         std::cout << "color=\"blue\"";
+	 std:: cout << "]" << std::endl;
+         for (unsigned int i = 0; i < n->r; ++i) {
+	        if (n->sons[i] != nullptr) {
+		        ++label;
+			show_label(n->sons[i], i, label);
+		}
+	}
+}
+
+template <class T, size_t R>
+void Trie::trie<T,R>::show(Trie::node_ptr<T,R> & n, int pos, int & label) {
+         std::cout << label << std::endl;
+	 int copy_label = label;
+         for (unsigned int i = 0; i < n->r; ++i) {
+	        if (n->sons[i] != nullptr) {
+		        std::cout << copy_label << "--";
+			++label;
+			show(n->sons[i], i, label);
+		}
 	}
 }
