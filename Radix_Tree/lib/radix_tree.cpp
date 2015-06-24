@@ -6,13 +6,16 @@
 
 template <class T, size_t R>
 const T & RadixTree::radix_tree<T,R>::get(const std::string & key) {
-	if (roots[key[0]] != nullptr){
-		node_ptr<T,R> node (get(roots[key[0]], key, 0));
-		if (node != nullptr){
-			aux_ret = node->value;
-			node.release();
-			return aux_ret;
+	if (key != "") {
+		if (roots[key[0]] != nullptr){
+			node_ptr<T,R> node (get(roots[key[0]], key, 0));
+			if (node != nullptr){
+				aux_ret = node->value;
+				node.release();
+				return aux_ret;
+			}
 		}
+		return def;
 	}
 	return def;
 }
@@ -47,10 +50,12 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::get(RadixTree::node_ptr<T,R
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::put(const std::string & key,
 				     const T & value) {
-	bool created = false;
-	roots[key[0]] = put(std::move(roots[key[0]]), key, value, 0, created);
-	if (created)
-		++s;
+	if (key != ""){
+		bool created = false;
+		roots[key[0]] = put(std::move(roots[key[0]]), key, value, 0, created);
+		if (created)
+			++s;
+	}
 }
 
 template <class T, size_t R>

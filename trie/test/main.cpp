@@ -169,8 +169,40 @@ TEST_F(TrieTest, MethodGetKeyWithPrefix) {
   EXPECT_EQ(0, vec.size()) << "This should be 0";
 }
 
+TEST_F(TrieTest, EmptyKeyTest) {
+	std::string empty = "";
+	t.put(empty, 1);
+	EXPECT_EQ(0, t.size());
+	EXPECT_EQ(0, t.get(empty));
+}
+
+TEST_F(TrieTest, RemoveEmptyTest) {
+	std::string hello = "Hello", he = "He", hes = "Hes";
+
+	t.put(he, 1);
+	t.put(hes, 2);
+	t.put(hello, 3);
+
+	t.remove(hes);
+	t.remove(he);
+	t.remove(hello);
+
+	EXPECT_EQ(0, t.size()) << "Size should be 0";
+
+	t.put(he, 1);
+	t.put(hes, 2);
+	t.put(hello, 3);
+	t.put(hes, 4);
+
+	t.remove(hes);
+	t.remove(he);
+	t.remove(hello);
+
+	EXPECT_EQ(0, t.size()) << "Size should be 0";
+}
+
 TEST_F(TrieTest, LongTest) {
-  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
+	std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
 
   t.put(hello, 1);  
   t.put(world, 2);

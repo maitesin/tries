@@ -6,14 +6,17 @@
 
 template <class T, size_t R>
 const T & Trie::trie<T,R>::get(const std::string & key) {
-	node_ptr<T,R> node (get(root, key, 0));
-	if (node != nullptr){
-		aux_ret = node->value;
-		node.release();
-		return aux_ret;
-	} else {
-		return def;
+	if (key != "") {
+		node_ptr<T,R> node (get(root, key, 0));
+		if (node != nullptr){
+			aux_ret = node->value;
+			node.release();
+			return aux_ret;
+		} else {
+			return def;
+		}
 	}
+	return def;
 }
 
 template <class T, size_t R>
@@ -40,10 +43,12 @@ Trie::node_ptr<T,R> Trie::trie<T,R>::get(Trie::node_ptr<T,R> & n,
 template <class T, size_t R>
 void Trie::trie<T,R>::put(const std::string & key,
 			  const T & value) {
-	bool created = false;
-	root = put(std::move(root), key, value, 0, created);
-	if (created)
-		++s;
+	if (key != ""){
+		bool created = false;
+		root = put(std::move(root), key, value, 0, created);
+		if (created)
+			++s;
+	}
 }
 
 template <class T, size_t R>
