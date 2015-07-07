@@ -375,7 +375,7 @@ void TST::tst<T>::show_label(TST::node_ptr<T> &n,
 			     int & label) {
          std::cout << label << " [shape=record,label=\"{<data> " << n->c;
 	 if (n->value != T())
-	         std::cout << " | " << n->value;
+	         std::cout << " | <value> " << n->value;
 	 std::cout << " | {<left> l | <middle> m | <right> r}}\"";
 	 if (n->value != T())
 	         std::cout << "color=\"blue\"";

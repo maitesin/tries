@@ -186,10 +186,11 @@ void Trie::trie<T,R>::gather_keys(Trie::node_ptr<T,R> & n,
 
 template <class T, size_t R>
 void Trie::trie<T,R>::show() {
-        std::cout << "graph graphName{" << std::endl;
+        std::cout << "digraph graphName{" << std::endl;
+	std::cout << "node [shape=record];" << std::endl;
 	// Node labels
 	int label = 0;
-	std::cout << label << " [label=\"Root\"]" << std::endl;;
+	std::cout << label << " [shape=record,label=\"{Root}\"];" << std::endl;;
 	for (unsigned int i = 0; i < root->r; ++i) {
 	        if (root->sons[i] != nullptr) {
 			++label;
@@ -200,7 +201,7 @@ void Trie::trie<T,R>::show() {
 	label = 0;
 	for (unsigned int i = 0; i < root->r; ++i) {
 	        if (root->sons[i] != nullptr) {
-                        std::cout << 0 << "--";
+                        std::cout << 0 << "->";
 			++label;
 			show(root->sons[i], i, label);
 		}
@@ -211,13 +212,13 @@ void Trie::trie<T,R>::show() {
 
 template <class T, size_t R>
 void Trie::trie<T,R>::show_label(Trie::node_ptr<T,R> & n, int pos, int & label) {
-         std::cout << label << " [label=\"" << static_cast<char>(pos);
+         std::cout << label << " [shape=record,label=\"{ <data>" << static_cast<char>(pos);
 	 if (n->value != T())
-	         std::cout << "," << n->value;
-	 std::cout << "\"";
+	         std::cout << " | <value> " << n->value;
+	 std::cout << "}\"";
 	 if (n->value != T())
 	         std::cout << "color=\"blue\"";
-	 std:: cout << "]" << std::endl;
+	 std:: cout << "];" << std::endl;
          for (unsigned int i = 0; i < n->r; ++i) {
 	        if (n->sons[i] != nullptr) {
 		        ++label;
@@ -232,7 +233,7 @@ void Trie::trie<T,R>::show(Trie::node_ptr<T,R> & n, int pos, int & label) {
 	 int copy_label = label;
          for (unsigned int i = 0; i < n->r; ++i) {
 	        if (n->sons[i] != nullptr) {
-		        std::cout << copy_label << "--";
+		        std::cout << copy_label << "->";
 			++label;
 			show(n->sons[i], i, label);
 		}
