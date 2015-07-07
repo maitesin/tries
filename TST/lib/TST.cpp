@@ -333,10 +333,11 @@ void TST::tst<T>::gather_keys(TST::node_ptr<T> & n,
 
 template <class T>
 void TST::tst<T>::show() {
-	std::cout << "graph graphName{" << std::endl;
+	std::cout << "digraph graphName{" << std::endl;
+	std::cout << "node [shape=record];" << std::endl;
 	// Node labels
 	int label = 0;
-	std::cout << label << " [label=\"" << root->c << "\"]" << std::endl;
+	std::cout << label << " [shape=record,label=\"{ <data> " << root->c << " | {<left> l | <middle> m | <right> r}}\"];" << std::endl;
 	if (root->left != nullptr) {
 	         ++label;
 		 show_label(root->left, label);
@@ -352,17 +353,17 @@ void TST::tst<T>::show() {
 	// Node hierarchy
 	label = 0;
 	if (root->left != nullptr) {
-	         std::cout << "0" << "--";
+	         std::cout << "0:left" << "->";
 	         ++label;
 		 show(root->left, label);
 	}
 	if (root->middle != nullptr) {
-	         std::cout << "0" << "--";
+	         std::cout << "0:middle" << "->";
 	         ++label;
 		 show(root->middle, label);
 	}
 	if (root->right != nullptr) {
-	         std::cout << "0" << "--";
+	         std::cout << "0:right" << "->";
 	         ++label;
 		 show(root->right, label);
 	}
@@ -372,13 +373,13 @@ void TST::tst<T>::show() {
 template <class T>
 void TST::tst<T>::show_label(TST::node_ptr<T> &n,
 			     int & label) {
-         std::cout << label << " [label=\"" << n->c;
+         std::cout << label << " [shape=record,label=\"{<data> " << n->c;
 	 if (n->value != T())
-	         std::cout << "," << n->value;
-	 std::cout << "\"";
+	         std::cout << " | " << n->value;
+	 std::cout << " | {<left> l | <middle> m | <right> r}}\"";
 	 if (n->value != T())
 	         std::cout << "color=\"blue\"";
-	 std:: cout << "]" << std::endl;
+	 std:: cout << "];" << std::endl;
 	 if (n->left != nullptr) {
 	         ++label;
 		 show_label(n->left, label);
@@ -396,20 +397,20 @@ void TST::tst<T>::show_label(TST::node_ptr<T> &n,
 template <class T>
 void TST::tst<T>::show(TST::node_ptr<T> &n,
 			 int & label) {
-         std::cout << label << std::endl;
+	std::cout << label << ":data" << std::endl;
 	 int copy_label = label;
 	 if (n->left != nullptr) {
-	         std::cout << copy_label << "--";
+	         std::cout << copy_label << ":left" << "->";
 	         ++label;
 		 show(n->left, label);
 	 }
 	 if (n->middle != nullptr) {
-	         std::cout << copy_label << "--";
+	         std::cout << copy_label << ":middle" << "->";
 	         ++label;
 		 show(n->middle, label);
 	 }
 	 if (n->right != nullptr) {
-	         std::cout << copy_label << "--";
+	         std::cout << copy_label << ":right" << "->";
 	         ++label;
 		 show(n->right, label);
 	 }
