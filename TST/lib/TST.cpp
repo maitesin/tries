@@ -21,7 +21,7 @@ template <class T>
 TST::node_ptr<T> TST::tst<T>::get(TST::node_ptr<T> & n,
 				  const std::string & key,
 				  unsigned int d) {
-	if (key.size() - 1 == d) {
+	if (key.size() == d + 1) {
 		if (n == nullptr)
 			return nullptr;
 		else {
@@ -70,7 +70,7 @@ TST::node_ptr<T> TST::tst<T>::put(TST::node_ptr<T> n,
 				  const T & value,
 				  unsigned int d,
 				  bool & created) {
-	if (key.size() - 1 == d) {
+	if (key.size() == d + 1) {
 		if (n->c > key[d]) {
 			if (n->left == nullptr)
 				n->left = TST::node_ptr<T>(new node<T>(key[d]));
@@ -124,7 +124,7 @@ template <class T>
 bool TST::tst<T>::contains(TST::node_ptr<T> & n,
 			const std::string & key,
 			unsigned int d) {
-	if (key.size() - 1 == d) {
+	if (key.size() == d + 1) {
 		if (n == nullptr) return false;
 		if (n->c >  key[d] && n->left != nullptr) {
 			return contains(n->left, key, d);
@@ -165,7 +165,7 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 			 const std::string & key,
 			 unsigned int d,
 			 bool & decrease) {
-	if (key.size() - 1 == d && n != nullptr) {
+	if (key.size() == d + 1 && n != nullptr) {
 		if (n->left != nullptr && n->c > key[d]) {
 			if (n->left->c == key[d]) {
 				bool deleted = remove(n->left, key, d, decrease);
@@ -260,7 +260,7 @@ template <class T>
 std::vector<std::string> TST::tst<T>::get_keys() {
 	vec_ptr vec;
 	vec = vec_ptr(new std::vector<std::string>());
-	gather_keys(root, "", vec);
+	get_keys_with_prefix(root, "", 0, vec);
 	return *vec;
 }
 
@@ -277,8 +277,20 @@ void TST::tst<T>::get_keys_with_prefix(TST::node_ptr<T> & n,
 				    std::string prefix,
 				    unsigned int d,
 				    TST::vec_ptr & v) {
-	if (prefix.size() - 1 == d) {
-		gather_keys(n->middle, prefix, v);
+	if (prefix.size() <= d + 1) {
+		if (prefix.size() == d + 1){
+			if (n->c > prefix[d] && n->left != nullptr)
+				get_keys_with_prefix(n->left, prefix, d, v);
+			if (n->c == prefix[d]) {
+				if (n->value != def)
+					v->push_back(prefix);
+				gather_keys(n->middle, prefix, v);
+			}
+			if (n->c < prefix[d] && n->right != nullptr)
+				get_keys_with_prefix(n->right, prefix, d, v);
+		}
+		else
+			gather_keys(n, prefix, v);
 	} else {
 	        if (n->c > prefix[d] && n->left != nullptr){
 			get_keys_with_prefix(n->left, prefix, d, v);
