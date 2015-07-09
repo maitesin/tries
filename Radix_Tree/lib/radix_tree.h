@@ -234,6 +234,14 @@ namespace RadixTree {
 		void gather_keys(node_ptr<T,R> & n,
 				 std::string prefix,
 				 vec_ptr & v);
+
+
+		void show_label(node_ptr<T,R> & n,
+				int & label);
+
+		void show(node_ptr<T,R> & n,
+			  int & label);
+		
 	}; // RADIX_TREE_CLASS
 
 }; // RADIX_TREE_NAMESPACE

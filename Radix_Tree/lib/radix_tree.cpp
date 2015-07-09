@@ -6,13 +6,16 @@
 
 template <class T, size_t R>
 const T & RadixTree::radix_tree<T,R>::get(const std::string & key) {
-	if (roots[key[0]] != nullptr){
-		node_ptr<T,R> node (get(roots[key[0]], key, 0));
-		if (node != nullptr){
-			aux_ret = node->value;
-			node.release();
-			return aux_ret;
+	if (key != "") {
+		if (roots[key[0]] != nullptr){
+			node_ptr<T,R> node (get(roots[key[0]], key, 0));
+			if (node != nullptr){
+				aux_ret = node->value;
+				node.release();
+				return aux_ret;
+			}
 		}
+		return def;
 	}
 	return def;
 }
@@ -47,10 +50,12 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::get(RadixTree::node_ptr<T,R
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::put(const std::string & key,
 				     const T & value) {
-	bool created = false;
-	roots[key[0]] = put(std::move(roots[key[0]]), key, value, 0, created);
-	if (created)
-		++s;
+	if (key != ""){
+		bool created = false;
+		roots[key[0]] = put(std::move(roots[key[0]]), key, value, 0, created);
+		if (created)
+			++s;
+	}
 }
 
 template <class T, size_t R>
@@ -349,8 +354,57 @@ void RadixTree::radix_tree<T,R>::gather_keys(RadixTree::node_ptr<T,R> & n,
 
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::show() {
-	std::cout << "new radix tree to show" << std::endl;
-	for (auto key : get_keys()) {
-		std::cout << key << std::endl;
+	std::cout << "digraph graphName{" << std::endl;
+	std::cout << "node [shape=record];" << std::endl;
+	// Node labels
+	int label = 0;
+	std::cout << label << " [shape=record,label=\"{Root}\"];" << std::endl;;
+	for (unsigned int i = 0; i < r; ++i) {
+	        if (roots[i] != nullptr) {
+			++label;
+			show_label(roots[i], label);
+		}
+	}
+	// Node hierarchy
+	label = 0;
+	for (unsigned int i = 0; i < r; ++i) {
+	        if (roots[i] != nullptr) {
+                        std::cout << 0 << "->";
+			++label;
+			show(roots[i], label);
+		}
+	}
+	std::cout << "}"<< std::endl;
+}
+
+template <class T, size_t R>
+void RadixTree::radix_tree<T,R>::show_label(RadixTree::node_ptr<T,R> & n,
+					    int & label) {
+         std::cout << label << " [shape=record,label=\"{ <data> " << n->path;
+	 if (n->value != T())
+	         std::cout << " | <value> " << n->value;
+	 std::cout << "}\"";
+	 if (n->value != T())
+	         std::cout << "color=\"blue\"";
+	 std:: cout << "];" << std::endl;
+         for (unsigned int i = 0; i < n->r; ++i) {
+	        if (n->sons[i] != nullptr) {
+		        ++label;
+			show_label(n->sons[i], label);
+		}
+	}
+}
+
+template <class T, size_t R>
+void RadixTree::radix_tree<T,R>::show(RadixTree::node_ptr<T,R> & n,
+				      int & label) {
+         std::cout << label << std::endl;
+	 int copy_label = label;
+         for (unsigned int i = 0; i < n->r; ++i) {
+	        if (n->sons[i] != nullptr) {
+		        std::cout << copy_label << "->";
+			++label;
+			show(n->sons[i], label);
+		}
 	}
 }

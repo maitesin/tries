@@ -197,6 +197,14 @@ namespace Trie {
 		void gather_keys(node_ptr<T,R> & n,
 				 std::string prefix,
 				 vec_ptr & v);
+
+
+		/*
+		 * Given a node prints the its value and the
+		 * ones for its sons in the 'dot' format.
+		 */
+		void show_label(node_ptr<T,R> & n, int pos, int & label);
+		void show(node_ptr<T,R> & n, int pos, int & label);
 	}; // TRIE_CLASS
 	
 }; // TRIE_NAMESPACE

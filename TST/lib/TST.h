@@ -201,6 +201,13 @@ namespace TST {
 		void gather_keys(node_ptr<T> & n,
 				 std::string prefix,
 				 vec_ptr & v);
+
+		void show_label(node_ptr<T> &n,
+				int & label);
+
+		void show(node_ptr<T> &n,
+				int & label);
+		
 	}; // TST_CLASS
 
 }; // TST_NAMESPACE
