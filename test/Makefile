@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-O2 -DALPHANUM -DMAX_SIZE=10000 --std=c++11
+CXXFLAGS=-O2 -DALPHANUM -DMAX_SIZE=1000000 --std=c++11
 TRIE_SOURCE=../trie/lib
 RADIX_SOURCE=../Radix_Tree/lib
 TST_SOURCE=../TST/lib
@@ -16,6 +16,8 @@ all:
 	$(MAKE) insert
 	$(MAKE) remove
 	$(MAKE) search
+	$(MAKE) run
+	$(MAKE) graphics
 
 clean:
 	$(MAKE) clean_insert
@@ -75,3 +77,27 @@ search:
 clean_search:
 	rm $(wildcard $(BIN)/*_search_found)
 	rm $(wildcard $(BIN)/*_search_not_found)
+
+run:
+	echo "Executing: insert.sh"
+	cd scripts && ./insert.sh
+	echo "Executing: remove_found.sh"
+	cd scripts && ./remove_found.sh
+	echo "Executing: remove_not_found.sh"
+	cd scripts && ./remove_not_found.sh
+	echo "Executing: search_found.sh"
+	cd scripts && ./search_found.sh
+	echo "Executing: search_not_found.sh"
+	cd scripts && ./search_not_found.sh
+
+graphics:
+	echo "Executing: insert.py"
+	cd plots && ./insert.py
+	echo "Executing: remove_found.py"
+	cd plots && ./remove_found.py
+	echo "Executing: remove_not_found.py"
+	cd plots && ./remove_not_found.py
+	echo "Executing: search_found.py"
+	cd plots && ./search_found.py
+	echo "Executing: search_not_found.py"
+	cd plots && ./search_not_found.py
