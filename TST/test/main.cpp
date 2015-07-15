@@ -169,13 +169,6 @@ TEST_F(TstTest, MethodGetKeyWithPrefix) {
   EXPECT_EQ(0, vec.size()) << "This should be 0";
 }
 
-TEST_F(TstTest, EmptyKeyTest) {
-	std::string empty = "";
-	t.put(empty, 1);
-	EXPECT_EQ(0, t.size());
-	EXPECT_EQ(0, t.get(empty));
-}
-
 TEST_F(TstTest, RemoveEmptyTest) {
 	std::string hello = "Hello", he = "He", hes = "Hes";
 
@@ -199,6 +192,23 @@ TEST_F(TstTest, RemoveEmptyTest) {
 	t.remove(hello);
 
 	EXPECT_EQ(0, t.size()) << "Size should be 0";
+}
+
+TEST_F(TstTest, EmptyStringParameterTest) {
+	std::string hello = "Hello", he = "He", hes = "Hes";
+
+	t.put(he, 1);
+	t.put(hes, 2);
+	t.put(hello, 3);
+
+	EXPECT_EQ(0, t.get("")) << "Get from an empty string should be 0 ALWAYS";
+	t.put("", 1);
+	t.remove("");
+	EXPECT_EQ(false, t.contains("")) << "Contains from an empty string should be 0 ALWAYS";
+	EXPECT_EQ(3, t.size()) << "Even after all those attempts the size should remain 3";
+	std::vector<std::string> vec;
+	vec = t.get_keys_with_prefix("");
+	EXPECT_EQ(3, vec.size()) << "This should be easy";
 }
 
 TEST_F(TstTest, LongTest) {
