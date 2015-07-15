@@ -1,2 +1,4 @@
 - WRITE THE DOCU!!
-- Fix known problems (detected in the test) God bless unit test!!
+- write more performance test:
+	- get_keys
+	- get_keys_with_prefix

@@ -288,6 +288,9 @@ std::vector<std::string> RadixTree::radix_tree<T,R>::get_keys() {
 
 template <class T, size_t R>
 std::vector<std::string> RadixTree::radix_tree<T,R>::get_keys_with_prefix(const std::string & prefix) {
+	if (prefix == "") {
+		return get_keys();
+	}
 	vec_ptr vec;
 	vec = vec_ptr(new std::vector<std::string>());
 	if (roots[prefix[0]] != nullptr)
@@ -306,7 +309,8 @@ void RadixTree::radix_tree<T,R>::get_keys_with_prefix(RadixTree::node_ptr<T,R> &
 				return;
 		}
 		// Is sure the begining is equal
-		return gather_keys(n, get_prefix_cut(prefix, d), v);
+		gather_keys(n, get_prefix_cut(prefix, d), v);
+		return;
 	}
 	else {
 		std::string sub = prefix.substr(d, n->path.size());
