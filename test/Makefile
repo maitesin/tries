@@ -9,6 +9,7 @@ REMOVE_FOUND=$(SRC)/remove_found.cpp
 REMOVE_NOT_FOUND=$(SRC)/remove_not_found.cpp
 SEARCH_FOUND=$(SRC)/search_found.cpp
 SEARCH_NOT_FOUND=$(SRC)/search_not_found.cpp
+GET_KEYS=$(SRC)/get_keys.cpp
 BIN=bin
 
 
@@ -16,6 +17,7 @@ all:
 	$(MAKE) insert
 	$(MAKE) remove
 	$(MAKE) search
+	$(MAKE) keys
 	$(MAKE) run
 	$(MAKE) graphics
 
@@ -23,6 +25,7 @@ clean:
 	$(MAKE) clean_insert
 	$(MAKE) clean_remove
 	$(MAKE) clean_search
+	$(MAKE) clean_keys
 
 insert: $(INSERT)
 	$(CXX) $(INSERT) $(CXXFLAGS) -I$(TRIE_SOURCE) -DTRIE -o $(BIN)/trie_insert
@@ -77,6 +80,16 @@ search:
 clean_search:
 	rm $(wildcard $(BIN)/*_search_found)
 	rm $(wildcard $(BIN)/*_search_not_found)
+
+keys: $(GET_KEYS)
+	$(CXX) $(GET_KEYS) $(CXXFLAGS) -I$(TRIE_SOURCE) -DTRIE -o $(BIN)/trie_get_keys
+	$(CXX) $(GET_KEYS) $(CXXFLAGS) -I$(TST_SOURCE) -DTERNARY -o $(BIN)/tst_get_keys
+	$(CXX) $(GET_KEYS) $(CXXFLAGS) -I$(RADIX_SOURCE) -DRADIX -o $(BIN)/radix_get_keys
+	$(CXX) $(GET_KEYS) $(CXXFLAGS) -DMAP -o $(BIN)/map_get_keys
+	$(CXX) $(GET_KEYS) $(CXXFLAGS) -DUMAP -o $(BIN)/umap_get_keys
+
+clean_keys:
+	rm $(wildcard $(BIN)/*_get_keys)
 
 run:
 	echo "Executing: insert.sh"
