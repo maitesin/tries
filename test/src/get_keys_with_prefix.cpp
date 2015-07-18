@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include <fstream>
+#include <sstream>
 
 // Conditional include for dependencies
 #ifdef TRIE
@@ -56,25 +58,40 @@ std::string get_random_string(unsigned int len) {
 }
 
 #ifdef MAP
-std::vector<std::string> get_map_keys(std::map<std::string, int> & m) {
+std::vector<std::string> get_map_keys_with_prefix(std::map<std::string, int> & m, std::string & prefix) {
 #endif
 #ifdef UMAP
-std::vector<std::string> get_map_keys(std::unordered_map<std::string, int> & m) {
+  std::vector<std::string> get_map_keys_with_prefix(std::unordered_map<std::string, int> & m, std::string & prefix) {
 #endif
 #ifdef MAP_FUNCTION
 	std::vector<std::string> keys;
 	for (auto it = m.begin(); it != m.end(); ++it) {
-		keys.push_back(it->first);
+	  std::cout << "s: " << it->first << "; p: " << prefix;
+	  if  (it->first.substring(0, prefix.size()) == prefix) {
+	    std::cout << " -> Valid prefix";
+	    keys.push_back(it->first);
+	  }
+	  std::cout << std::endl;
 	}
 	return keys;
 }
 #endif
 
-int main(void) {
-	time_t t_init;
-	float us;
-	int size, counter;
+ int main(int argc, char * argv[]) {
+   time_t t_init;
+   float us;
+   int size, counter;
+   bool random = true;
+   std::ifstream f;
+   std::string prefix;
 
+   if (argc > 0) {
+     f = infile(argv[1]);
+     prefix = argv[2];
+     random = false;
+   }
+
+   if (random) {
 	for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
 #ifdef TRIE
 		Trie::trie<int, 256> t;
@@ -104,18 +121,60 @@ int main(void) {
 #endif
 		}
 		counter = 0;
+		prefix = get_random_string(rand()%(size/10));
 		t_init = clock();
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
 #ifndef MAP
-			t.get_keys();
+			t.get_keys_with_prefix(prefix);
 #else
-			get_map_keys(m);
+			get_map_keys_with_prefix(m, prefix);
 #endif
 			++counter;			
 		}
 		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
 		std::cout << size << "\t" << us/counter << std::endl;
 	}
-
+   }
+   else {
+     //Reading input from a file
+#ifdef TRIE
+		Trie::trie<int, 256> t;
+#endif
+#ifdef TERNARY
+		TST::tst<int> t;
+#endif
+#ifdef RADIX
+		RadixTree::radix_tree<int, 256> t;
+#endif
+#ifdef MAP
+		std::map<std::string, int> m;
+#endif
+#ifdef UMAP
+#define MAP
+		std::unordered_map<std::string, int> m;
+#endif
+		std::string aux;
+		counter = 0;
+		std::string line;
+		while (f >> line) {
+#ifndef MAP
+			t.put(line, 1);
+#else
+			m.insert(std::pair<std::string, int>(line, 1));
+#endif
+		}
+		counter = 0;
+		t_init = clock();
+		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
+#ifndef MAP
+			t.get_keys_with_prefix(prefix);
+#else
+			get_map_keys_with_prefix(m, prefix);
+#endif
+			++counter;
+		}
+		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
+		std::cout << size << "\t" << us/counter << std::endl;
+	}
 	return 0;
 }
