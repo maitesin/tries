@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <sstream>
+#include <algorithm>
 
 // Conditional include for dependencies
 #ifdef TRIE
@@ -61,17 +61,14 @@ std::string get_random_string(unsigned int len) {
 std::vector<std::string> get_map_keys_with_prefix(std::map<std::string, int> & m, std::string & prefix) {
 #endif
 #ifdef UMAP
-  std::vector<std::string> get_map_keys_with_prefix(std::unordered_map<std::string, int> & m, std::string & prefix) {
+std::vector<std::string> get_map_keys_with_prefix(std::unordered_map<std::string, int> & m, std::string & prefix) {
 #endif
 #ifdef MAP_FUNCTION
 	std::vector<std::string> keys;
 	for (auto it = m.begin(); it != m.end(); ++it) {
-	  std::cout << "s: " << it->first << "; p: " << prefix;
-	  if  (it->first.substring(0, prefix.size()) == prefix) {
-	    std::cout << " -> Valid prefix";
+	  if  (it->first.substr(0, prefix.size()) == prefix) {
 	    keys.push_back(it->first);
 	  }
-	  std::cout << std::endl;
 	}
 	return keys;
 }
@@ -85,8 +82,8 @@ std::vector<std::string> get_map_keys_with_prefix(std::map<std::string, int> & m
    std::ifstream f;
    std::string prefix;
 
-   if (argc > 0) {
-     f = infile(argv[1]);
+   if (argc > 1) {
+	   f = std::ifstream(argv[1]);
      prefix = argv[2];
      random = false;
    }
@@ -106,25 +103,24 @@ std::vector<std::string> get_map_keys_with_prefix(std::map<std::string, int> & m
 		std::map<std::string, int> m;
 #endif
 #ifdef UMAP
-#define MAP
 		std::unordered_map<std::string, int> m;
 #endif
 		std::string aux;
 		counter = 0;
 		srand(SALT);
-		for (unsigned int j = 0; j < size; ++j) {
+		for (unsigned int j = 0; j < MAX_SIZE; ++j) {
 			aux = get_random_string(rand()%size);
-#ifndef MAP
+#ifndef MAP_FUNCTION
 			t.put(aux, 1);
 #else
 			m.insert(std::pair<std::string, int>(aux, 1));
 #endif
 		}
 		counter = 0;
-		prefix = get_random_string(rand()%(size/10));
+		prefix = get_random_string((std::min(100, std::max(1, size/10))));
 		t_init = clock();
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
-#ifndef MAP
+#ifndef MAP_FUNCTION
 			t.get_keys_with_prefix(prefix);
 #else
 			get_map_keys_with_prefix(m, prefix);
@@ -150,14 +146,13 @@ std::vector<std::string> get_map_keys_with_prefix(std::map<std::string, int> & m
 		std::map<std::string, int> m;
 #endif
 #ifdef UMAP
-#define MAP
 		std::unordered_map<std::string, int> m;
 #endif
 		std::string aux;
 		counter = 0;
 		std::string line;
 		while (f >> line) {
-#ifndef MAP
+#ifndef MAP_FUNCTION
 			t.put(line, 1);
 #else
 			m.insert(std::pair<std::string, int>(line, 1));
@@ -166,7 +161,7 @@ std::vector<std::string> get_map_keys_with_prefix(std::map<std::string, int> & m
 		counter = 0;
 		t_init = clock();
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
-#ifndef MAP
+#ifndef MAP_FUNCTION
 			t.get_keys_with_prefix(prefix);
 #else
 			get_map_keys_with_prefix(m, prefix);

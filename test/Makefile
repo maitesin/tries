@@ -10,6 +10,7 @@ REMOVE_NOT_FOUND=$(SRC)/remove_not_found.cpp
 SEARCH_FOUND=$(SRC)/search_found.cpp
 SEARCH_NOT_FOUND=$(SRC)/search_not_found.cpp
 GET_KEYS=$(SRC)/get_keys.cpp
+GET_KEYS_PREFIX=$(SRC)/get_keys_with_prefix.cpp
 BIN=bin
 
 
@@ -18,6 +19,7 @@ all:
 	$(MAKE) remove
 	$(MAKE) search
 	$(MAKE) keys
+	$(MAKE) keys_prefix
 	$(MAKE) run
 	$(MAKE) graphics
 
@@ -26,6 +28,7 @@ clean:
 	$(MAKE) clean_remove
 	$(MAKE) clean_search
 	$(MAKE) clean_keys
+	$(MAKE) clean_keys_prefix
 
 insert: $(INSERT)
 	$(CXX) $(INSERT) $(CXXFLAGS) -I$(TRIE_SOURCE) -DTRIE -o $(BIN)/trie_insert
@@ -91,6 +94,16 @@ keys: $(GET_KEYS)
 clean_keys:
 	rm $(wildcard $(BIN)/*_get_keys)
 
+keys_prefix: $(GET_KEYS_PREFIX)
+	$(CXX) $(GET_KEYS_PREFIX) $(CXXFLAGS) -I$(TRIE_SOURCE) -DTRIE -o $(BIN)/trie_get_keys_prefix
+	$(CXX) $(GET_KEYS_PREFIX) $(CXXFLAGS) -I$(TST_SOURCE) -DTERNARY -o $(BIN)/tst_get_keys_prefix
+	$(CXX) $(GET_KEYS_PREFIX) $(CXXFLAGS) -I$(RADIX_SOURCE) -DRADIX -o $(BIN)/radix_get_keys_prefix
+	$(CXX) $(GET_KEYS_PREFIX) $(CXXFLAGS) -DMAP -o $(BIN)/map_get_keys_prefix
+	$(CXX) $(GET_KEYS_PREFIX) $(CXXFLAGS) -DUMAP -o $(BIN)/umap_get_keys_prefix
+
+clean_keys_prefix:
+	rm $(wildcard $(BIN)/*_get_keys_prefix)
+
 run:
 	echo "Executing: insert.sh"
 	cd scripts && ./insert.sh
@@ -100,8 +113,10 @@ run:
 	cd scripts && ./remove_not_found.sh
 	echo "Executing: search_found.sh"
 	cd scripts && ./search_found.sh
-	echo "Executing: search_not_found.sh"
-	cd scripts && ./search_not_found.sh
+	echo "Executing: get_keys.sh"
+	cd scripts && ./get_keys.sh
+	echo "Executing: get_keys_prefix.sh"
+	cd scripts && ./get_keys_prefix.sh
 
 graphics:
 	echo "Executing: insert.py"
@@ -112,5 +127,7 @@ graphics:
 	cd plots && ./remove_not_found.py
 	echo "Executing: search_found.py"
 	cd plots && ./search_found.py
-	echo "Executing: search_not_found.py"
-	cd plots && ./search_not_found.py
+	echo "Executing: get_keys.py"
+	cd plots && ./get_keys.py
+	echo "Executing: get_keys_prefix.py"
+	cd plots && ./get_keys_prefix.py
