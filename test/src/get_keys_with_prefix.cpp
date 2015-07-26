@@ -83,7 +83,7 @@ std::vector<std::string> get_map_keys_with_prefix(std::unordered_map<std::string
    std::string prefix;
 
    if (argc > 1) {
-	   f = std::ifstream(argv[1]);
+     f.open(argv[1]);
      prefix = argv[2];
      random = false;
    }
