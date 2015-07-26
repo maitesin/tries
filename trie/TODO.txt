@@ -1,4 +1,0 @@
-- WRITE THE DOCU!!
-- write more performance test:
-	- get_keys
-	- get_keys_with_prefix
