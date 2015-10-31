@@ -17,7 +17,7 @@ namespace Trie {
 			std::array<std::unique_ptr<node<T,R>>, R> sons;
 			unsigned int s;
 			unsigned int r;
-			
+
 			explicit node(T v = T()) : value(v), s(0), r(R) {
 				sons = std::array<std::unique_ptr<node<T,R>>, R>();
 				for (unsigned int i = 0; i < r; ++i) {
