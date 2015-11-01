@@ -23,34 +23,37 @@
 #include <unordered_map>
 #endif
 
-// Definition of the default parameters
+//////////////////////////////////////////
+// Definition of the default parameters //
+//////////////////////////////////////////
+
+// Minimum size of the generated strings 
 #ifndef MIN_SIZE
 #define MIN_SIZE 10
 #endif
+
+// Maximum size of the generated strings
 #ifndef MAX_SIZE
 #define MAX_SIZE 100000000
 #endif
+
+// Amount of time running the test
 #ifndef SECONDS_LOOP
 #define SECONDS_LOOP 10.0
 #endif
+
+// Salt for the random to generate strings
 #ifndef SALT
 #define SALT 0
 #endif
-#ifdef ALPHANUM
-#define ALPHABET "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-#define LENGTH 62
-#else
+
+// How many different characters can have our strings. Basicly, UTF-8
 #define LENGTH 256
-#endif
 
 std::string get_random_string(unsigned int len) {
 	std::string result = "";
 	for (unsigned int i = 0; i < len; ++i){
-		#ifdef ALPHANUM
-		result += ALPHABET[rand()%LENGTH];
-		#else
 		result += static_cast<char>(rand()%LENGTH);
-		#endif
 	}
 	return result;
 }
@@ -111,7 +114,7 @@ int main(void) {
 #else
 			get_map_keys(m);
 #endif
-			++counter;			
+			++counter;
 		}
 		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
 		std::cout << size << "\t" << us/counter << std::endl;
