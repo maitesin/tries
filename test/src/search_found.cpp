@@ -2,20 +2,33 @@
 #include <ctime>
 #include <cstdlib>
 
-// Conditional include for dependencies
+//////////////////////////////////////////
+// Conditional include for dependencies //
+//////////////////////////////////////////
+
+// Trie
 #ifdef TRIE
 #include <trie.cpp>
 #endif
+
+// Ternary Search Tree
 #ifdef TERNARY
 #include <TST.cpp>
 #endif
+
+// Radix Tree
 #ifdef RADIX
 #include <radix_tree.cpp>
 #endif
+
+// Map
 #ifdef MAP
+#define MAP_FUNCTION
 #include <map>
 #endif
+// Unordered Map
 #ifdef UMAP
+#define MAP_FUNCTION
 #include <unordered_map>
 #endif
 
@@ -47,6 +60,10 @@
 #define LENGTH 256
 
 
+//////////////////////
+// Useful functions //
+//////////////////////
+
 std::string get_random_string(unsigned int len) {
 	std::string result = "";
 	for (unsigned int i = 0; i < len; ++i){
@@ -62,13 +79,13 @@ int main(void) {
 
 	for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
 #ifdef TRIE
-		Trie::trie<int, 256> t;
+		Trie::trie<int, LENGTH> t;
 #endif
 #ifdef TERNARY
 		TST::tst<int> t;
 #endif
 #ifdef RADIX
-		RadixTree::radix_tree<int, 256> t;
+		RadixTree::radix_tree<int, LENGTH> t;
 #endif
 #ifdef MAP
 		std::map<std::string, int> m;
@@ -104,6 +121,5 @@ int main(void) {
 		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
 		std::cout << size << "\t" << us/counter << std::endl;
 	}
-
 	return 0;
 }

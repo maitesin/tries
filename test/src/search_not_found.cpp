@@ -2,22 +2,36 @@
 #include <ctime>
 #include <cstdlib>
 
-// Conditional include for dependencies
+//////////////////////////////////////////
+// Conditional include for dependencies //
+//////////////////////////////////////////
+
+// Trie
 #ifdef TRIE
 #include <trie.cpp>
 #endif
+
+// Ternary Search Tree
 #ifdef TERNARY
 #include <TST.cpp>
 #endif
+
+// Radix Tree
 #ifdef RADIX
 #include <radix_tree.cpp>
 #endif
+
+// Map
 #ifdef MAP
+#define MAP_FUNCTION
 #include <map>
 #endif
+// Unordered Map
 #ifdef UMAP
+#define MAP_FUNCTION
 #include <unordered_map>
 #endif
+
 
 //////////////////////////////////////////
 // Definition of the default parameters //
@@ -43,8 +57,13 @@
 #define SALT 0
 #endif
 
-// How many different characters can have our strings. Basicly, UTF-8
+// How many different characters can have our strings. Basicly, Extended ASCII
 #define LENGTH 256
+
+
+//////////////////////
+// Useful functions //
+//////////////////////
 
 std::string get_random_string(unsigned int len) {
 	std::string result = "";
@@ -54,6 +73,11 @@ std::string get_random_string(unsigned int len) {
 	return result;
 }
 
+
+//////////
+// Main //
+//////////
+
 int main(void) {
 	time_t t_init;
 	float us;
@@ -62,13 +86,13 @@ int main(void) {
 	srand(SALT);
 	for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
 #ifdef TRIE
-		Trie::trie<int, 256> t;
+		Trie::trie<int, LENGTH> t;
 #endif
 #ifdef TERNARY
 		TST::tst<int> t;
 #endif
 #ifdef RADIX
-		RadixTree::radix_tree<int, 256> t;
+		RadixTree::radix_tree<int, LENGTH> t;
 #endif
 #ifdef MAP
 		std::map<std::string, int> m;
