@@ -107,9 +107,9 @@ int main(int argc, char * argv[]) {
    std::string prefix;
 
    if (argc > 1) {
-     f.open(argv[1]);
-     prefix = argv[2];
-     random = false;
+	f.open(argv[1]);
+	prefix = argv[2];
+	random = false;
    }
 
    if (random) {
@@ -173,7 +173,6 @@ int main(int argc, char * argv[]) {
 		std::unordered_map<std::string, int> m;
 #endif
 		std::string aux;
-		counter = 0;
 		std::string line;
 		while (f >> line) {
 #ifndef MAP_FUNCTION
@@ -193,7 +192,7 @@ int main(int argc, char * argv[]) {
 			++counter;
 		}
 		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
-		std::cout << size << "\t" << us/counter << std::endl;
+		std::cout << us/counter << std::endl;
 	}
 	return 0;
 }
