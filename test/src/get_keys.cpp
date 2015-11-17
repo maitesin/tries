@@ -2,6 +2,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <vector>
+#include <fstream>
 #include <string>
 
 //////////////////////////////////////////
@@ -93,12 +94,61 @@ std::vector<std::string> get_map_keys(std::unordered_map<std::string, int> & m) 
 // Main //
 //////////
 
-int main(void) {
+int main(int argc, char * argv[]) {
 	time_t t_init;
 	float us;
 	int size, counter;
+	bool random = true;
+	std::ifstream f;
 
-	for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
+	if (argc > 1) {
+		f.open(argv[1]);
+		random = false;
+	}
+
+	if (random) {
+		for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
+#ifdef TRIE
+			Trie::trie<int, LENGTH> t;
+#endif
+#ifdef TERNARY
+			TST::tst<int> t;
+#endif
+#ifdef RADIX
+			RadixTree::radix_tree<int, LENGTH> t;
+#endif
+#ifdef MAP
+			std::map<std::string, int> m;
+#endif
+#ifdef UMAP
+			std::unordered_map<std::string, int> m;
+#endif
+			std::string aux;
+			counter = 0;
+			srand(SALT);
+			for (unsigned int j = 0; j < size; ++j) {
+				aux = get_random_string(rand()%size);
+#ifndef MAP_FUNCTION
+				t.put(aux, 1);
+#else
+				m.insert(std::pair<std::string, int>(aux, 1));
+#endif
+			}
+			counter = 0;
+			t_init = clock();
+			while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
+#ifndef MAP_FUNCTION
+				t.get_keys();
+#else
+				get_map_keys(m);
+#endif
+				++counter;
+			}
+			us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
+			std::cout << size << "\t" << us/counter << std::endl;
+		}
+	} else {
+	//Reading input from a file
 #ifdef TRIE
 		Trie::trie<int, LENGTH> t;
 #endif
@@ -112,24 +162,21 @@ int main(void) {
 		std::map<std::string, int> m;
 #endif
 #ifdef UMAP
-#define MAP
 		std::unordered_map<std::string, int> m;
 #endif
 		std::string aux;
-		counter = 0;
-		srand(SALT);
-		for (unsigned int j = 0; j < size; ++j) {
-			aux = get_random_string(rand()%size);
-#ifndef MAP
-			t.put(aux, 1);
+		std::string line;
+		while (f >> line) {
+#ifndef MAP_FUNCTION
+			t.put(line, 1);
 #else
-			m.insert(std::pair<std::string, int>(aux, 1));
+			m.insert(std::pair<std::string, int>(line, 1));
 #endif
 		}
 		counter = 0;
 		t_init = clock();
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
-#ifndef MAP
+#ifndef MAP_FUNCTION
 			t.get_keys();
 #else
 			get_map_keys(m);
@@ -137,8 +184,7 @@ int main(void) {
 			++counter;
 		}
 		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
-		std::cout << size << "\t" << us/counter << std::endl;
+		std::cout << us/counter << std::endl;
 	}
-
 	return 0;
 }
