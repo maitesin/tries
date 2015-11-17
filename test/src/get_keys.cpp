@@ -173,6 +173,8 @@ int main(int argc, char * argv[]) {
 			m.insert(std::pair<std::string, int>(line, 1));
 #endif
 		}
+		f.close();
+
 		counter = 0;
 		t_init = clock();
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
