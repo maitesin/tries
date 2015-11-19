@@ -2,6 +2,9 @@
 #include <ctime>
 #include <cstdlib>
 #include <sys/resource.h>
+#include <fstream>
+#include <string>
+
 
 //////////////////////////////////////////
 // Conditional include for dependencies //
@@ -78,15 +81,53 @@ std::string get_random_string(unsigned int len) {
 // Main //
 //////////
 
-int main(void) {
+int main(int argc, char * argv[]) {
 	time_t t_init;
 	float us;
 	int size, counter;
 	struct rusage usage;
+	bool random = true;
+	std::ifstream f;
 
-	srand(SALT);
+	if (argc > 1) {
+		f.open(argv[1]);
+		random = false;
+	}
 
-	for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
+	if (random) {
+		srand(SALT);
+
+		for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
+#ifdef TRIE
+			Trie::trie<int, LENGTH> t;
+#endif
+#ifdef TERNARY
+			TST::tst<int> t;
+#endif
+#ifdef RADIX
+			RadixTree::radix_tree<int, LENGTH> t;
+#endif
+#ifdef MAP
+			std::map<std::string, int> m;
+#endif
+#ifdef UMAP
+			std::unordered_map<std::string, int> m;
+#endif
+			counter = 0;
+			t_init = clock();
+			while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
+#ifndef MAP_FUNCTION
+				t.put(get_random_string(rand()%size), 1);
+#else
+				m.insert(std::pair<std::string, int>(get_random_string(rand()%size), 1));
+#endif
+				++counter;
+			}
+			us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
+			getrusage(RUSAGE_SELF,&usage);
+			std::cout << size << "\t" << us/counter << "\t" << usage.ru_maxrss<< std::endl;
+		}
+	} else {
 #ifdef TRIE
 		Trie::trie<int, LENGTH> t;
 #endif
@@ -100,23 +141,21 @@ int main(void) {
 		std::map<std::string, int> m;
 #endif
 #ifdef UMAP
-#define MAP
 		std::unordered_map<std::string, int> m;
 #endif
-		counter = 0;
-		t_init = clock();
-		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
-#ifndef MAP
-			t.put(get_random_string(rand()%size), 1);
+		std::string aux;
+		std::string line;
+		while (f >> line) {
+#ifndef MAP_FUNCTION
+			t.put(line, 1);
 #else
-			m.insert(std::pair<std::string, int>(get_random_string(rand()%size), 1));
+			m.insert(std::pair<std::string, int>(line, 1));
 #endif
-			++counter;
 		}
-		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
-		getrusage(RUSAGE_SELF,&usage);
-		std::cout << size << "\t" << us/counter << "\t" << usage.ru_maxrss<< std::endl;
-	}
+		f.close();
 
+		getrusage(RUSAGE_SELF,&usage);
+		std::cout << "\t" << usage.ru_maxrss<< std::endl;
+	}
 	return 0;
 }
