@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
+#include "test_utils.h"
 
 //////////////////////////////////////////
 // Conditional include for dependencies //
@@ -61,21 +62,10 @@
 #define SALT 0
 #endif
 
-// How many different characters can have our strings. Basicly, Extended ASCII
-#define LENGTH 256
-
 
 //////////////////////
 // Useful functions //
 //////////////////////
-
-std::string get_random_string(unsigned int len) {
-	std::string result = "";
-	for (unsigned int i = 0; i < len; ++i){
-		result += static_cast<char>(rand()%LENGTH);
-	}
-	return result;
-}
 
 #ifdef MAP
 std::vector<std::string> get_map_keys_with_prefix(std::map<std::string, int> & m, std::string & prefix) {

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include "test_utils.h"
 
 //////////////////////////////////////////
 // Conditional include for dependencies //
@@ -56,23 +57,6 @@
 #ifndef SALT
 #define SALT 0
 #endif
-
-// How many different characters can have our strings. Basicly, Extended ASCII
-#define LENGTH 256
-
-
-//////////////////////
-// Useful functions //
-//////////////////////
-
-std::string get_random_string(unsigned int len) {
-	std::string result = "";
-	for (unsigned int i = 0; i < len; ++i){
-		result += static_cast<char>(rand()%LENGTH);
-	}
-	return result;
-}
-
 
 //////////
 // Main //
