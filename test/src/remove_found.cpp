@@ -1,6 +1,9 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include <fstream>
+#include <string>
+#include <unordered_set>
 #include "test_utils.h"
 
 //////////////////////////////////////////
@@ -61,12 +64,63 @@
 // Main //
 //////////
 
-int main(void) {
+int main(int argc, char * argv[]) {
 	time_t t_init;
 	float us;
 	int size, counter;
+	bool random = true;
+	std::ifstream f;
 
-	for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
+	if (argc > 1) {
+		f.open(argv[1]);
+		random = false;
+	}
+
+	if (random) {
+		for (size = MIN_SIZE; size <= MAX_SIZE; size *= 2) {
+#ifdef TRIE
+			Trie::trie<int, LENGTH> t;
+#endif
+#ifdef TERNARY
+			TST::tst<int> t;
+#endif
+#ifdef RADIX
+			RadixTree::radix_tree<int, LENGTH> t;
+#endif
+#ifdef MAP
+			std::map<std::string, int> m;
+#endif
+#ifdef UMAP
+			std::unordered_map<std::string, int> m;
+#endif
+			std::string aux;
+			counter = 0;
+			srand(SALT);
+			t_init = clock();
+			while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
+				aux = get_random_string(rand()%size);
+#ifndef MAP_FUNCTION
+				t.put(aux, 1);
+#else
+				m.insert(std::pair<std::string, int>(aux, 1));
+#endif
+			}
+
+			srand(SALT);
+			t_init = clock();
+			while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
+				aux = get_random_string(rand()%size);
+#ifndef MAP_FUNCTION
+				t.remove(aux);
+#else
+				m.erase(aux);
+#endif
+				++counter;
+			}
+			us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
+			std::cout << size << "\t" << us/counter << std::endl;
+		}
+	} else {
 #ifdef TRIE
 		Trie::trie<int, LENGTH> t;
 #endif
@@ -80,35 +134,36 @@ int main(void) {
 		std::map<std::string, int> m;
 #endif
 #ifdef UMAP
-#define MAP
 		std::unordered_map<std::string, int> m;
 #endif
-		std::string aux;
-		counter = 0;
-		srand(SALT);
-		t_init = clock();
-		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
-			aux = get_random_string(rand()%size);
-#ifndef MAP
-			t.put(aux, 1);
-#else
-			m.insert(std::pair<std::string, int>(aux, 1));
-#endif
-		}
+		std::unordered_set<std::string> words;
 
-		srand(SALT);
-		t_init = clock();
-		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
-			aux = get_random_string(rand()%size);
-#ifndef MAP
-			t.remove(aux);
+		std::string aux;
+		std::string line;
+		while (f >> line) {
+#ifndef MAP_FUNCTION
+			t.put(line, 1);
 #else
-			m.erase(aux);
+			m.insert(std::pair<std::string, int>(line, 1));
+#endif
+			words.insert(line);
+		}
+		f.close();
+
+		counter = 0;
+		t_init = clock();
+		auto it = words.begin();
+		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC && it != words.end()) {
+#ifndef MAP_FUNCTION
+			t.remove(*it);
+#else
+			m.erase(*it);
 #endif
 			++counter;
+			++it;
 		}
 		us = 1e6*float(clock() - t_init)/CLOCKS_PER_SEC;
-		std::cout << size << "\t" << us/counter << std::endl;
+		std::cout << us/counter << std::endl;
 	}
 	return 0;
 }
