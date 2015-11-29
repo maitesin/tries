@@ -12,6 +12,7 @@ SEARCH_NOT_FOUND=$(SRC)/search_not_found.cpp
 GET_KEYS=$(SRC)/get_keys.cpp
 GET_KEYS_PREFIX=$(SRC)/get_keys_with_prefix.cpp
 BIN=bin
+DICT=dict
 
 
 all:
@@ -20,6 +21,7 @@ all:
 	$(MAKE) search
 	$(MAKE) keys
 	$(MAKE) keys_prefix
+	$(MAKE) dicts
 	$(MAKE) run
 	$(MAKE) graphics
 
@@ -103,6 +105,9 @@ keys_prefix: $(GET_KEYS_PREFIX)
 
 clean_keys_prefix:
 	rm $(wildcard $(BIN)/*_get_keys_prefix)
+
+dicts:
+	tar zxf $(DICT)/dicts.tar.gz -C $(DICT)
 
 run:
 	echo "Executing: insert.sh"
