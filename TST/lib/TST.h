@@ -26,7 +26,7 @@ namespace TST {
 	template <class T>
 		using node_ptr = std::unique_ptr<node<T>>;
 	using vec_ptr = std::unique_ptr<std::vector<std::string>>;
-	
+
 	/**
 	 * Ternary Search Tree (TST)
 	 */
@@ -35,13 +35,13 @@ namespace TST {
 	public:
 		// Constructor
 		explicit tst() : root(nullptr), s(0){}
-		
+
 		// Destructor
 		~tst() {
 		        if (root != nullptr)
 			        clean(std::move(root));
 		}
-		
+
 		// Methods
 				/*
 		 * This method is to allow the user to clean the
@@ -104,16 +104,12 @@ namespace TST {
 
 		/*
 		 * This method returns a vector of all keys in the
-		 * TST with the prefix provided.
+		 * TST with the prefix provided. Moreover, if there
+		 * is no prefix provided it will return all keys in
+		 * the TST.
 		 */
-		std::vector<std::string> get_keys_with_prefix(const std::string & prefix);
+		std::vector<std::string> get_keys(const std::string & prefix = "");
 
-		/*
-		 * This method returns all the keys in the TST.
-		 *
-		 */
-		std::vector<std::string> get_keys();
-		
 	private:
 		// Atributes
 		node_ptr<T> root;
@@ -165,7 +161,7 @@ namespace TST {
 		 * d we begin to delete all the nodes from that
 		 * one up to the first node with at least one of
 		 * the pointers different from nullptr.
-		 */		
+		 */
 		bool remove(node_ptr<T> & n,
 			    const std::string & key,
 			    unsigned int d,
@@ -177,7 +173,7 @@ namespace TST {
 		 * d we check if the value is different from the
 		 * default value of T. If all that happens return
 		 * true else return false.
-		 */		
+		 */
 		bool contains(node_ptr<T> & n,
 			      const std::string & key,
 			      unsigned int d);
@@ -187,17 +183,17 @@ namespace TST {
 		 * the prefix exists. When the prefix length is
 		 * equal to d then it calls gather keys to get
 		 * all keys with that prefix.
-		 */		
-		void get_keys_with_prefix(node_ptr<T> & n,
-					  std::string prefix,
-					  unsigned int d,
-					  vec_ptr & v);
+		 */
+		void get_keys(node_ptr<T> & n,
+			      std::string prefix,
+			      unsigned int d,
+			      vec_ptr & v);
 
 		/*
 		 * Given a node goes to all its sons to gather
 		 * all the keys that are under the given node.
 		 * All those keys are stored in the vector.
-		 */		
+		 */
 		void gather_keys(node_ptr<T> & n,
 				 std::string prefix,
 				 vec_ptr & v);
@@ -207,7 +203,6 @@ namespace TST {
 
 		void show(node_ptr<T> &n,
 				int & label);
-		
 	}; // TST_CLASS
 
 }; // TST_NAMESPACE

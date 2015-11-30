@@ -257,48 +257,40 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 }
 
 template <class T>
-std::vector<std::string> TST::tst<T>::get_keys() {
+std::vector<std::string> TST::tst<T>::get_keys(const std::string & prefix) {
 	vec_ptr vec;
 	vec = vec_ptr(new std::vector<std::string>());
-	get_keys_with_prefix(root, "", 0, vec);
+	get_keys(root, prefix, 0, vec);
 	return *vec;
 }
 
 template <class T>
-std::vector<std::string> TST::tst<T>::get_keys_with_prefix(const std::string & prefix) {
-	vec_ptr vec;
-	vec = vec_ptr(new std::vector<std::string>());
-	get_keys_with_prefix(root, prefix, 0, vec);
-	return *vec;
-}
-
-template <class T>
-void TST::tst<T>::get_keys_with_prefix(TST::node_ptr<T> & n,
-				    std::string prefix,
-				    unsigned int d,
-				    TST::vec_ptr & v) {
+void TST::tst<T>::get_keys(TST::node_ptr<T> & n,
+			   std::string prefix,
+			   unsigned int d,
+			   TST::vec_ptr & v) {
 	if (prefix.size() <= d + 1) {
 		if (prefix.size() == d + 1){
 			if (n->c > prefix[d] && n->left != nullptr)
-				get_keys_with_prefix(n->left, prefix, d, v);
+				get_keys(n->left, prefix, d, v);
 			if (n->c == prefix[d]) {
 				if (n->value != def)
 					v->push_back(prefix);
 				gather_keys(n->middle, prefix, v);
 			}
 			if (n->c < prefix[d] && n->right != nullptr)
-				get_keys_with_prefix(n->right, prefix, d, v);
+				get_keys(n->right, prefix, d, v);
 		}
 		else
 			gather_keys(n, prefix, v);
 	} else {
 	        if (n->c > prefix[d] && n->left != nullptr){
-			get_keys_with_prefix(n->left, prefix, d, v);
+			get_keys(n->left, prefix, d, v);
 		}
 		if (n->c == prefix[d] && n->middle != nullptr)
-			get_keys_with_prefix(n->middle, prefix, d+1, v);
+			get_keys(n->middle, prefix, d+1, v);
 		if (n->c < prefix[d] && n->right != nullptr){
-			get_keys_with_prefix(n->right, prefix, d, v);
+			get_keys(n->right, prefix, d, v);
 		}
 	}
 }
