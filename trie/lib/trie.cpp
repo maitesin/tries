@@ -140,32 +140,24 @@ bool Trie::trie<T,R>::remove(Trie::node_ptr<T,R> & n,
 
 
 template <class T, size_t R>
-std::vector<std::string> Trie::trie<T,R>::get_keys() {
+std::vector<std::string> Trie::trie<T,R>::get_keys(const std::string & prefix) {
 	vec_ptr vec;
 	vec = vec_ptr(new std::vector<std::string>());
-	gather_keys(root, "", vec);
+	get_keys(root, prefix, 0, vec);
 	return *vec;
 }
 
 template <class T, size_t R>
-std::vector<std::string> Trie::trie<T,R>::get_keys_with_prefix(const std::string & prefix) {
-	vec_ptr vec;
-	vec = vec_ptr(new std::vector<std::string>());
-	get_keys_with_prefix(root, prefix, 0, vec);
-	return *vec;
-}
-
-template <class T, size_t R>
-void Trie::trie<T,R>::get_keys_with_prefix(Trie::node_ptr<T,R> & n,
-					   std::string prefix,
-					   unsigned int d,
-					   vec_ptr & v) {
+void Trie::trie<T,R>::get_keys(Trie::node_ptr<T,R> & n,
+			       std::string prefix,
+			       unsigned int d,
+			       vec_ptr & v) {
 	if (prefix.size() == d) {
 		gather_keys(n, prefix, v);
 	} else {
 		if (n->sons[prefix[d]] != nullptr)
-			get_keys_with_prefix(n->sons[prefix[d]], prefix, d+1, v);
-	}  
+			get_keys(n->sons[prefix[d]], prefix, d+1, v);
+	}
 }
 
 template <class T, size_t R>

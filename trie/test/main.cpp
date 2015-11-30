@@ -5,8 +5,8 @@ class TrieTest : public testing::Test {
 protected:
   virtual void TearDown() {
     t.clean();
-  }    
-  
+  }
+
   Trie::trie<int, 256> t;
 }; // class
 
@@ -140,32 +140,32 @@ TEST_F(TrieTest, MethodGetKeyWithPrefix) {
 
   std::vector<std::string> vec;
   // With prefix Hel
-  vec = t.get_keys_with_prefix("Hel");
+  vec = t.get_keys("Hel");
   EXPECT_EQ(1, vec.size()) << "This should be 1";
   EXPECT_EQ(hello, vec[0]) << "This should be 'Hello'";
   // With prefix N
-  vec = t.get_keys_with_prefix("N");
+  vec = t.get_keys("N");
   EXPECT_EQ(1, vec.size()) << "This should be 1";
   EXPECT_EQ(no, vec[0]) << "This should be 'No'";
   // With prefix No
-  vec = t.get_keys_with_prefix("No");
+  vec = t.get_keys("No");
   EXPECT_EQ(1, vec.size()) << "This should be 1";
   EXPECT_EQ(no, vec[0]) << "This should be 'No'";
   // With prefix Nos
-  vec = t.get_keys_with_prefix("Nos");
+  vec = t.get_keys("Nos");
   EXPECT_EQ(0, vec.size()) << "This should be 0";
   // With prefix W
-  vec = t.get_keys_with_prefix("W");
+  vec = t.get_keys("W");
   EXPECT_EQ(2, vec.size()) << "This should be 2";
   EXPECT_EQ(wololo, vec[0]) << "This should be 'Wololo'";
   EXPECT_EQ(world, vec[1]) << "This should be 'World'";
   // With prefix Wo
-  vec = t.get_keys_with_prefix("Wo");
+  vec = t.get_keys("Wo");
   EXPECT_EQ(2, vec.size()) << "This should be 2";
   EXPECT_EQ(wololo, vec[0]) << "This should be 'Wololo'";
   EXPECT_EQ(world, vec[1]) << "This should be 'World'";
   // With prefix Wou
-  vec = t.get_keys_with_prefix("Wou");
+  vec = t.get_keys("Wou");
   EXPECT_EQ(0, vec.size()) << "This should be 0";
 }
 
@@ -207,7 +207,7 @@ TEST_F(TrieTest, EmptyStringParameterTest) {
 	EXPECT_EQ(false, t.contains("")) << "Contains from an empty string should be 0 ALWAYS";
 	EXPECT_EQ(3, t.size()) << "Even after all those attempts the size should remain 3";
 	std::vector<std::string> vec;
-	vec = t.get_keys_with_prefix("");
+	vec = t.get_keys("");
 	EXPECT_EQ(3, vec.size()) << "This should be easy";
 }
 
@@ -240,17 +240,17 @@ TEST_F(TrieTest, LongTest) {
 
   // Getting some keys with prefix "He". Should be 2.
   std::vector<std::string> keys;
-  keys = t.get_keys_with_prefix("He");
+  keys = t.get_keys("He");
   EXPECT_EQ(2, keys.size()) << "This should be 2";
   EXPECT_EQ(he, keys[0]);
   EXPECT_EQ(hello, keys[1]);
 
   // Getting some keys with prefix "Hi". Should be none
-  keys = t.get_keys_with_prefix("His");
+  keys = t.get_keys("His");
   EXPECT_EQ(0, keys.size()) << "This should be 0";
 
   // Gettin some keys with prefix "H". Should be 2.
-  keys = t.get_keys_with_prefix("H");
+  keys = t.get_keys("H");
   EXPECT_EQ(2, keys.size()) << "This should be 2";
   EXPECT_EQ(he, keys[0]);
   EXPECT_EQ(hello, keys[1]);
@@ -264,21 +264,21 @@ TEST_F(TrieTest, LongTest) {
   // Removing hello
   t.remove(hello);
   EXPECT_EQ(4, t.size()) << "This should be 4";
-  keys = t.get_keys_with_prefix("He");
+  keys = t.get_keys("He");
   EXPECT_EQ(1, keys.size()) << "This should be 1";
   EXPECT_EQ(he, keys[0]);
   EXPECT_EQ(0, t.get(hello)) << "This should be 0";
   // Removing hello again. Shoul not make any difference
   t.remove(hello);
   EXPECT_EQ(4, t.size()) << "This should be 4";
-  keys = t.get_keys_with_prefix("He");
+  keys = t.get_keys("He");
   EXPECT_EQ(1, keys.size()) << "This should be 1";
   EXPECT_EQ(he, keys[0]);
   EXPECT_EQ(0, t.get(hello)) << "This should be 0";
   // Re-adding hello again
   t.put(hello, 1);
   EXPECT_EQ(5, t.size()) << "This should be 5";
-  keys = t.get_keys_with_prefix("He");
+  keys = t.get_keys("He");
   EXPECT_EQ(2, keys.size()) << "This should be 2";
   EXPECT_EQ(he, keys[0]);
   EXPECT_EQ(hello, keys[1]);
@@ -287,21 +287,21 @@ TEST_F(TrieTest, LongTest) {
   // Removing he
   t.remove(he);
   EXPECT_EQ(4, t.size()) << "This should be 4";
-  keys = t.get_keys_with_prefix("He");
+  keys = t.get_keys("He");
   EXPECT_EQ(1, keys.size()) << "This should be 1";
   EXPECT_EQ(hello, keys[0]);
   EXPECT_EQ(0, t.get(he)) << "This should be 0";
   // Removing hello again. Shoul not make any difference
   t.remove(he);
   EXPECT_EQ(4, t.size()) << "This should be 4";
-  keys = t.get_keys_with_prefix("He");
+  keys = t.get_keys("He");
   EXPECT_EQ(1, keys.size()) << "This should be 1";
   EXPECT_EQ(hello, keys[0]);
   EXPECT_EQ(0, t.get(he)) << "This should be 0";
   // Re-adding hello again
   t.put(he, 7);
   EXPECT_EQ(5, t.size()) << "This should be 5";
-  keys = t.get_keys_with_prefix("He");
+  keys = t.get_keys("He");
   EXPECT_EQ(2, keys.size()) << "This should be 2";
   EXPECT_EQ(he, keys[0]);
   EXPECT_EQ(hello, keys[1]);
