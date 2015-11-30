@@ -23,18 +23,18 @@ namespace RadixTree {
 				sons = std::array<std::unique_ptr<node<T,R>>, R>();
 				for (unsigned int i = 0; i < r; ++i) {
 					sons[i] = nullptr;
-				}				
+				}
 			}
 		};
-	
-	
+
+
 	/*
 	 * Utils
 	 */
 	template <class T, size_t R>
 		using node_ptr = std::unique_ptr<node<T,R>>;	
 	using vec_ptr = std::unique_ptr<std::vector<std::string>>;
-	
+
 	/*
 	 * Radix Tree
 	 */
@@ -46,7 +46,7 @@ namespace RadixTree {
 			roots = std::array<node_ptr<T,R>, R>();
 			for (unsigned int i = 0; i < r; ++i) {
 				roots[i] = nullptr;
-			}				
+			}
 		}
 		// Destructor
 		~radix_tree() {
@@ -71,7 +71,7 @@ namespace RadixTree {
 		  roots = std::array<node_ptr<T,R>, R>();
 		  for (unsigned int i = 0; i < r; ++i) {
 		    roots[i] = nullptr;
-		  }				
+		  }
 		}
 		/*
 		 * This method return the value stored in the radix tree
@@ -80,7 +80,7 @@ namespace RadixTree {
 		 * for the value type.
 		 */
 		const T & get(const std::string & key);
-		
+
 		/*
 		 * This method is used to add a new key to the radix tree.
 		 * You must provide the key and the value to store.
@@ -91,19 +91,19 @@ namespace RadixTree {
 		 */
 		void put(const std::string & key,
 			 const T & value);
-		
+
 		/*
 		 * This method return the amount of elements stored
 		 * in the radix tree.
 		 */
 		unsigned int size() {return s;}
-		
+
 		/*
 		 * This is an auxiliary method to print in the screen
 		 * the current set of keys of the radix tree.
 		 */
 		void show();
-		
+
 		/*
 		 * This method is to remove a value from the radix tree.
 		 * You must provide the key that holds the value.
@@ -113,25 +113,21 @@ namespace RadixTree {
 		 * nothing will happen.
 		 */
 		void remove(const std::string & key);
-		
+
 		/*
 		 * This method tells you if a given key is in the
 		 * radix tree.
 		 */
 		bool contains(const std::string & key);
-		
+
 		/*
 		 * This method returns a vector of all keys in the
-		 * radix tree with the prefix provided.
+		 * radix tree with the prefix provided. Moreover, if
+		 * there is not prefix provided it will return all 
+		 * keys in the Radix Tree.
 		 */
-		std::vector<std::string> get_keys_with_prefix(const std::string & prefix);
-		
-		/*
-		 * This method returns all the keys in the radix tree.
-		 *
-		 */
-		std::vector<std::string> get_keys();
-		
+		std::vector<std::string> get_keys(const std::string & prefix = "");
+
 	private:
 		// Atributes
 		std::array<node_ptr<T,R>, R> roots;
@@ -180,18 +176,18 @@ namespace RadixTree {
 		void find_diff_and_split(node_ptr<T,R> & n,
 					 const std::string & key,
 					 const T & value);
-			
+
 		/*
 		 * Given a node deleted everything under it.
 		 */
 		void clean(node_ptr<T,R> n);
-		
+
 		/*
 		 * Given a node it checks if the d-th position in
 		 * the key exists. When the key length is equal to
 		 * d we begin to delete all the nodes from that
 		 * one up to the first node with at least one son.
-		 */		
+		 */
 		bool remove(node_ptr<T,R> & n,
 			    const std::string & key,
 			    unsigned int d,
@@ -207,7 +203,7 @@ namespace RadixTree {
 		 * d we check if the value is different from the
 		 * default value of T. If all that happens return
 		 * true else return false.
-		 */		
+		 */
 		bool contains(node_ptr<T,R> & n,
 			      const std::string & key,
 			      unsigned int d);
@@ -217,11 +213,11 @@ namespace RadixTree {
 		 * the prefix exists. When the prefix length is
 		 * equal to d then it calls gather keys to get
 		 * all keys with that prefix.
-		 */		
-		void get_keys_with_prefix(node_ptr<T,R> & n,
-					  std::string prefix,
-					  unsigned int d,
-					  vec_ptr & v);
+		 */
+		void get_keys(node_ptr<T,R> & n,
+			      std::string prefix,
+			      unsigned int d,
+			      vec_ptr & v);
 
 		std::string get_prefix_cut(std::string & prefix,
 					   unsigned int d);
@@ -230,7 +226,7 @@ namespace RadixTree {
 		 * Given a node goes to all its sons to gather
 		 * all the keys that are under the given node.
 		 * All those keys are stored in the vector.
-		 */		
+		 */
 		void gather_keys(node_ptr<T,R> & n,
 				 std::string prefix,
 				 vec_ptr & v);
@@ -241,7 +237,7 @@ namespace RadixTree {
 
 		void show(node_ptr<T,R> & n,
 			  int & label);
-		
+
 	}; // RADIX_TREE_CLASS
 
 }; // RADIX_TREE_NAMESPACE
