@@ -114,6 +114,12 @@ namespace Trie {
 		 */
 		std::vector<std::string> keys(const std::string & prefix = "");
 
+		/*
+		 * This method returns the longest common prefix
+		 * of the content in the Trie.
+		 */
+		std::string lcp();
+
 	private:
 		// Atributes
 		node_ptr<T,R> root;
@@ -200,6 +206,11 @@ namespace Trie {
 		 */
 		void show_label(node_ptr<T,R> & n, int pos, int & label);
 		void show(node_ptr<T,R> & n, int pos, int & label);
+
+		/*
+		 * Returns the longest common prefix
+		 */
+		std::string lcp(node_ptr<T,R> &n, std::string s);
 	}; // TRIE_CLASS
 
 }; // TRIE_NAMESPACE
