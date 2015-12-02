@@ -5,8 +5,8 @@
 #include "./TST.h"
 
 template <class T>
-const T & TST::tst<T>::get(const std::string & key) {
-	node_ptr<T> node (get(root, key, 0));
+const T & TST::tst<T>::find(const std::string & key) {
+	node_ptr<T> node (find(root, key, 0));
 	if (node != nullptr) {
 		aux_ret = node->value;
 		node.release();
@@ -18,7 +18,7 @@ const T & TST::tst<T>::get(const std::string & key) {
 }
 
 template <class T>
-TST::node_ptr<T> TST::tst<T>::get(TST::node_ptr<T> & n,
+TST::node_ptr<T> TST::tst<T>::find(TST::node_ptr<T> & n,
 				  const std::string & key,
 				  unsigned int d) {
 	if (key.size() == d + 1) {
@@ -26,7 +26,7 @@ TST::node_ptr<T> TST::tst<T>::get(TST::node_ptr<T> & n,
 			return nullptr;
 		else {
 			if (n->c >  key[d] && n->left != nullptr) {
-				return get(n->left, key, d);
+				return find(n->left, key, d);
 			}
 			if (n->c == key[d]) {
 				if (n->value != def)
@@ -35,17 +35,17 @@ TST::node_ptr<T> TST::tst<T>::get(TST::node_ptr<T> & n,
 					return nullptr;
 			}
 			if (n->c <  key[d] && n->right != nullptr) {
-				return get(n->right, key, d);
+				return find(n->right, key, d);
 			}
 		}
 	} else {
 	        if (n != nullptr) {
 			if (n->c >  key[d] && n->left != nullptr) {
-				return get(n->left, key, d);
+				return find(n->left, key, d);
 			}
-			if (n->c == key[d]) return get(n->middle, key, d+1);
+			if (n->c == key[d]) return find(n->middle, key, d+1);
 			if (n->c <  key[d] && n->right != nullptr) {
-				return get(n->right, key, d);
+				return find(n->right, key, d);
 			}
 		}
 	}
@@ -53,19 +53,19 @@ TST::node_ptr<T> TST::tst<T>::get(TST::node_ptr<T> & n,
 }
 
 template <class T>
-void TST::tst<T>::put(const std::string & key,
+void TST::tst<T>::insert(const std::string & key,
 		      const T & value) {
 	if (key == "") return;
 	if (root == nullptr)
 		root = TST::node_ptr<T>(new node<T>(key[0]));
 	bool created = false;
-	root = put(std::move(root), key, value, 0, created);
+	root = insert(std::move(root), key, value, 0, created);
 	if (created)
 		++s;
 }
 
 template <class T>
-TST::node_ptr<T> TST::tst<T>::put(TST::node_ptr<T> n,
+TST::node_ptr<T> TST::tst<T>::insert(TST::node_ptr<T> n,
 				  const std::string & key,
 				  const T & value,
 				  unsigned int d,
@@ -74,7 +74,7 @@ TST::node_ptr<T> TST::tst<T>::put(TST::node_ptr<T> n,
 		if (n->c > key[d]) {
 			if (n->left == nullptr)
 				n->left = TST::node_ptr<T>(new node<T>(key[d]));
-			n->left = put(std::move(n->left), key, value, d, created);
+			n->left = insert(std::move(n->left), key, value, d, created);
 		}
 		if (n->c == key[d]) {
 			if (n->value == def)
@@ -84,34 +84,34 @@ TST::node_ptr<T> TST::tst<T>::put(TST::node_ptr<T> n,
 		if (n->c < key[d]) {
 			if (n->right == nullptr)
 				n->right = TST::node_ptr<T>(new node<T>(key[d]));
-			n->right = put(std::move(n->right), key, value, d, created);
+			n->right = insert(std::move(n->right), key, value, d, created);
 		}
 		return n;
 	} else {
 		if (n->c > key[d]) {
 			if (n->left == nullptr)
 				n->left = TST::node_ptr<T>(new node<T>(key[d]));
-			n->left = put(std::move(n->left), key, value, d, created);
+			n->left = insert(std::move(n->left), key, value, d, created);
 		}
 		if (n->c == key[d]) {
 			if (n->middle == nullptr)
 				n->middle = TST::node_ptr<T>(new node<T>(key[d+1]));
-			n->middle = put(std::move(n->middle), key, value, d+1, created);
+			n->middle = insert(std::move(n->middle), key, value, d+1, created);
 		}
 		if (n->c < key[d]) {
 			if (n->right == nullptr)
 				n->right = TST::node_ptr<T>(new node<T>(key[d]));
-			n->right = put(std::move(n->right), key, value, d, created);
-		} 
+			n->right = insert(std::move(n->right), key, value, d, created);
+		}
 		return n;
 	}
 }
 
 template <class T>
-void TST::tst<T>::clean(TST::node_ptr<T> n) {
-	if (n->left   != nullptr) clean(std::move(n->left));
-	if (n->middle != nullptr) clean(std::move(n->middle));
-	if (n->right  != nullptr) clean(std::move(n->right));
+void TST::tst<T>::clear(TST::node_ptr<T> n) {
+	if (n->left   != nullptr) clear(std::move(n->left));
+	if (n->middle != nullptr) clear(std::move(n->middle));
+	if (n->right  != nullptr) clear(std::move(n->right));
 	n.reset();
 }
 
@@ -153,22 +153,22 @@ bool TST::tst<T>::contains(TST::node_ptr<T> & n,
 }
 
 template <class T>
-void TST::tst<T>::remove(const std::string & key) {
+void TST::tst<T>::erase(const std::string & key) {
 	bool decrease = false;
-	remove(root, key, 0, decrease);
+	erase(root, key, 0, decrease);
 	if (decrease)
 		--s;
 }
 
 template <class T>
-bool TST::tst<T>::remove(TST::node_ptr<T> & n,
+bool TST::tst<T>::erase(TST::node_ptr<T> & n,
 			 const std::string & key,
 			 unsigned int d,
 			 bool & decrease) {
 	if (key.size() == d + 1 && n != nullptr) {
 		if (n->left != nullptr && n->c > key[d]) {
 			if (n->left->c == key[d]) {
-				bool deleted = remove(n->left, key, d, decrease);
+				bool deleted = erase(n->left, key, d, decrease);
 				if (deleted) {
 					n->left.reset();
 					if (n->left == nullptr &&
@@ -179,7 +179,7 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 				}
 				return false;
 			} else {
-				return remove(n->left, key, d, decrease);
+				return erase(n->left, key, d, decrease);
 			}
 		}
 		if (n->c == key[d]) {
@@ -193,7 +193,7 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 		}
 		if (n->right != nullptr && n->c < key[d]){
 			if (n->right->c == key[d]) {
-				bool deleted = remove(n->right, key, d, decrease);
+				bool deleted = erase(n->right, key, d, decrease);
 				if (deleted) {
 					n->right.reset();
 					if (n->left == nullptr &&
@@ -204,13 +204,13 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 				}
 				return false;
 			} else {
-				return remove(n->right, key, d, decrease);
+				return erase(n->right, key, d, decrease);
 			}
 		}
 	} else {
 		if (n->left != nullptr && n->c > key[d]) {
 			if (n->left->c == key[d]) {
-				bool deleted = remove(n->left, key, d, decrease);
+				bool deleted = erase(n->left, key, d, decrease);
 				if (deleted) {
 					n->left.reset();
 					if (n->left == nullptr &&
@@ -221,11 +221,11 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 				}
 				return false;
 			} else {
-				return remove(n->left, key, d, decrease);
+				return erase(n->left, key, d, decrease);
 			}
 		}
 		if (n->middle != nullptr && n->c == key[d]) {
-			bool deleted = remove(n->middle, key, d+1, decrease);
+			bool deleted = erase(n->middle, key, d+1, decrease);
 			if (deleted) {
 				n->middle.reset();
 				if (n->left == nullptr &&
@@ -238,7 +238,7 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 		}
 		if (n->right != nullptr && n->c < key[d]){
 			if (n->right->c == key[d]) {
-				bool deleted = remove(n->right, key, d, decrease);
+				bool deleted = erase(n->right, key, d, decrease);
 				if (deleted) {
 					n->right.reset();
 					if (n->left == nullptr &&
@@ -249,7 +249,7 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 				}
 				return false;
 			} else {
-				return remove(n->right, key, d, decrease);
+				return erase(n->right, key, d, decrease);
 			}
 		}
 	}
@@ -257,40 +257,40 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 }
 
 template <class T>
-std::vector<std::string> TST::tst<T>::get_keys(const std::string & prefix) {
+std::vector<std::string> TST::tst<T>::keys(const std::string & prefix) {
 	vec_ptr vec;
 	vec = vec_ptr(new std::vector<std::string>());
-	get_keys(root, prefix, 0, vec);
+	keys(root, prefix, 0, vec);
 	return *vec;
 }
 
 template <class T>
-void TST::tst<T>::get_keys(TST::node_ptr<T> & n,
+void TST::tst<T>::keys(TST::node_ptr<T> & n,
 			   std::string prefix,
 			   unsigned int d,
 			   TST::vec_ptr & v) {
 	if (prefix.size() <= d + 1) {
 		if (prefix.size() == d + 1){
 			if (n->c > prefix[d] && n->left != nullptr)
-				get_keys(n->left, prefix, d, v);
+				keys(n->left, prefix, d, v);
 			if (n->c == prefix[d]) {
 				if (n->value != def)
 					v->push_back(prefix);
 				gather_keys(n->middle, prefix, v);
 			}
 			if (n->c < prefix[d] && n->right != nullptr)
-				get_keys(n->right, prefix, d, v);
+				keys(n->right, prefix, d, v);
 		}
 		else
 			gather_keys(n, prefix, v);
 	} else {
 	        if (n->c > prefix[d] && n->left != nullptr){
-			get_keys(n->left, prefix, d, v);
+			keys(n->left, prefix, d, v);
 		}
 		if (n->c == prefix[d] && n->middle != nullptr)
-			get_keys(n->middle, prefix, d+1, v);
+			keys(n->middle, prefix, d+1, v);
 		if (n->c < prefix[d] && n->right != nullptr){
-			get_keys(n->right, prefix, d, v);
+			keys(n->right, prefix, d, v);
 		}
 	}
 }
