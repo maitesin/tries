@@ -5,9 +5,9 @@
 #include "./trie.h"
 
 template <class T, size_t R>
-const T & Trie::trie<T,R>::get(const std::string & key) {
+const T & Trie::trie<T,R>::find(const std::string & key) {
 	if (key != "") {
-		node_ptr<T,R> node (get(root, key, 0));
+		node_ptr<T,R> node (find(root, key, 0));
 		if (node != nullptr){
 			aux_ret = node->value;
 			node.release();
@@ -20,7 +20,7 @@ const T & Trie::trie<T,R>::get(const std::string & key) {
 }
 
 template <class T, size_t R>
-Trie::node_ptr<T,R> Trie::trie<T,R>::get(Trie::node_ptr<T,R> & n,
+Trie::node_ptr<T,R> Trie::trie<T,R>::find(Trie::node_ptr<T,R> & n,
 					 const std::string & key,
 					 unsigned int d) {
 	if (key.size() == d) {
@@ -34,25 +34,25 @@ Trie::node_ptr<T,R> Trie::trie<T,R>::get(Trie::node_ptr<T,R> & n,
 		}
 	} else {
 		if (n->sons[key[d]] != nullptr) {
-			return get(n->sons[key[d]], key, d+1);
+			return find(n->sons[key[d]], key, d+1);
 		}
 	}
 	return nullptr;
 }
 
 template <class T, size_t R>
-void Trie::trie<T,R>::put(const std::string & key,
+void Trie::trie<T,R>::insert(const std::string & key,
 			  const T & value) {
 	if (key != ""){
 		bool created = false;
-		root = put(std::move(root), key, value, 0, created);
+		root = insert(std::move(root), key, value, 0, created);
 		if (created)
 			++s;
 	}
 }
 
 template <class T, size_t R>
-Trie::node_ptr<T,R> Trie::trie<T,R>::put(Trie::node_ptr<T,R> n,
+Trie::node_ptr<T,R> Trie::trie<T,R>::insert(Trie::node_ptr<T,R> n,
 					 const std::string & key,
 					 const T & value,
 					 unsigned int d,
@@ -67,15 +67,15 @@ Trie::node_ptr<T,R> Trie::trie<T,R>::put(Trie::node_ptr<T,R> n,
 			n->sons[key[d]] = Trie::node_ptr<T,R>(new node<T,R>());
 			++n->s;
 		}
-		n->sons[key[d]] = put(std::move(n->sons[key[d]]), key, value, d+1, created);
+		n->sons[key[d]] = insert(std::move(n->sons[key[d]]), key, value, d+1, created);
 		return n;
 	}
 }
 
 template <class T, size_t R>
-void Trie::trie<T,R>::clean(Trie::node_ptr<T,R> n) {
+void Trie::trie<T,R>::clear(Trie::node_ptr<T,R> n) {
 	for (unsigned int i = 0; i < n->r; ++i) {
-		if (n->sons[i] != nullptr) clean(std::move(n->sons[i]));
+		if (n->sons[i] != nullptr) clear(std::move(n->sons[i]));
 	}
 	n.reset();
 }
@@ -103,15 +103,15 @@ bool Trie::trie<T,R>::contains(Trie::node_ptr<T,R> & n,
 
 
 template <class T, size_t R>
-void Trie::trie<T,R>::remove(const std::string & key) {
+void Trie::trie<T,R>::erase(const std::string & key) {
 	bool decrease = false;
-	remove(root, key, 0, decrease);
+	erase(root, key, 0, decrease);
 	if (decrease)
 		--s;
 }
 
 template <class T, size_t R>
-bool Trie::trie<T,R>::remove(Trie::node_ptr<T,R> & n,
+bool Trie::trie<T,R>::erase(Trie::node_ptr<T,R> & n,
 			     const std::string & key,
 			     unsigned int d,
 			     bool & decrease) {
@@ -125,7 +125,7 @@ bool Trie::trie<T,R>::remove(Trie::node_ptr<T,R> & n,
 		return false;
 	} else {
 		if (n->sons[key[d]] != nullptr) {
-			bool deleted = remove(n->sons[key[d]], key, d+1, decrease);
+			bool deleted = erase(n->sons[key[d]], key, d+1, decrease);
 			if (deleted) {
 				n->sons[key[d]].reset();
 				--n->s;
@@ -140,15 +140,15 @@ bool Trie::trie<T,R>::remove(Trie::node_ptr<T,R> & n,
 
 
 template <class T, size_t R>
-std::vector<std::string> Trie::trie<T,R>::get_keys(const std::string & prefix) {
+std::vector<std::string> Trie::trie<T,R>::keys(const std::string & prefix) {
 	vec_ptr vec;
 	vec = vec_ptr(new std::vector<std::string>());
-	get_keys(root, prefix, 0, vec);
+	keys(root, prefix, 0, vec);
 	return *vec;
 }
 
 template <class T, size_t R>
-void Trie::trie<T,R>::get_keys(Trie::node_ptr<T,R> & n,
+void Trie::trie<T,R>::keys(Trie::node_ptr<T,R> & n,
 			       std::string prefix,
 			       unsigned int d,
 			       vec_ptr & v) {
@@ -156,7 +156,7 @@ void Trie::trie<T,R>::get_keys(Trie::node_ptr<T,R> & n,
 		gather_keys(n, prefix, v);
 	} else {
 		if (n->sons[prefix[d]] != nullptr)
-			get_keys(n->sons[prefix[d]], prefix, d+1, v);
+			keys(n->sons[prefix[d]], prefix, d+1, v);
 	}
 }
 

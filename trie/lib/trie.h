@@ -15,7 +15,7 @@ namespace Trie {
 		struct node {
 			T value;
 			std::array<std::unique_ptr<node<T,R>>, R> sons;
-			unsigned int s;
+			size_t s;
 			unsigned int r;
 
 			explicit node(T v = T()) : value(v), s(0), r(R) {
@@ -30,7 +30,7 @@ namespace Trie {
 	 * Utils
 	 */
 	template <class T, size_t R>
-		using node_ptr = std::unique_ptr<node<T,R>>;	
+		using node_ptr = std::unique_ptr<node<T,R>>;
 	using vec_ptr = std::unique_ptr<std::vector<std::string>>;
 
 	/*
@@ -45,16 +45,16 @@ namespace Trie {
 		}
 		// Destructor
 		~trie() {
-			clean(std::move(root));
+			clear(std::move(root));
 		}
 		// Methods
 		/*
-		 * This method is to allow the user to clean the
+		 * This method is to allow the user to clear the
 		 * content of the trie. Basically does the same
 		 * as the destructor.
 		 */
-		void clean() {
-		  clean(std::move(root));
+		void clear() {
+		  clear(std::move(root));
 		  s = 0;
 		  root = node_ptr<T,R>(new node<T,R>);
 		}
@@ -65,7 +65,7 @@ namespace Trie {
 		 * is no the key in the trie return default value for
 		 * the value type.
 		 */
-		const T & get(const std::string & key);
+		const T & find(const std::string & key);
 
 		/*
 		 * This method is used to add a new key to the trie.
@@ -75,14 +75,14 @@ namespace Trie {
 		 * Otherwise, if the key was already in the trie it
 		 * will update the value of the key with the new one.
 		 */
-		void put(const std::string & key,
+		void insert(const std::string & key,
 			 const T & value);
 
 		/*
 		 * This method return the amount of elements stored
 		 * in the trie.
 		 */
-		unsigned int size() {return s;}
+		size_t size() {return s;}
 
 		/*
 		 * This is an auxiliary method to print in the screen
@@ -98,7 +98,7 @@ namespace Trie {
 		 * are using it. Otherwise, if the key is not there
 		 * nothing will happen.
 		 */
-		void remove(const std::string & key);
+		void erase(const std::string & key);
 
 		/*
 		 * This method tells you if a given key is in the
@@ -112,7 +112,7 @@ namespace Trie {
 		 * prefix provided it will return all the keys in
 		 * the trie.
 		 */
-		std::vector<std::string> get_keys(const std::string & prefix = "");
+		std::vector<std::string> keys(const std::string & prefix = "");
 
 	private:
 		// Atributes
@@ -131,7 +131,7 @@ namespace Trie {
 		 * length is equal to d we check if the value
 		 * is diferent from the default value for T.
 		 */
-		node_ptr<T,R> get(node_ptr<T,R> & n,
+		node_ptr<T,R> find(node_ptr<T,R> & n,
 				  const std::string & key,
 				  unsigned int d);
 
@@ -141,7 +141,7 @@ namespace Trie {
 		 * When the key length is equal to d we assign
 		 * the value to the node's value.
 		 */
-		node_ptr<T,R> put(node_ptr<T,R> n,
+		node_ptr<T,R> insert(node_ptr<T,R> n,
 				  const std::string & key,
 				  const T & value,
 				  unsigned int d,
@@ -150,7 +150,7 @@ namespace Trie {
 		/*
 		 * Given a node deleted everything under it.
 		 */
-		void clean(node_ptr<T,R> n);
+		void clear(node_ptr<T,R> n);
 
 		/*
 		 * Given a node it checks if the d-th position in
@@ -158,7 +158,7 @@ namespace Trie {
 		 * d we begin to delete all the nodes from that
 		 * one up to the first node with at least one son.
 		 */
-		bool remove(node_ptr<T,R> & n,
+		bool erase(node_ptr<T,R> & n,
 			    const std::string & key,
 			    unsigned int d,
 			    bool & decrease);
@@ -180,7 +180,7 @@ namespace Trie {
 		 * equal to d then it calls gather keys to get
 		 * all keys with that prefix.
 		 */
-		void get_keys(node_ptr<T,R> & n,
+		void keys(node_ptr<T,R> & n,
 			      std::string prefix,
 			      unsigned int d,
 			      vec_ptr & v);
