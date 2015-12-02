@@ -125,7 +125,7 @@ int main(int argc, char * argv[]) {
 		for (unsigned int j = 0; j < MAX_SIZE; ++j) {
 			aux = get_random_string(rand()%size);
 #ifndef MAP_FUNCTION
-			t.put(aux, 1);
+			t.insert(aux, 1);
 #else
 			m.insert(std::pair<std::string, int>(aux, 1));
 #endif
@@ -135,7 +135,7 @@ int main(int argc, char * argv[]) {
 		t_init = clock();
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
 #ifndef MAP_FUNCTION
-			t.get_keys_with_prefix(prefix);
+			t.keys(prefix);
 #else
 			get_map_keys_with_prefix(m, prefix);
 #endif
@@ -166,7 +166,7 @@ int main(int argc, char * argv[]) {
 		std::string line;
 		while (f >> line) {
 #ifndef MAP_FUNCTION
-			t.put(line, 1);
+			t.insert(line, 1);
 #else
 			m.insert(std::pair<std::string, int>(line, 1));
 #endif
@@ -177,7 +177,7 @@ int main(int argc, char * argv[]) {
 		t_init = clock();
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
 #ifndef MAP_FUNCTION
-			t.get_keys_with_prefix(prefix);
+			t.keys(prefix);
 #else
 			get_map_keys_with_prefix(m, prefix);
 #endif

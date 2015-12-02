@@ -90,7 +90,7 @@ int main(void) {
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
 			aux = get_random_string(rand()%size);
 #ifndef MAP
-			t.put(aux, 1);
+			t.insert(aux, 1);
 #else
 			m.insert(std::pair<std::string, int>(aux, 1));
 #endif
@@ -101,7 +101,7 @@ int main(void) {
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
 			aux = get_random_string(rand()%size);
 #ifndef MAP
-			t.get(aux);
+			t.find(aux);
 #else
 			m.find(aux);
 #endif
