@@ -319,7 +319,7 @@ TEST_F(TrieTest, LongTest) {
 }
 
 TEST_F(TrieTest, LongestCommonPath) {
-  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
+  std::string hello = "Hello", world = "World", wololo = "Wololo";
 
   t.insert(hello, 1);
   t.insert(world, 2);
@@ -329,7 +329,7 @@ TEST_F(TrieTest, LongestCommonPath) {
 
   t.erase(hello);
   EXPECT_EQ(2, t.size()) << "This should be 2";
-  EXPECT_EQ("Wo", t.lcp()) << "This should be 'wo'";
+  EXPECT_EQ("Wo", t.lcp()) << "This should be 'Wo'";
 
   t.clear();
   EXPECT_EQ(0, t.size()) << "This should be 0";
@@ -337,7 +337,7 @@ TEST_F(TrieTest, LongestCommonPath) {
 
   t.insert(hello, 1);
   EXPECT_EQ(1, t.size()) << "This should be 1";
-  EXPECT_EQ("Hello", t.lcp()) << "This should be 'hello'";
+  EXPECT_EQ("Hello", t.lcp()) << "This should be 'Hello'";
 }
 
 int main(int argc, char * argv[]) {

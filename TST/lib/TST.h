@@ -110,6 +110,11 @@ namespace TST {
 		 */
 		std::vector<std::string> keys(const std::string & prefix = "");
 
+		/*
+		 * This method returns the longest common path.
+		 */
+		std::string lcp();
+
 	private:
 		// Atributes
 		node_ptr<T> root;
@@ -203,6 +208,13 @@ namespace TST {
 
 		void show(node_ptr<T> &n,
 				int & label);
+
+		/*
+		 * Returns the longest common path from all the
+		 * strings contended in the TST.
+		 */
+		std::string lcp(node_ptr<T> &n, std::string s);
+		std::string lcp_clean_before(node_ptr<T> &n);
 	}; // TST_CLASS
 
 }; // TST_NAMESPACE

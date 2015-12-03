@@ -318,6 +318,28 @@ TEST_F(TstTest, LongTest) {
   EXPECT_EQ(3, t.size()) << "This should be 3";
 }
 
+TEST_F(TstTest, LongestCommonPath) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo";
+
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  EXPECT_EQ(3, t.size()) << "This should be 3";
+  EXPECT_EQ("", t.lcp()) << "This should be ''";
+
+  t.erase(hello);
+  EXPECT_EQ(2, t.size()) << "This should be 2";
+  EXPECT_EQ("Wo", t.lcp()) << "This should be 'Wo'";
+
+  t.clear();
+  EXPECT_EQ(0, t.size()) << "This should be 0";
+  EXPECT_EQ("", t.lcp()) << "This should be ''";
+
+  t.insert(hello, 1);
+  EXPECT_EQ(1, t.size()) << "This should be 1";
+  EXPECT_EQ("Hello", t.lcp()) << "This should be 'Hello'";
+}
+
 int main(int argc, char * argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

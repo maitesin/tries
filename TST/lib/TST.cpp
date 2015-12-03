@@ -393,3 +393,35 @@ void TST::tst<T>::show(TST::node_ptr<T> &n,
 		 show(n->right, label);
 	 }
 }
+
+template <class T>
+std::string TST::tst<T>::lcp() {
+	return lcp_clean_before(root);
+}
+
+template <class T>
+std::string TST::tst<T>::lcp_clean_before(TST::node_ptr<T> & n) {
+	if (n == nullptr) {
+		return "";
+	}
+	if (n->middle == nullptr) {
+		if (n->left == nullptr && n->right != nullptr) {
+			return lcp_clean_before(n->right);
+		} else if (n->left != nullptr && n->right == nullptr) {
+			return lcp_clean_before(n->left);
+		} else if (n->left == nullptr && n->right == nullptr) {
+			return "";
+		}
+	} else {
+		return lcp(n, "");
+	}
+	return "";
+}
+
+template <class T>
+std::string TST::tst<T>::lcp(TST::node_ptr<T> &n, std::string s) {
+	if (n != nullptr && n->left == nullptr && n->right == nullptr) {
+		return lcp(n->middle, s + n->c);
+	}
+	return s;
+}
