@@ -329,7 +329,7 @@ TEST_F(TrieTest, LongestCommonPath) {
 
   t.erase(hello);
   EXPECT_EQ(2, t.size()) << "This should be 2";
-  EXPECT_EQ("wo", t.lcp()) << "This should be 'wo'";
+  EXPECT_EQ("Wo", t.lcp()) << "This should be 'wo'";
 
   t.clear();
   EXPECT_EQ(0, t.size()) << "This should be 0";
@@ -337,7 +337,7 @@ TEST_F(TrieTest, LongestCommonPath) {
 
   t.insert(hello, 1);
   EXPECT_EQ(1, t.size()) << "This should be 1";
-  EXPECT_EQ("hello", t.lcp()) << "This should be 'hello'";
+  EXPECT_EQ("Hello", t.lcp()) << "This should be 'hello'";
 }
 
 int main(int argc, char * argv[]) {

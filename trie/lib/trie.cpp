@@ -234,9 +234,7 @@ void Trie::trie<T,R>::show(Trie::node_ptr<T,R> & n, int pos, int & label) {
 
 template <class T, size_t R>
 std::string Trie::trie<T,R>::lcp() {
-	std::string s = "";
-	lcp(root, s);
-	return s;
+	return lcp(root, "");
 }
 
 template <class T, size_t R>
