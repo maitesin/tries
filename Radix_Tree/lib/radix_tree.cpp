@@ -412,9 +412,7 @@ std::string RadixTree::radix_tree<T,R>::lcp(){
 	unsigned int founds = 0;
 	std::string lcp = "";
 	for (unsigned int i = 0; i < r; ++i){
-		if (roots[i] != nullptr) {
-			std::cout << static_cast<char>(i) << " has content" <<
-				std::endl;
+		if (roots[i] != nullptr && roots[i]->s > 0) {
 			++founds;
 			lcp = roots[i]->path;
 		}
