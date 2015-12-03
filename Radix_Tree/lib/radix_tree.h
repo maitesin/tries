@@ -128,6 +128,12 @@ namespace RadixTree {
 		 */
 		std::vector<std::string> keys(const std::string & prefix = "");
 
+		/*
+		 * This method returns the longest common path
+		 * of the content in the Radix Tree.
+		 */
+		std::string lcp();
+
 	private:
 		// Atributes
 		std::array<node_ptr<T,R>, R> roots;
@@ -237,7 +243,6 @@ namespace RadixTree {
 
 		void show(node_ptr<T,R> & n,
 			  int & label);
-
 	}; // RADIX_TREE_CLASS
 
 }; // RADIX_TREE_NAMESPACE

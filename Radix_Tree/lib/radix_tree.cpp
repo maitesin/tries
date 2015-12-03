@@ -216,6 +216,8 @@ bool RadixTree::radix_tree<T,R>::erase(RadixTree::node_ptr<T,R> & n,
 					bool deleted = erase(n->sons[key[d+n->path.size()]], key, d+n->path.size(), decrease);
 					if (deleted) {
 						n->sons[key[d+n->path.size()]].reset();
+						n->sons[key[d+n->path.size()]] =
+							nullptr;
 						--n->s;
 						if (n->s == 1 && n->value == T()) {
 							merge_with_only_son(n);
@@ -404,3 +406,18 @@ void RadixTree::radix_tree<T,R>::show(RadixTree::node_ptr<T,R> & n,
 		}
 	}
 }
+
+template <class T, size_t R>
+std::string RadixTree::radix_tree<T,R>::lcp(){
+	unsigned int founds = 0;
+	std::string lcp = "";
+	for (unsigned int i = 0; i < r; ++i){
+		if (roots[i] != nullptr) {
+			std::cout << static_cast<char>(i) << " has content" <<
+				std::endl;
+			++founds;
+			lcp = roots[i]->path;
+		}
+	}
+	return founds == 1 ? lcp : "";
+};
