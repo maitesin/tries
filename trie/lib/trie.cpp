@@ -227,3 +227,20 @@ void Trie::trie<T,R>::show(Trie::node_ptr<T,R> & n, size_t pos, size_t & label) 
 		}
 	}
 }
+
+template <class T, size_t R>
+std::string Trie::trie<T,R>::lcp() {
+	return lcp(root, "");
+}
+
+template <class T, size_t R>
+std::string Trie::trie<T,R>::lcp(Trie::node_ptr<T,R> &n, std::string s) {
+	if (n->s == 1) {
+		for (unsigned int i = 0; i < n->r; ++i) {
+			if (n->sons[i] != nullptr) {
+				return lcp(n->sons[i], s + static_cast<char>(i));
+			}
+		}
+	}
+	return s;
+};

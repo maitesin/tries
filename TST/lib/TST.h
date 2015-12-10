@@ -16,7 +16,7 @@ namespace TST {
 		struct node {
 			T value;
 			char c;
-			std::unique_ptr<node<T>> left, right, middle;			
+			std::unique_ptr<node<T>> left, right, middle;
 			explicit node(char ch, T v = T()) : value(v), c(ch), left(nullptr), right(nullptr), middle(nullptr) {}
 		};
 
@@ -39,7 +39,7 @@ namespace TST {
 		// Destructor
 		~tst() {
 		        if (root != nullptr)
-			        clean(std::move(root));
+			        clear(std::move(root));
 		}
 
 		// Methods
@@ -48,9 +48,9 @@ namespace TST {
 		 * content of the trie. Basically does the same
 		 * as the destructor.
 		 */
-		void clean() {
+		void clear() {
 		        if (root != nullptr)
-			        clean(std::move(root));
+			        clear(std::move(root));
 			s = 0;
 			root = nullptr;
 		}
@@ -61,7 +61,7 @@ namespace TST {
 		 * is no the key in the TST return default value for
 		 * the value type.
 		 */
-		const T & get(const std::string & key);
+		const T & find(const std::string & key);
 
 		/*
 		 * This method is used to add a new key to the TST.
@@ -71,7 +71,7 @@ namespace TST {
 		 * Otherwise, if the key was already in the TST it
 		 * will update the value of the key with the new one.
 		 */
-		void put(const std::string & key,
+		void insert(const std::string & key,
 			 const T & value);
 
 		/*
@@ -94,7 +94,7 @@ namespace TST {
 		 * are using it. Otherwise, if the key is not there
 		 * nothing will happen.
 		 */
-		void remove(const std::string & key);
+		void erase(const std::string & key);
 
 		/*
 		 * This method tells you if a given key is in the
@@ -108,7 +108,12 @@ namespace TST {
 		 * is no prefix provided it will return all keys in
 		 * the TST.
 		 */
-		std::vector<std::string> get_keys(const std::string & prefix = "");
+		std::vector<std::string> keys(const std::string & prefix = "");
+
+		/*
+		 * This method returns the longest common path.
+		 */
+		std::string lcp();
 
 	private:
 		// Attributes
@@ -134,7 +139,7 @@ namespace TST {
 		 * For that we have to check if the value stored is
 		 * different from the default value for T.
 		 */
-		node_ptr<T> get(node_ptr<T> & n,
+		node_ptr<T> find(node_ptr<T> & n,
 				const std::string & key,
 				unsigned int d);
 
@@ -144,7 +149,7 @@ namespace TST {
 		 * is created. When the key legnth is equal to d
 		 * it assign the value tot he node's value.
 		 */
-		node_ptr<T> put(node_ptr<T> n,
+		node_ptr<T> insert(node_ptr<T> n,
 				const std::string & key,
 				const T & value,
 				unsigned int d,
@@ -153,7 +158,7 @@ namespace TST {
 		/*
 		 * Given a node deleted everything under it.
 		 */
-		void clean(node_ptr<T> n);
+		void clear(node_ptr<T> n);
 
 		/*
 		 * Given a node it checks if the d-th position in
@@ -162,7 +167,7 @@ namespace TST {
 		 * one up to the first node with at least one of
 		 * the pointers different from nullptr.
 		 */
-		bool remove(node_ptr<T> & n,
+		bool erase(node_ptr<T> & n,
 			    const std::string & key,
 			    unsigned int d,
 			    bool & decrease);
@@ -184,7 +189,7 @@ namespace TST {
 		 * equal to d then it calls gather keys to get
 		 * all keys with that prefix.
 		 */
-		void get_keys(node_ptr<T> & n,
+		void keys(node_ptr<T> & n,
 			      std::string prefix,
 			      unsigned int d,
 			      vec_ptr & v);
@@ -203,6 +208,13 @@ namespace TST {
 
 		void show(node_ptr<T> &n,
 				size_t & label);
+
+		/*
+		 * Returns the longest common path from all the
+		 * strings contended in the TST.
+		 */
+		std::string lcp(node_ptr<T> &n, std::string s);
+		std::string lcp_clean_before(node_ptr<T> &n);
 	}; // TST_CLASS
 
 }; // TST_NAMESPACE

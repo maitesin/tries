@@ -101,7 +101,7 @@ int main(int argc, char * argv[]) {
 			t_init = clock();
 			while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
 #ifndef MAP_FUNCTION
-				t.put(get_random_string(rand()%size), 1);
+				t.insert(get_random_string(rand()%size), 1);
 #else
 				m.insert(std::pair<std::string, int>(get_random_string(rand()%size), 1));
 #endif
@@ -131,7 +131,7 @@ int main(int argc, char * argv[]) {
 		std::string line;
 		while (f >> line) {
 #ifndef MAP_FUNCTION
-			t.put(line, 1);
+			t.insert(line, 1);
 #else
 			m.insert(std::pair<std::string, int>(line, 1));
 #endif

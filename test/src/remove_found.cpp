@@ -100,7 +100,7 @@ int main(int argc, char * argv[]) {
 			while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
 				aux = get_random_string(rand()%size);
 #ifndef MAP_FUNCTION
-				t.put(aux, 1);
+				t.insert(aux, 1);
 #else
 				m.insert(std::pair<std::string, int>(aux, 1));
 #endif
@@ -111,7 +111,7 @@ int main(int argc, char * argv[]) {
 			while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC) {
 				aux = get_random_string(rand()%size);
 #ifndef MAP_FUNCTION
-				t.remove(aux);
+				t.erase(aux);
 #else
 				m.erase(aux);
 #endif
@@ -142,7 +142,7 @@ int main(int argc, char * argv[]) {
 		std::string line;
 		while (f >> line) {
 #ifndef MAP_FUNCTION
-			t.put(line, 1);
+			t.insert(line, 1);
 #else
 			m.insert(std::pair<std::string, int>(line, 1));
 #endif
@@ -155,7 +155,7 @@ int main(int argc, char * argv[]) {
 		auto it = words.begin();
 		while (clock() - t_init < SECONDS_LOOP * CLOCKS_PER_SEC && it != words.end()) {
 #ifndef MAP_FUNCTION
-			t.remove(*it);
+			t.erase(*it);
 #else
 			m.erase(*it);
 #endif
