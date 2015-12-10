@@ -150,7 +150,7 @@ void RadixTree::radix_tree<T,R>::find_diff_and_split(RadixTree::node_ptr<T,R> & 
 template <class T, size_t R>
 void RadixTree::radix_tree<T,R>::clear(RadixTree::node_ptr<T,R> n) {
 	for (size_t i = 0; i < n->r; ++i) {
-		if (n->sons[i] != nullptr) clean(std::move(n->sons[i]));
+		if (n->sons[i] != nullptr) clear(std::move(n->sons[i]));
 	}
 	n.reset();
 }

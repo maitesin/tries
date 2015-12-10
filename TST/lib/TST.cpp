@@ -250,7 +250,7 @@ bool TST::tst<T>::erase(TST::node_ptr<T> & n,
 			}
 			if (n->right != nullptr && n->c < key[d]) {
 				if (n->right->c == key[d]) {
-					bool deleted = remove(n->right, key, d, decrease);
+					bool deleted = erase(n->right, key, d, decrease);
 					if (deleted) {
 						n->right.reset();
 						if (n->left == nullptr &&
@@ -261,7 +261,7 @@ bool TST::tst<T>::erase(TST::node_ptr<T> & n,
 					}
 					return false;
 				} else {
-					return remove(n->right, key, d, decrease);
+					return erase(n->right, key, d, decrease);
 				}
 			} else {
 				return erase(n->right, key, d, decrease);
