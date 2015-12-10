@@ -130,8 +130,7 @@ bool TST::tst<T>::contains(TST::node_ptr<T> & n,
 			return contains(n->left, key, d);
 		}
 		if (n->c == key[d]) {
-			if (n->value != def) return true;
-			else return false;
+			return n->value != def;
 		}
 		if (n->c < key[d] && n->right != nullptr) {
 			return contains(n->right, key, d);
@@ -208,48 +207,50 @@ bool TST::tst<T>::remove(TST::node_ptr<T> & n,
 			}
 		}
 	} else {
-		if (n->left != nullptr && n->c > key[d]) {
-			if (n->left->c == key[d]) {
-				bool deleted = remove(n->left, key, d, decrease);
+		if (n != nullptr) {
+			if (n->left != nullptr && n->c > key[d]) {
+				if (n->left->c == key[d]) {
+					bool deleted = remove(n->left, key, d, decrease);
+					if (deleted) {
+						n->left.reset();
+						if (n->left == nullptr &&
+							n->middle == nullptr &&
+							n->right == nullptr &&
+							n->value == def)
+							return true;
+					}
+					return false;
+				} else {
+					return remove(n->left, key, d, decrease);
+				}
+			}
+			if (n->middle != nullptr && n->c == key[d]) {
+				bool deleted = remove(n->middle, key, d + 1, decrease);
 				if (deleted) {
-					n->left.reset();
+					n->middle.reset();
 					if (n->left == nullptr &&
-					    n->middle == nullptr &&
-					    n->right == nullptr &&
-					    n->value == def)
+						n->middle == nullptr &&
+						n->right == nullptr &&
+						n->value == def)
 						return true;
 				}
 				return false;
-			} else {
-				return remove(n->left, key, d, decrease);
 			}
-		}
-		if (n->middle != nullptr && n->c == key[d]) {
-			bool deleted = remove(n->middle, key, d+1, decrease);
-			if (deleted) {
-				n->middle.reset();
-				if (n->left == nullptr &&
-				    n->middle == nullptr &&
-				    n->right == nullptr &&
-				    n->value == def)
-					return true;
-			}
-			return false;
-		}
-		if (n->right != nullptr && n->c < key[d]){
-			if (n->right->c == key[d]) {
-				bool deleted = remove(n->right, key, d, decrease);
-				if (deleted) {
-					n->right.reset();
-					if (n->left == nullptr &&
-					    n->middle == nullptr &&
-					    n->right == nullptr &&
-					    n->value == def)
-						return true;
+			if (n->right != nullptr && n->c < key[d]) {
+				if (n->right->c == key[d]) {
+					bool deleted = remove(n->right, key, d, decrease);
+					if (deleted) {
+						n->right.reset();
+						if (n->left == nullptr &&
+							n->middle == nullptr &&
+							n->right == nullptr &&
+							n->value == def)
+							return true;
+					}
+					return false;
+				} else {
+					return remove(n->right, key, d, decrease);
 				}
-				return false;
-			} else {
-				return remove(n->right, key, d, decrease);
 			}
 		}
 	}
@@ -314,7 +315,7 @@ void TST::tst<T>::show() {
 	std::cout << "digraph graphName{" << std::endl;
 	std::cout << "node [shape=record];" << std::endl;
 	// Node labels
-	int label = 0;
+	size_t label = 0;
 	std::cout << label << " [shape=record,label=\"{ <data> " << root->c << " | {<left> l | <middle> m | <right> r}}\"];" << std::endl;
 	if (root->left != nullptr) {
 	         ++label;
@@ -350,7 +351,7 @@ void TST::tst<T>::show() {
 
 template <class T>
 void TST::tst<T>::show_label(TST::node_ptr<T> &n,
-			     int & label) {
+			     size_t & label) {
          std::cout << label << " [shape=record,label=\"{<data> " << n->c;
 	 if (n->value != T())
 	         std::cout << " | <value> " << n->value;
@@ -374,9 +375,9 @@ void TST::tst<T>::show_label(TST::node_ptr<T> &n,
 
 template <class T>
 void TST::tst<T>::show(TST::node_ptr<T> &n,
-			 int & label) {
+			 size_t & label) {
 	std::cout << label << ":data" << std::endl;
-	 int copy_label = label;
+	 size_t copy_label = label;
 	 if (n->left != nullptr) {
 	         std::cout << copy_label << ":left" << "->";
 	         ++label;

@@ -15,13 +15,13 @@ namespace RadixTree {
 		struct node {
 			T value;
 			std::string path;
-			unsigned int s;
-			unsigned int r;
+			size_t s;
+			size_t r;
 			std::array<std::unique_ptr<node<T,R>>, R> sons;
 
 			explicit node(std::string p, T v = T()) : value(v), path(p), s(0), r(R) {
 				sons = std::array<std::unique_ptr<node<T,R>>, R>();
-				for (unsigned int i = 0; i < r; ++i) {
+				for (size_t i = 0; i < r; ++i) {
 					sons[i] = nullptr;
 				}
 			}
@@ -44,13 +44,13 @@ namespace RadixTree {
 		// Constructor
 		explicit radix_tree() : r(R), s(0) {
 			roots = std::array<node_ptr<T,R>, R>();
-			for (unsigned int i = 0; i < r; ++i) {
+			for (size_t i = 0; i < r; ++i) {
 				roots[i] = nullptr;
 			}
 		}
 		// Destructor
 		~radix_tree() {
-			for (unsigned int i = 0; i < r; ++i) {
+			for (size_t i = 0; i < r; ++i) {
 				if (roots[i] != nullptr)
 					clean(std::move(roots[i]));
 			}
@@ -63,13 +63,13 @@ namespace RadixTree {
 		 * as the destructor.
 		 */
 		void clean() {
-		  for (unsigned int i = 0; i < r; ++i) {
+		  for (size_t i = 0; i < r; ++i) {
 		    if (roots[i] != nullptr)
 		      clean(std::move(roots[i]));
 		  }
 		  s = 0;
 		  roots = std::array<node_ptr<T,R>, R>();
-		  for (unsigned int i = 0; i < r; ++i) {
+		  for (size_t i = 0; i < r; ++i) {
 		    roots[i] = nullptr;
 		  }
 		}
@@ -96,7 +96,7 @@ namespace RadixTree {
 		 * This method return the amount of elements stored
 		 * in the radix tree.
 		 */
-		unsigned int size() {return s;}
+		size_t size() {return s;}
 
 		/*
 		 * This is an auxiliary method to print in the screen
@@ -129,13 +129,13 @@ namespace RadixTree {
 		std::vector<std::string> get_keys(const std::string & prefix = "");
 
 	private:
-		// Atributes
+		// Attributes
 		std::array<node_ptr<T,R>, R> roots;
-		unsigned int r;
-		unsigned int s;
+		size_t r;
+		size_t s;
 		// Default value of T to return.
 		const T def = T();
-		// Auxiliar value to help return found values.
+		// Helper value to help return found values.
 		T aux_ret;
 		// Methods
 		/*
@@ -147,7 +147,7 @@ namespace RadixTree {
 		 */
 		node_ptr<T,R> get(node_ptr<T,R> & n,
 				  const std::string & key,
-				  unsigned int d);
+				  size_t d);
 		
 		/*
 		 * Given a node it checks if the d-th position in
@@ -158,7 +158,7 @@ namespace RadixTree {
 		node_ptr<T,R> put(node_ptr<T,R> n,
 				  const std::string & key,
 				  const T & value,
-				  unsigned int d,
+				  size_t d,
 				  bool & created);
 
 		/*
@@ -167,7 +167,7 @@ namespace RadixTree {
 		 */
 		void split(node_ptr<T,R> & n,
 			   const T & value,
-			   unsigned int p);
+			   size_t p);
 
 		/*
 		 * Auxiliar method that find where begins the
@@ -190,7 +190,7 @@ namespace RadixTree {
 		 */
 		bool remove(node_ptr<T,R> & n,
 			    const std::string & key,
-			    unsigned int d,
+			    size_t d,
 			    bool & decrease);
 
 		void merge_with_only_son(node_ptr<T,R> & n);
@@ -206,7 +206,7 @@ namespace RadixTree {
 		 */
 		bool contains(node_ptr<T,R> & n,
 			      const std::string & key,
-			      unsigned int d);
+			      size_t d);
 
 		/*
 		 * Given a node it checks if the d-th position in
@@ -216,11 +216,11 @@ namespace RadixTree {
 		 */
 		void get_keys(node_ptr<T,R> & n,
 			      std::string prefix,
-			      unsigned int d,
+			      size_t d,
 			      vec_ptr & v);
 
 		std::string get_prefix_cut(std::string & prefix,
-					   unsigned int d);
+					  size_t d);
 
 		/*
 		 * Given a node goes to all its sons to gather
@@ -233,10 +233,10 @@ namespace RadixTree {
 
 
 		void show_label(node_ptr<T,R> & n,
-				int & label);
+				size_t & label);
 
 		void show(node_ptr<T,R> & n,
-			  int & label);
+			  size_t & label);
 
 	}; // RADIX_TREE_CLASS
 

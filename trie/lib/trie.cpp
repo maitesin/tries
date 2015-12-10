@@ -22,7 +22,7 @@ const T & Trie::trie<T,R>::find(const std::string & key) {
 template <class T, size_t R>
 Trie::node_ptr<T,R> Trie::trie<T,R>::find(Trie::node_ptr<T,R> & n,
 					 const std::string & key,
-					 unsigned int d) {
+					 size_t d) {
 	if (key.size() == d) {
 		if (n == nullptr) {
 			return nullptr;
@@ -55,7 +55,7 @@ template <class T, size_t R>
 Trie::node_ptr<T,R> Trie::trie<T,R>::insert(Trie::node_ptr<T,R> n,
 					 const std::string & key,
 					 const T & value,
-					 unsigned int d,
+					 size_t d,
 					 bool & created) {
 	if (key.size() == d) {
 		if (n->value == def)
@@ -74,7 +74,7 @@ Trie::node_ptr<T,R> Trie::trie<T,R>::insert(Trie::node_ptr<T,R> n,
 
 template <class T, size_t R>
 void Trie::trie<T,R>::clear(Trie::node_ptr<T,R> n) {
-	for (unsigned int i = 0; i < n->r; ++i) {
+	for (size_t i = 0; i < n->r; ++i) {
 		if (n->sons[i] != nullptr) clear(std::move(n->sons[i]));
 	}
 	n.reset();
@@ -88,11 +88,10 @@ bool Trie::trie<T,R>::contains(const std::string & key) {
 template <class T, size_t R>
 bool Trie::trie<T,R>::contains(Trie::node_ptr<T,R> & n,
 			       const std::string & key,
-			       unsigned int d) {
+			       size_t d) {
 	if (key.size() ==d) {
 		if (n == nullptr) return false;
-		if (n->value != def) return true;
-		return false;
+		return n->value != def;
 	} else {
 		if (n->sons[key[d]] != nullptr) {
 			return contains(n->sons[key[d]], key, d+1);
@@ -113,18 +112,15 @@ void Trie::trie<T,R>::erase(const std::string & key) {
 template <class T, size_t R>
 bool Trie::trie<T,R>::erase(Trie::node_ptr<T,R> & n,
 			     const std::string & key,
-			     unsigned int d,
+			     size_t d,
 			     bool & decrease) {
 	if (key.size() == d && n != nullptr) {
 		if (n->value != def)
 			decrease = true;
 		n->value = T();
-		if (n->s == 0) {
-			return true;
-		}
-		return false;
+		return n->s == 0;
 	} else {
-		if (n->sons[key[d]] != nullptr) {
+		if (n != nullptr && n->sons[key[d]] != nullptr) {
 			bool deleted = erase(n->sons[key[d]], key, d+1, decrease);
 			if (deleted) {
 				n->sons[key[d]].reset();
@@ -150,7 +146,7 @@ std::vector<std::string> Trie::trie<T,R>::keys(const std::string & prefix) {
 template <class T, size_t R>
 void Trie::trie<T,R>::keys(Trie::node_ptr<T,R> & n,
 			       std::string prefix,
-			       unsigned int d,
+			       size_t d,
 			       vec_ptr & v) {
 	if (prefix.size() == d) {
 		gather_keys(n, prefix, v);
@@ -168,7 +164,7 @@ void Trie::trie<T,R>::gather_keys(Trie::node_ptr<T,R> & n,
 		v->push_back(prefix);
 	}
 	if (n->s != 0) {
-		for (unsigned int i = 0; i < n->r; ++i) {
+		for (size_t i = 0; i < n->r; ++i) {
 			if (n->sons[i] != nullptr) {
 				gather_keys(n->sons[i], prefix + static_cast<char>(i), v);
 			}
@@ -181,9 +177,9 @@ void Trie::trie<T,R>::show() {
         std::cout << "digraph graphName{" << std::endl;
 	std::cout << "node [shape=record];" << std::endl;
 	// Node labels
-	int label = 0;
+	size_t label = 0;
 	std::cout << label << " [shape=record,label=\"{Root}\"];" << std::endl;;
-	for (unsigned int i = 0; i < root->r; ++i) {
+	for (size_t i = 0; i < root->r; ++i) {
 	        if (root->sons[i] != nullptr) {
 			++label;
 			show_label(root->sons[i], i, label);
@@ -191,7 +187,7 @@ void Trie::trie<T,R>::show() {
 	}
 	// Node hierarchy
 	label = 0;
-	for (unsigned int i = 0; i < root->r; ++i) {
+	for (size_t i = 0; i < root->r; ++i) {
 	        if (root->sons[i] != nullptr) {
                         std::cout << 0 << "->";
 			++label;
@@ -203,7 +199,7 @@ void Trie::trie<T,R>::show() {
 
 
 template <class T, size_t R>
-void Trie::trie<T,R>::show_label(Trie::node_ptr<T,R> & n, int pos, int & label) {
+void Trie::trie<T,R>::show_label(Trie::node_ptr<T,R> & n, size_t pos, size_t & label) {
          std::cout << label << " [shape=record,label=\"{ <data>" << static_cast<char>(pos);
 	 if (n->value != T())
 	         std::cout << " | <value> " << n->value;
@@ -211,7 +207,7 @@ void Trie::trie<T,R>::show_label(Trie::node_ptr<T,R> & n, int pos, int & label) 
 	 if (n->value != T())
 	         std::cout << "color=\"blue\"";
 	 std:: cout << "];" << std::endl;
-         for (unsigned int i = 0; i < n->r; ++i) {
+         for (size_t i = 0; i < n->r; ++i) {
 	        if (n->sons[i] != nullptr) {
 		        ++label;
 			show_label(n->sons[i], i, label);
@@ -220,9 +216,9 @@ void Trie::trie<T,R>::show_label(Trie::node_ptr<T,R> & n, int pos, int & label) 
 }
 
 template <class T, size_t R>
-void Trie::trie<T,R>::show(Trie::node_ptr<T,R> & n, int pos, int & label) {
+void Trie::trie<T,R>::show(Trie::node_ptr<T,R> & n, size_t pos, size_t & label) {
          std::cout << label << std::endl;
-	 int copy_label = label;
+	 size_t copy_label = label;
          for (unsigned int i = 0; i < n->r; ++i) {
 	        if (n->sons[i] != nullptr) {
 		        std::cout << copy_label << "->";

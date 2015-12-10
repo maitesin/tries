@@ -16,11 +16,11 @@ namespace Trie {
 			T value;
 			std::array<std::unique_ptr<node<T,R>>, R> sons;
 			size_t s;
-			unsigned int r;
+			size_t r;
 
 			explicit node(T v = T()) : value(v), s(0), r(R) {
 				sons = std::array<std::unique_ptr<node<T,R>>, R>();
-				for (unsigned int i = 0; i < r; ++i) {
+				for (size_t i = 0; i < r; ++i) {
 					sons[i] = nullptr;
 				}
 			}
@@ -115,13 +115,13 @@ namespace Trie {
 		std::vector<std::string> keys(const std::string & prefix = "");
 
 	private:
-		// Atributes
+		// Attributes
 		node_ptr<T,R> root;
-		unsigned int r;
-		unsigned int s;
+		size_t r;
+		size_t s;
 		// Default value of T to return.
 		const T def = T();
-		// Auxiliar value to help return found values.
+		// Helper value to help return found values.
 		T aux_ret;
 		// Methods
 		/*
@@ -133,7 +133,7 @@ namespace Trie {
 		 */
 		node_ptr<T,R> find(node_ptr<T,R> & n,
 				  const std::string & key,
-				  unsigned int d);
+				  size_t d);
 
 		/*
 		 * Given a node it checks if the d-th position in
@@ -144,7 +144,7 @@ namespace Trie {
 		node_ptr<T,R> insert(node_ptr<T,R> n,
 				  const std::string & key,
 				  const T & value,
-				  unsigned int d,
+				  size_t d,
 				  bool & created);
 
 		/*
@@ -160,7 +160,7 @@ namespace Trie {
 		 */
 		bool erase(node_ptr<T,R> & n,
 			    const std::string & key,
-			    unsigned int d,
+			    size_t d,
 			    bool & decrease);
 
 		/*
@@ -172,7 +172,7 @@ namespace Trie {
 		 */
 		bool contains(node_ptr<T,R> & n,
 			      const std::string & key,
-			      unsigned int d);
+			      size_t d);
 
 		/*
 		 * Given a node it checks if the d-th position in
@@ -182,7 +182,7 @@ namespace Trie {
 		 */
 		void keys(node_ptr<T,R> & n,
 			      std::string prefix,
-			      unsigned int d,
+			      size_t d,
 			      vec_ptr & v);
 		/*
 		 * Given a node goes to all its sons to gather
@@ -198,8 +198,8 @@ namespace Trie {
 		 * Given a node prints the its value and the
 		 * ones for its sons in the 'dot' format.
 		 */
-		void show_label(node_ptr<T,R> & n, int pos, int & label);
-		void show(node_ptr<T,R> & n, int pos, int & label);
+		void show_label(node_ptr<T,R> & n, size_t pos, size_t & label);
+		void show(node_ptr<T,R> & n, size_t pos, size_t & label);
 	}; // TRIE_CLASS
 
 }; // TRIE_NAMESPACE

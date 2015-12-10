@@ -111,7 +111,7 @@ namespace TST {
 		std::vector<std::string> get_keys(const std::string & prefix = "");
 
 	private:
-		// Atributes
+		// Attributes
 		node_ptr<T> root;
 		unsigned int s;
 		const T def = T();
@@ -199,10 +199,10 @@ namespace TST {
 				 vec_ptr & v);
 
 		void show_label(node_ptr<T> &n,
-				int & label);
+				size_t & label);
 
 		void show(node_ptr<T> &n,
-				int & label);
+				size_t & label);
 	}; // TST_CLASS
 
 }; // TST_NAMESPACE
