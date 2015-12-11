@@ -7,7 +7,7 @@
 template <class T, size_t R>
 const T & Trie::trie<T,R>::find(const std::string & key) {
 	if (key != "") {
-		node_ptr<T,R> node (find(root, key, 0));
+		node_ptr node (find(root, key, 0));
 		if (node != nullptr){
 			aux_ret = node->value;
 			node.release();
@@ -20,7 +20,7 @@ const T & Trie::trie<T,R>::find(const std::string & key) {
 }
 
 template <class T, size_t R>
-Trie::node_ptr<T,R> Trie::trie<T,R>::find(Trie::node_ptr<T,R> & n,
+typename Trie::trie<T,R>::node_ptr Trie::trie<T,R>::find(Trie::trie<T,R>::node_ptr & n,
 					 const std::string & key,
 					 size_t d) {
 	if (key.size() == d) {
@@ -28,7 +28,7 @@ Trie::node_ptr<T,R> Trie::trie<T,R>::find(Trie::node_ptr<T,R> & n,
 			return nullptr;
 		} else {
 			if (n->value != def)
-				return node_ptr<T,R>(n.get());
+				return node_ptr(n.get());
 			else
 				return nullptr;
 		}
@@ -52,7 +52,7 @@ void Trie::trie<T,R>::insert(const std::string & key,
 }
 
 template <class T, size_t R>
-Trie::node_ptr<T,R> Trie::trie<T,R>::insert(Trie::node_ptr<T,R> n,
+typename Trie::trie<T,R>::node_ptr Trie::trie<T,R>::insert(Trie::trie<T,R>::node_ptr n,
 					 const std::string & key,
 					 const T & value,
 					 size_t d,
@@ -64,7 +64,7 @@ Trie::node_ptr<T,R> Trie::trie<T,R>::insert(Trie::node_ptr<T,R> n,
 		return n;
 	} else {
 		if (n->sons[key[d]] == nullptr) {
-			n->sons[key[d]] = Trie::node_ptr<T,R>(new node<T,R>());
+			n->sons[key[d]] = node_ptr(new node());
 			++n->s;
 		}
 		n->sons[key[d]] = insert(std::move(n->sons[key[d]]), key, value, d+1, created);
@@ -73,7 +73,7 @@ Trie::node_ptr<T,R> Trie::trie<T,R>::insert(Trie::node_ptr<T,R> n,
 }
 
 template <class T, size_t R>
-void Trie::trie<T,R>::clear(Trie::node_ptr<T,R> n) {
+void Trie::trie<T,R>::clear(Trie::trie<T,R>::node_ptr n) {
 	for (size_t i = 0; i < n->r; ++i) {
 		if (n->sons[i] != nullptr) clear(std::move(n->sons[i]));
 	}
@@ -86,7 +86,7 @@ bool Trie::trie<T,R>::contains(const std::string & key) {
 }
 
 template <class T, size_t R>
-bool Trie::trie<T,R>::contains(Trie::node_ptr<T,R> & n,
+bool Trie::trie<T,R>::contains(Trie::trie<T,R>::node_ptr & n,
 			       const std::string & key,
 			       size_t d) {
 	if (key.size() ==d) {
@@ -110,7 +110,7 @@ void Trie::trie<T,R>::erase(const std::string & key) {
 }
 
 template <class T, size_t R>
-bool Trie::trie<T,R>::erase(Trie::node_ptr<T,R> & n,
+bool Trie::trie<T,R>::erase(Trie::trie<T,R>::node_ptr & n,
 			     const std::string & key,
 			     size_t d,
 			     bool & decrease) {
@@ -144,7 +144,7 @@ std::vector<std::string> Trie::trie<T,R>::keys(const std::string & prefix) {
 }
 
 template <class T, size_t R>
-void Trie::trie<T,R>::keys(Trie::node_ptr<T,R> & n,
+void Trie::trie<T,R>::keys(Trie::trie<T,R>::node_ptr & n,
 			       std::string prefix,
 			       size_t d,
 			       vec_ptr & v) {
@@ -157,7 +157,7 @@ void Trie::trie<T,R>::keys(Trie::node_ptr<T,R> & n,
 }
 
 template <class T, size_t R>
-void Trie::trie<T,R>::gather_keys(Trie::node_ptr<T,R> & n,
+void Trie::trie<T,R>::gather_keys(Trie::trie<T,R>::node_ptr & n,
 				  std::string prefix,
 				  vec_ptr & v) {
 	if (n->value != def) {
@@ -199,7 +199,7 @@ void Trie::trie<T,R>::show() {
 
 
 template <class T, size_t R>
-void Trie::trie<T,R>::show_label(Trie::node_ptr<T,R> & n, size_t pos, size_t & label) {
+void Trie::trie<T,R>::show_label(Trie::trie<T,R>::node_ptr & n, size_t pos, size_t & label) {
          std::cout << label << " [shape=record,label=\"{ <data>" << static_cast<char>(pos);
 	 if (n->value != T())
 	         std::cout << " | <value> " << n->value;
@@ -216,7 +216,7 @@ void Trie::trie<T,R>::show_label(Trie::node_ptr<T,R> & n, size_t pos, size_t & l
 }
 
 template <class T, size_t R>
-void Trie::trie<T,R>::show(Trie::node_ptr<T,R> & n, size_t pos, size_t & label) {
+void Trie::trie<T,R>::show(Trie::trie<T,R>::node_ptr & n, size_t pos, size_t & label) {
          std::cout << label << std::endl;
 	 size_t copy_label = label;
          for (unsigned int i = 0; i < n->r; ++i) {
@@ -234,7 +234,7 @@ std::string Trie::trie<T,R>::lcp() {
 }
 
 template <class T, size_t R>
-std::string Trie::trie<T,R>::lcp(Trie::node_ptr<T,R> &n, std::string s) {
+std::string Trie::trie<T,R>::lcp(Trie::trie<T,R>::node_ptr &n, std::string s) {
 	if (n->s == 1) {
 		for (unsigned int i = 0; i < n->r; ++i) {
 			if (n->sons[i] != nullptr) {

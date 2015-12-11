@@ -8,7 +8,7 @@ template <class T, size_t R>
 const T & RadixTree::radix_tree<T,R>::find(const std::string & key) {
 	if (key != "") {
 		if (roots[key[0]] != nullptr){
-			node_ptr<T,R> node (find(roots[key[0]], key, 0));
+			node_ptr node (find(roots[key[0]], key, 0));
 			if (node != nullptr){
 				aux_ret = node->value;
 				node.release();
@@ -21,7 +21,7 @@ const T & RadixTree::radix_tree<T,R>::find(const std::string & key) {
 }
 
 template <class T, size_t R>
-RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::find(RadixTree::node_ptr<T,R> & n,
+typename RadixTree::radix_tree<T,R>::node_ptr RadixTree::radix_tree<T,R>::find(RadixTree::radix_tree<T,R>::node_ptr & n,
 							 const std::string & key,
 							 size_t d) {
 	if (n != nullptr) {
@@ -38,7 +38,7 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::find(RadixTree::node_ptr<T,
 				else {
 					// We found it
 					if (n->value != def) {
-						return node_ptr<T,R>(n.get());
+						return node_ptr(n.get());
 					}
 				}
 			}
@@ -59,7 +59,7 @@ void RadixTree::radix_tree<T,R>::insert(const std::string & key,
 }
 
 template <class T, size_t R>
-RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::insert(RadixTree::node_ptr<T,R> n,
+typename RadixTree::radix_tree<T,R>::node_ptr RadixTree::radix_tree<T,R>::insert(RadixTree::radix_tree<T,R>::node_ptr n,
 							 const std::string & key,
 							 const T & value,
 							 size_t d,
@@ -112,17 +112,17 @@ RadixTree::node_ptr<T,R> RadixTree::radix_tree<T,R>::insert(RadixTree::node_ptr<
 	else {
 		// Create a new node with the information remaining
 		created = true;
-		return node_ptr<T,R>(new node<T,R>(key.substr(d, key.size()-d), value));
+		return radix_tree<T,R>::node_ptr(new node(key.substr(d, key.size()-d), value));
 	}
 }
 
 template <class T, size_t R>
-void RadixTree::radix_tree<T,R>::split(RadixTree::node_ptr<T,R> & n,
+void RadixTree::radix_tree<T,R>::split(RadixTree::radix_tree<T,R>::node_ptr & n,
 				       const T & value,
 				       size_t p) {
 	std::string upper_path = n->path.substr(0, p);
 	std::string lower_path = n->path.substr(p, n->path.size()-p);
-	n->sons[lower_path[0]] = node_ptr<T,R>(new node<T,R>(lower_path, n->value));
+	n->sons[lower_path[0]] = node_ptr(new node(lower_path, n->value));
 	n->sons[lower_path[0]]->s = n->s;
 	n->value = value;
 	n->path = upper_path;
@@ -130,7 +130,7 @@ void RadixTree::radix_tree<T,R>::split(RadixTree::node_ptr<T,R> & n,
 }
 
 template <class T, size_t R>
-void RadixTree::radix_tree<T,R>::find_diff_and_split(RadixTree::node_ptr<T,R> & n,
+void RadixTree::radix_tree<T,R>::find_diff_and_split(RadixTree::radix_tree<T,R>::node_ptr & n,
 						     const std::string & key,
 						     const T & value) {
 	size_t p_s = n->path.size();
@@ -140,7 +140,7 @@ void RadixTree::radix_tree<T,R>::find_diff_and_split(RadixTree::node_ptr<T,R> & 
 		if (n->path[i] != key[i]){
 			split(n, T(), i);
 			std::string branch = key.substr(i, key.size()-i);
-			n->sons[branch[0]] = node_ptr<T,R>(new node<T,R>(branch, value));
+			n->sons[branch[0]] = node_ptr(new node(branch, value));
 			++n->s;
 			return ;
 		}
@@ -148,7 +148,7 @@ void RadixTree::radix_tree<T,R>::find_diff_and_split(RadixTree::node_ptr<T,R> & 
 }
 
 template <class T, size_t R>
-void RadixTree::radix_tree<T,R>::clear(RadixTree::node_ptr<T,R> n) {
+void RadixTree::radix_tree<T,R>::clear(RadixTree::radix_tree<T,R>::node_ptr n) {
 	for (size_t i = 0; i < n->r; ++i) {
 		if (n->sons[i] != nullptr) clear(std::move(n->sons[i]));
 	}
@@ -164,7 +164,7 @@ bool RadixTree::radix_tree<T,R>::contains(const std::string & key) {
 }
 
 template <class T, size_t R>
-bool RadixTree::radix_tree<T,R>::contains(RadixTree::node_ptr<T,R> & n,
+bool RadixTree::radix_tree<T,R>::contains(RadixTree::radix_tree<T,R>::node_ptr & n,
 					  const std::string & key,
 					  size_t d) {
 	if (n != nullptr) {
@@ -200,7 +200,7 @@ void RadixTree::radix_tree<T,R>::erase(const std::string & key) {
 }
 
 template <class T, size_t R>
-bool RadixTree::radix_tree<T,R>::erase(RadixTree::node_ptr<T,R> & n,
+bool RadixTree::radix_tree<T,R>::erase(RadixTree::radix_tree<T,R>::node_ptr & n,
 					const std::string & key,
 					size_t d,
 					bool & decrease) {
@@ -248,7 +248,7 @@ bool RadixTree::radix_tree<T,R>::erase(RadixTree::node_ptr<T,R> & n,
 }
 
 template <class T, size_t R>
-void RadixTree::radix_tree<T,R>::merge_with_only_son(RadixTree::node_ptr<T,R> & n) {
+void RadixTree::radix_tree<T,R>::merge_with_only_son(RadixTree::radix_tree<T,R>::node_ptr & n) {
 	if (n->s == 1){
 		for (size_t i = 0; i < r; ++i) {
 			if (n->sons[i] != nullptr) {
@@ -260,8 +260,8 @@ void RadixTree::radix_tree<T,R>::merge_with_only_son(RadixTree::node_ptr<T,R> & 
 }
 
 template <class T, size_t R>
-void RadixTree::radix_tree<T,R>::merge(RadixTree::node_ptr<T,R> & father,
-				       RadixTree::node_ptr<T,R> & son) {
+void RadixTree::radix_tree<T,R>::merge(RadixTree::radix_tree<T,R>::node_ptr & father,
+				       RadixTree::radix_tree<T,R>::node_ptr & son) {
 	father->value = son->value;
 	father->s = son->s;
 	father->path += son->path;
@@ -293,7 +293,7 @@ std::vector<std::string> RadixTree::radix_tree<T,R>::keys(const std::string & pr
 }
 
 template <class T, size_t R>
-void RadixTree::radix_tree<T,R>::keys(RadixTree::node_ptr<T,R> & n,
+void RadixTree::radix_tree<T,R>::keys(RadixTree::radix_tree<T,R>::node_ptr & n,
 					  std::string prefix,
 					  size_t d,
 					  vec_ptr & v) {
@@ -335,7 +335,7 @@ std::string RadixTree::radix_tree<T,R>::prefix_cut(std::string & prefix, size_t 
 }
 
 template <class T, size_t R>
-void RadixTree::radix_tree<T,R>::gather_keys(RadixTree::node_ptr<T,R> & n,
+void RadixTree::radix_tree<T,R>::gather_keys(RadixTree::radix_tree<T,R>::node_ptr & n,
 					     std::string prefix,
 					     vec_ptr & v) {
 	if (n->value != def) {
@@ -376,7 +376,7 @@ void RadixTree::radix_tree<T,R>::show() {
 }
 
 template <class T, size_t R>
-void RadixTree::radix_tree<T,R>::show_label(RadixTree::node_ptr<T,R> & n,
+void RadixTree::radix_tree<T,R>::show_label(RadixTree::radix_tree<T,R>::node_ptr & n,
 					    size_t & label) {
          std::cout << label << " [shape=record,label=\"{ <data> " << n->path;
 	 if (n->value != T())
@@ -394,7 +394,7 @@ void RadixTree::radix_tree<T,R>::show_label(RadixTree::node_ptr<T,R> & n,
 }
 
 template <class T, size_t R>
-void RadixTree::radix_tree<T,R>::show(RadixTree::node_ptr<T,R> & n,
+void RadixTree::radix_tree<T,R>::show(RadixTree::radix_tree<T,R>::node_ptr & n,
 				      size_t & label) {
          std::cout << label << std::endl;
 	 size_t copy_label = label;
