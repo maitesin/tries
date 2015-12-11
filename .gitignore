@@ -1,4 +1,4 @@
-doc
+doc/latex
 test/bin/*
 test/data/*
 test/plots/*
