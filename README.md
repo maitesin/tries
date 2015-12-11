@@ -8,15 +8,14 @@ The aim of this study is to <b>compare the performance</b> of these three data s
 ##Operations supported by the three data structures tested in this project.
 Operation|Description
 ---------|-----------
-clean|Removes all the content of the data structure
-get|Returns the value stored in the data structure for a specific key provided
-put|Adds a new pair of key and value to the data structure
+clear|Removes all the content of the data structure
+find|Returns the value stored in the data structure for a specific key provided
+insert|Adds a new pair of key and value to the data structure
 size|Returns the amount of elements stored in the data structure
 show|Prints the content of the data structure in the [dot](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) format
-remove|Removes the value stored in the data structure for a specific key provided
+erase|Removes the value stored in the data structure for a specific key provided
 contains|Returns true if there is a value associated to the key provided
-get_keys_with_prefix|Returns a std::vector with all the keys in the data structure that have the provided prefix
-get_keys|Returns a std::vector with all the keys in the data structure
+keys|Returns a std::vector with all the keys in the data structure that have the provided prefix. If no prefix is provided returns a std::vector with all the keys in the data structure.
 
 ##Scenarios tested
 I have develop several test scenarios (and I am still developing new ones) to compare the performance of these five data structures.
