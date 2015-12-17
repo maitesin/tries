@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/maitesin/tries.svg?branch=master)](https://travis-ci.org/maitesin/tries)
+
 Trie / Ternary Search Tree (TST) / Radix Tree
 =====
 ##Description of this project
