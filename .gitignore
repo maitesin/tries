@@ -3,3 +3,10 @@ test/bin/*
 test/data/*
 test/plots/*
 test/dict/*.txt
+
+CMakeFiles
+CMakeCache.txt
+bin
+conaninfo.txt
+*.cmake
+Makefile

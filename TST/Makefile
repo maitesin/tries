@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/maitesin/workspace/tries/TST
+CMAKE_SOURCE_DIR = /home/maitesin/workspace/tries
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/maitesin/workspace/tries/TST
+CMAKE_BINARY_DIR = /home/maitesin/workspace/tries
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,14 +80,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/maitesin/workspace/tries/TST/CMakeFiles /home/maitesin/workspace/tries/TST/CMakeFiles/progress.marks
-	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/maitesin/workspace/tries/TST/CMakeFiles 0
+	cd /home/maitesin/workspace/tries && $(CMAKE_COMMAND) -E cmake_progress_start /home/maitesin/workspace/tries/CMakeFiles /home/maitesin/workspace/tries/TST/CMakeFiles/progress.marks
+	cd /home/maitesin/workspace/tries && $(MAKE) -f CMakeFiles/Makefile2 TST/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maitesin/workspace/tries/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) -f CMakeFiles/Makefile2 clean
+	cd /home/maitesin/workspace/tries && $(MAKE) -f CMakeFiles/Makefile2 TST/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,31 +97,33 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/maitesin/workspace/tries && $(MAKE) -f CMakeFiles/Makefile2 TST/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/maitesin/workspace/tries && $(MAKE) -f CMakeFiles/Makefile2 TST/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/maitesin/workspace/tries && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-#=============================================================================
-# Target rules for targets named test
+# Convenience name for target.
+TST/CMakeFiles/tst_test.dir/rule:
+	cd /home/maitesin/workspace/tries && $(MAKE) -f CMakeFiles/Makefile2 TST/CMakeFiles/tst_test.dir/rule
+.PHONY : TST/CMakeFiles/tst_test.dir/rule
 
-# Build rule for target.
-test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 test
-.PHONY : test
+# Convenience name for target.
+tst_test: TST/CMakeFiles/tst_test.dir/rule
+
+.PHONY : tst_test
 
 # fast build rule for target.
-test/fast:
-	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/build
-.PHONY : test/fast
+tst_test/fast:
+	cd /home/maitesin/workspace/tries && $(MAKE) -f TST/CMakeFiles/tst_test.dir/build.make TST/CMakeFiles/tst_test.dir/build
+.PHONY : tst_test/fast
 
 gtest/main.o: gtest/main.cpp.o
 
@@ -129,7 +131,7 @@ gtest/main.o: gtest/main.cpp.o
 
 # target to build an object file
 gtest/main.cpp.o:
-	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/gtest/main.cpp.o
+	cd /home/maitesin/workspace/tries && $(MAKE) -f TST/CMakeFiles/tst_test.dir/build.make TST/CMakeFiles/tst_test.dir/gtest/main.cpp.o
 .PHONY : gtest/main.cpp.o
 
 gtest/main.i: gtest/main.cpp.i
@@ -138,7 +140,7 @@ gtest/main.i: gtest/main.cpp.i
 
 # target to preprocess a source file
 gtest/main.cpp.i:
-	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/gtest/main.cpp.i
+	cd /home/maitesin/workspace/tries && $(MAKE) -f TST/CMakeFiles/tst_test.dir/build.make TST/CMakeFiles/tst_test.dir/gtest/main.cpp.i
 .PHONY : gtest/main.cpp.i
 
 gtest/main.s: gtest/main.cpp.s
@@ -147,7 +149,7 @@ gtest/main.s: gtest/main.cpp.s
 
 # target to generate assembly for a file
 gtest/main.cpp.s:
-	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/gtest/main.cpp.s
+	cd /home/maitesin/workspace/tries && $(MAKE) -f TST/CMakeFiles/tst_test.dir/build.make TST/CMakeFiles/tst_test.dir/gtest/main.cpp.s
 .PHONY : gtest/main.cpp.s
 
 # Help Target
@@ -158,7 +160,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... test"
+	@echo "... tst_test"
 	@echo "... gtest/main.o"
 	@echo "... gtest/main.i"
 	@echo "... gtest/main.s"
@@ -173,6 +175,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/maitesin/workspace/tries && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
