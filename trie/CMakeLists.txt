@@ -9,3 +9,5 @@ CONAN_BASIC_SETUP()
 INCLUDE_DIRECTORIES(lib)
 ADD_EXECUTABLE(test gtest/main.cpp)
 TARGET_LINK_LIBRARIES(test ${CONAN_LIBS})
+
+add_custom_command(TARGET test POST_BUILD COMMAND ./bin/test)
