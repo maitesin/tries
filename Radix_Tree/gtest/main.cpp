@@ -10,7 +10,7 @@ protected:
   RadixTree::radix_tree<int, 256> t;
 }; // class
 
-TEST_F(RadixTest, MethodPut) {
+TEST_F(RadixTest, MethodInsertTest1) {
   const std::string key = "hi";
   const std::string no_key = "no";
   const int value = 42;
@@ -19,6 +19,19 @@ TEST_F(RadixTest, MethodPut) {
   EXPECT_EQ(1, t.size()) << "This should be 1. It only has a value";
   EXPECT_EQ(42, t.find(key)) << "This should be 42. It is the value we insert";
   EXPECT_EQ(0, t.find(no_key)) << "This should be the default value for the content. We never inserted any value with this key";
+}
+
+TEST_F(RadixTest, MethodInsertTest2) {
+	const std::string world = "World",
+	      worry = "Worry",
+	      wololo = "Wololo";
+	t.insert(worry, 1);
+	t.insert(world, 2);
+	t.insert(wololo, 3);
+	EXPECT_EQ(3, t.size()) << "This should be 3";
+	EXPECT_EQ(1, t.find(worry)) << "This should be 1";
+	EXPECT_EQ(2, t.find(world)) << "This should be 2";
+	EXPECT_EQ(3, t.find(wololo)) << "This should be 3";
 }
 
 TEST_F(RadixTest, MethodClean) {
