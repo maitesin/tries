@@ -23,8 +23,9 @@ script:
 env:
   global:
     # COVERITY_SCAN_TOKEN
+      - COVERITY_SCAN_TOKEN: "SeCJaR041ZLYRz9O0_Ze8A"
     # ** specific to your project **
-    - secure: "k40i2hBgh9PcscNCT9zMlg"
+    - secure: "SeCJaR041ZLYRz9O0_Ze8A"
 
 addons:
   coverity_scan:
