@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/maitesin/tries.svg?branch=master)](https://travis-ci.org/maitesin/tries)
+Build with CMake | Coverity analysis
+-----------------|------------------
+[![Build Status](https://travis-ci.org/maitesin/tries.svg?branch=master)](https://travis-ci.org/maitesin/tries) | <a href="https://scan.coverity.com/projects/maitesin-tries"> <img alt="Coverity Scan Build Status" src="https://scan.coverity.com/projects/7354/badge.svg"/> </a>
 
 Trie / Ternary Search Tree (TST) / Radix Tree
 =====
