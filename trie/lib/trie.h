@@ -17,6 +17,7 @@ namespace Trie {
 		// Constructor
 		explicit trie() : r(R), s(0) {
 			root = node_ptr(new node);
+			aux_ret = T();
 		}
 		// Destructor
 		~trie() {

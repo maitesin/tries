@@ -4,9 +4,9 @@ test/data/*
 test/plots/*
 test/dict/*.txt
 
-CMakeFiles
-CMakeCache.txt
-bin
-conaninfo.txt
-*.cmake
-Makefile
+**/CMakeFiles
+**/CMakeCache.txt
+**/bin
+**/conaninfo.txt
+**/*.cmake
+**/Makefile

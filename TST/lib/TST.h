@@ -16,7 +16,9 @@ namespace TST {
 		class tst {
 	public:
 		// Constructor
-		explicit tst() : root(nullptr), s(0){}
+		explicit tst() : root(nullptr), s(0) {
+			aux_ret = T();
+		}
 
 		// Destructor
 		~tst() {

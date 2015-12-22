@@ -20,6 +20,7 @@ namespace RadixTree {
 			for (size_t i = 0; i < r; ++i) {
 				roots[i] = nullptr;
 			}
+			aux_ret = T();
 		}
 		// Destructor
 		~radix_tree() {
