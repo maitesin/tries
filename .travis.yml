@@ -19,7 +19,7 @@ install:
 
 script:
 - cmake .
-- make
+- make CXXFLAGS="-ftest-coverage"
 
 after_success:
 - coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" --gcov-options '\-lp' --gcov 'gcov-4.9'
