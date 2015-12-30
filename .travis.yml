@@ -22,7 +22,7 @@ script:
 - make
 
 after_success:
-- coveralls --root . -E ".*CMakeFiles.*" -E "trie/lib/.*.cpp" -E "TST/lib/.*.cpp" -E "Radix_Tree/lib/.*.cpp"
+- coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" --gcov-options '\-lp' --gcov 'gcov-4.9'
 
 addons:
   coverity_scan:
