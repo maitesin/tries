@@ -1,6 +1,6 @@
-Build with CMake | Coverity analysis
------------------|------------------
-[![Build Status](https://travis-ci.org/maitesin/tries.svg?branch=master)](https://travis-ci.org/maitesin/tries) | <a href="https://scan.coverity.com/projects/maitesin-tries"> <img alt="Coverity Scan Build Status" src="https://scan.coverity.com/projects/7354/badge.svg"/> </a>
+Build with CMake | Coverity analysis | Coverage of code |
+-----------------|-------------------|------------------|
+[![Build Status](https://travis-ci.org/maitesin/tries.svg?branch=master)](https://travis-ci.org/maitesin/tries) | <a href="https://scan.coverity.com/projects/maitesin-tries"> <img alt="Coverity Scan Build Status" src="https://scan.coverity.com/projects/7354/badge.svg"/> </a> | [![Coverage Status](https://coveralls.io/repos/maitesin/tries/badge.svg?branch=master&service=github)](https://coveralls.io/github/maitesin/tries?branch=master) |
 
 Trie / Ternary Search Tree (TST) / Radix Tree
 =====

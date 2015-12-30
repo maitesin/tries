@@ -10,4 +10,5 @@ INCLUDE_DIRECTORIES(lib)
 ADD_EXECUTABLE(radix_test gtest/main.cpp)
 TARGET_LINK_LIBRARIES(radix_test ${CONAN_LIBS})
 
-add_custom_command(TARGET radix_test POST_BUILD COMMAND ./bin/radix_test)
+enable_testing()
+add_test(unit ./bin/radix_test)
