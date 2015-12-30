@@ -10,4 +10,4 @@ INCLUDE_DIRECTORIES(lib)
 ADD_EXECUTABLE(tst_test gtest/main.cpp)
 TARGET_LINK_LIBRARIES(tst_test ${CONAN_LIBS})
 
-#add_custom_command(TARGET tst_test POST_BUILD COMMAND ./bin/tst_test)
+add_custom_command(TARGET tst_test POST_BUILD COMMAND ./bin/tst_test)
