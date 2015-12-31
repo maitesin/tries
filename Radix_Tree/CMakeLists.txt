@@ -11,4 +11,5 @@ ADD_EXECUTABLE(radix_test gtest/main.cpp)
 TARGET_LINK_LIBRARIES(radix_test ${CONAN_LIBS})
 
 enable_testing()
-add_test(unit ./bin/radix_test)
+add_test(NAME Radix
+        COMMAND ./bin/radix_test)

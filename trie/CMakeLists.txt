@@ -10,5 +10,5 @@ INCLUDE_DIRECTORIES(lib)
 ADD_EXECUTABLE(trie_test gtest/main.cpp)
 TARGET_LINK_LIBRARIES(trie_test ${CONAN_LIBS})
 
-enable_testing()
-add_test(unit ./bin/trie_test)
+add_test(NAME trie
+        COMMAND ./bin/trie_test)

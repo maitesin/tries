@@ -11,4 +11,5 @@ ADD_EXECUTABLE(tst_test gtest/main.cpp)
 TARGET_LINK_LIBRARIES(tst_test ${CONAN_LIBS})
 
 enable_testing()
-add_test(unit ./bin/tst_test)
+add_test(NAME TST
+        COMMAND ./bin/tst_test)
