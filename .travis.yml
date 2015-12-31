@@ -22,9 +22,7 @@ script:
 - make CXXFLAGS="-fprofile-arcs -ftest-coverage"
 
 after_success:
-- ./trie/bin/trie_test
-- ./TST/bin/tst_test
-- ./Radix_Tree/bin/radix_test
+- make test
 - coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" --gcov-options '\-lp' --gcov 'gcov-4.9'
 
 addons:
