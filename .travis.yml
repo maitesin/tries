@@ -19,11 +19,11 @@ install:
 
 script:
 - cmake .
-- make CXXFLAGS="-fprofile-arcs -ftest-coverage"
+- make
 
 after_success:
 - make test
-- coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" 
+- coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" --gcov-options '\-lp' --gcov 'gcov-4.9' 
 
 addons:
   coverity_scan:
