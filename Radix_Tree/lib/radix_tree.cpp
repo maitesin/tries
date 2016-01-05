@@ -415,10 +415,12 @@ std::string RadixTree::radix_tree<T,R>::lcp(){
 	unsigned int founds = 0;
 	std::string lcp = "";
 	for (unsigned int i = 0; i < r; ++i){
-		if (roots[i] != nullptr && roots[i]->s > 0) {
-			++founds;
-			lcp = roots[i]->path;
+		if (roots[i] != nullptr) {
+			if (roots[i]->s > 0 || roots[i]->value != def) {
+				++founds;
+				lcp = roots[i]->path;
+			}
 		}
 	}
-	return founds >= 1 ? lcp : "";
+	return founds == 1 ? lcp : "";
 };
