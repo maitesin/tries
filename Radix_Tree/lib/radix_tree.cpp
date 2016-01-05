@@ -420,5 +420,5 @@ std::string RadixTree::radix_tree<T,R>::lcp(){
 			lcp = roots[i]->path;
 		}
 	}
-	return founds == 1 ? lcp : "";
+	return founds >= 1 ? lcp : "";
 };
