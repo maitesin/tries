@@ -11,6 +11,7 @@ SEARCH_FOUND=$(SRC)/search_found.cpp
 SEARCH_NOT_FOUND=$(SRC)/search_not_found.cpp
 GET_KEYS=$(SRC)/get_keys.cpp
 GET_KEYS_PREFIX=$(SRC)/get_keys_with_prefix.cpp
+LCP=$(SRC)/lcp.cpp
 BIN=bin
 DICT=dict
 
@@ -21,6 +22,7 @@ all:
 	$(MAKE) search
 	$(MAKE) keys
 	$(MAKE) keys_prefix
+	$(MAKE) lcp
 	$(MAKE) dicts
 	$(MAKE) run
 	$(MAKE) graphics
@@ -31,6 +33,7 @@ clean:
 	$(MAKE) clean_search
 	$(MAKE) clean_keys
 	$(MAKE) clean_keys_prefix
+	$(MAKE) clean_lcp
 
 insert: $(INSERT)
 	$(CXX) $(INSERT) $(CXXFLAGS) -I$(TRIE_SOURCE) -DTRIE -o $(BIN)/trie_insert
@@ -105,6 +108,16 @@ keys_prefix: $(GET_KEYS_PREFIX)
 
 clean_keys_prefix:
 	rm $(wildcard $(BIN)/*_get_keys_prefix)
+
+lcp: $(LCP)
+	$(CXX) $(LCP) $(CXXFLAGS) -I$(TRIE_SOURCE) -DTRIE -o $(BIN)/trie_lcp
+	$(CXX) $(LCP) $(CXXFLAGS) -I$(TST_SOURCE) -DTERNARY -o $(BIN)/tst_lcp
+	$(CXX) $(LCP) $(CXXFLAGS) -I$(RADIX_SOURCE) -DRADIX -o $(BIN)/radix_lcp
+	$(CXX) $(LCP) $(CXXFLAGS) -DMAP -o $(BIN)/map_lcp
+	$(CXX) $(LCP) $(CXXFLAGS) -DUMAP -o $(BIN)/umap_lcp
+
+clean_lcp:
+	rm $(wildcard $(BIN)/*_lcp)
 
 dicts:
 	tar zxf $(DICT)/dicts.tar.gz -C $(DICT)
