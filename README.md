@@ -1,11 +1,9 @@
-Build with CMake | Coverity analysis | Coverage of code |
------------------|-------------------|------------------|
-[![Build Status](https://travis-ci.org/maitesin/tries.svg?branch=master)](https://travis-ci.org/maitesin/tries) | <a href="https://scan.coverity.com/projects/maitesin-tries"> <img alt="Coverity Scan Build Status" src="https://scan.coverity.com/projects/7354/badge.svg"/> </a> | [![Coverage Status](https://coveralls.io/repos/maitesin/tries/badge.svg?branch=master&service=github)](https://coveralls.io/github/maitesin/tries?branch=master) |
+[![Build Status](https://travis-ci.org/maitesin/tries.svg?branch=master)](https://travis-ci.org/maitesin/tries)  <a href="https://scan.coverity.com/projects/maitesin-tries"> <img alt="Coverity Scan Build Status" src="https://scan.coverity.com/projects/7354/badge.svg"/> </a>  [![Coverage Status](https://coveralls.io/repos/maitesin/tries/badge.svg?branch=master&service=github)](https://coveralls.io/github/maitesin/tries?branch=master) 
 
 Trie / Ternary Search Tree (TST) / Radix Tree
 =====
 ##Description of this project
-I have created three data structures that are implementations of the <b>abstract data type dictionary</b>. But they are enhanced with an <b>extra method</b> called <b>"get_keys_with_prefix"</b>. This can be useful to use it in tasks such as autocomplete searches.
+I have created three data structures that are implementations of the <b>abstract data type dictionary</b>. But they are enhanced with an <b>extra method</b> called <b>"keys"</b>, this returns the keys with that share a provided prefix. This can be useful to use it in tasks such as autocomplete searches.
 
 The aim of this study is to <b>compare the performance</b> of these three data structures in <b>different scenarios</b> and against the <b>std::map</b> and <b>std::unordered_map</b>. Moreover, the second aim of this project is to practice new things added in the standard <b>C++11</b> and the <b>Google Test</b> as a unit test framework.
 
