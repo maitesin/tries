@@ -18,6 +18,7 @@ show|Prints the content of the data structure in the [dot](https://en.wikipedia.
 erase|Removes the value stored in the data structure for a specific key provided
 contains|Returns true if there is a value associated to the key provided
 keys|Returns a std::vector with all the keys in the data structure that have the provided prefix. If no prefix is provided returns a std::vector with all the keys in the data structure.
+lcp|Returns the longest common prefix of all keys stored in the data structure.
 
 ##Scenarios tested
 I have develop several test scenarios (and I am still developing new ones) to compare the performance of these five data structures.
