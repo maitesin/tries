@@ -104,7 +104,7 @@ typename RadixTree::radix_tree<T,R>::node_ptr RadixTree::radix_tree<T,R>::insert
 			else {
 				// The path does not match. Find where begin the difference and split there
 				created = true;
-				n = find_diff_and_split(std::move(n), key, value);
+				n = find_diff_and_split(std::move(n), key.substr(d, key.size()), value);
 				return n;
 			}
 		}
