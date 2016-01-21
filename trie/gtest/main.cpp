@@ -1,135 +1,97 @@
+#include <string>
 #include "trie.cpp"
 #include "gtest/gtest.h"
 
 class TrieTest : public testing::Test {
 protected:
-  virtual void TearDown() {
-    t.clear();
-  }
+  virtual void TearDown() { t.clear(); }
 
   Trie::trie<int, 256> t;
 }; // class
 
-TEST_F(TrieTest, MethodPut) {
-  const std::string key = "hi";
+TEST_F(TrieTest, SizeOfAnEmptyObjectIsZero) {
+  EXPECT_EQ(0, t.size()) << "Size for an empty object should be always zero";
+}
+
+TEST_F(TrieTest, SizeOfAnObjectWithOneElement) {
+  const std::string key = "key";
+  const int value = 42;
+  EXPECT_EQ(1, t.size())
+      << "Size for an object with one element should be one ";
+}
+
+TEST_F(TrieTest, FindANotInsertedKey) {
   const std::string no_key = "no";
-  const int value = 42;
-  EXPECT_EQ(0, t.size()) << "This should be 0 due it is an emplty trie";
-  t.insert(key, value);
-  EXPECT_EQ(1, t.size()) << "This should be 1. It only has a value";
-  EXPECT_EQ(42, t.find(key)) << "This should be 42. It is the value we insert";
-  EXPECT_EQ(0, t.find(no_key)) << "This should be the default value for the content. We never inserted any value with this key";
+  EXPECT_EQ(0, t.find(no_key)) << "Find a key that is not in the object "
+                                  "has to return the entry with the "
+                                  "default contructor of the template";
 }
 
-TEST_F(TrieTest, MethodClean) {
+TEST_F(TrieTest, FindAnInsertedKey) {
   const std::string key = "hi";
   const int value = 42;
-  EXPECT_EQ(0, t.size()) << "This should be 0 due it is an emplty trie";
   t.insert(key, value);
-  EXPECT_EQ(1, t.size()) << "This should be 1. It only has a value";
+  EXPECT_EQ(42, t.find(key)) << "After inserting an entry in the object. It "
+                                "should be able to be retrieved";
+}
+
+TEST_F(TrieTest, CleanAnObjectWithOneElement) {
+  const std::string key = "key";
+  const int value = 42;
+  t.insert(key, value);
   t.clear();
-  EXPECT_EQ(0, t.size()) << "This should be 0 due it is an emplty trie";
-  EXPECT_EQ(0, t.find(key)) << "This should be 0 due we just cleaned the trie";
+  EXPECT_EQ(0, t.size()) << "The size of an object after clear should be zero";
 }
 
-TEST_F(TrieTest, MethodGetRemove) {
-  std::string hello = "Hello", he = "He", hes = "Hes";
-  t.insert(hello, 1);
-  t.insert(he, 2);
-  t.insert(hes, 3);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  t.erase(he);
-  EXPECT_EQ(2, t.size()) << "This should be 2";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(0, t.find(he)) << "This should be 0";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  t.erase(hes);
-  EXPECT_EQ(1, t.size()) << "This should be 1";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(0, t.find(he)) << "This should be 0";
-  EXPECT_EQ(0, t.find(hes)) << "This should be 0";
-  t.insert(hes, 3);
-  EXPECT_EQ(2, t.size()) << "This should be 2";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(0, t.find(he)) << "This should be 0";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  t.insert(he, 2);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  t.erase(hello);
-  EXPECT_EQ(2, t.size()) << "This should be 2";
-  EXPECT_EQ(0, t.find(hello)) << "This should be 0";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  t.insert(hello, 1);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  // Check things are not in the trie
-  EXPECT_EQ(0, t.find("HelloS")) << "This should be 0";
-  EXPECT_EQ(0, t.find("H")) << "This should be 0";
-  EXPECT_EQ(0, t.find("Hel")) << "This should be 0";
+TEST_F(TrieTest, FindAKeyAfterObjectHasBeenCleared) {
+  const std::string key = "key";
+  const int value = 42;
+  t.insert(key, value);
+  t.clear();
+  EXPECT_EQ(0, t.find(key)) << "The result of find for an inserter key after "
+                               "the object has been cleared should be zero";
 }
 
-TEST_F(TrieTest, MethodContains) {
-  std::string hello = "Hello", he = "He", hes = "Hes";
-  t.insert(hello, 1);
-  t.insert(he, 2);
-  t.insert(hes, 3);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  EXPECT_EQ(true, t.contains(hello)) << "This should contain 'Hello'";
-  EXPECT_EQ(true, t.contains(he)) << "This should contain 'He'";
-  EXPECT_EQ(true, t.contains(hes)) << "This should contain 'Hes'";
-  EXPECT_EQ(false, t.contains("he")) << "This should NOT contain 'he'";
-  EXPECT_EQ(false, t.contains("Hel")) << "This should NOT contain 'Hel'";
-  EXPECT_EQ(false, t.contains("HelloS")) << "This should NOT contain 'HelloS'";
+TEST_F(TrieTest, RemoveInsertedKey) {
+	const std::string key = "key";
+	const int value = 42;
+	t.insert(key, value);
+	t.remove(key);
+	EXPECT_EQ(0, t.find(key)) << "After removing an inserted entry in the"
+		"object it should return the entry with the default constructor"
+		"of the template";
 }
 
-TEST_F(TrieTest, MethodGetKeys) {
-  std::string hello = "Hello", he = "He", hes = "Hes";
-  t.insert(hello, 1);
-  t.insert(he, 2);
-  t.insert(hes, 3);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  std::vector<std::string> vec;
-  vec = t.keys();
-  EXPECT_EQ(3, vec.size()) << "This should be 3";
-  EXPECT_EQ(he, vec[0]) << "This should be 'He'";
-  EXPECT_EQ(hello, vec[1]) << "This should be 'Hello'";
-  EXPECT_EQ(hes, vec[2]) << "This should be 'Hes'";
-  t.erase(he);
-  vec = t.keys();
-  EXPECT_EQ(2, vec.size()) << "This should be 2";
-  EXPECT_EQ(hello, vec[0]) << "This should be 'Hello'";
-  EXPECT_EQ(hes, vec[1]) << "This should be 'Hes'";
-  t.insert(he, 2);
-  vec = t.keys();
-  EXPECT_EQ(3, vec.size()) << "This should be 3";
-  EXPECT_EQ(he, vec[0]) << "This should be 'He'";
-  EXPECT_EQ(hello, vec[1]) << "This should be 'Hello'";
-  EXPECT_EQ(hes, vec[2]) << "This should be 'Hes'";
-  t.erase(hello);
-  vec = t.keys();
-  EXPECT_EQ(2, vec.size()) << "This should be 2";
-  EXPECT_EQ(he, vec[0]) << "This should be 'He'";
-  EXPECT_EQ(hes, vec[1]) << "This should be 'Hes'";  
+TEST_F(TrieTest, RemoveNonInsertedKey) {
+	const std::string key = "key";
+	t.remove(key);
+	EXPECT_EQ(0, t.size()) << "Removing a non inserted entry should not"
+		"affect at all to the state of the object";
+}
+
+TEST_F(TrieTest, ContainsAnInsertedKey) {
+	const std::string key = "key";
+	const int value = 42;
+	t.insert(key, value);
+	EXPECT_EQ(true, t.contains(key)) << "The object should return true when"
+		"it contains the entry";
+}
+
+TEST_F(TrieTest, ContainsANonInsertedKey) {
+	const std::string key = "key";
+	EXPECT_EQ(false, t.contains(key)) << "The object should return false"
+		"when it does not contain the entry";
+}
+
+TEST_F(TrieTest, LongestCommonPathOfAnEmptyObject) {
+	EXPECT_EQ("", t.lcp()) << "The longest common path of an empty object"
+		"should be the empty string";
 }
 
 TEST_F(TrieTest, MethodGetKeyWithPrefix) {
-  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
-  t.insert(hello, 1);  
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
   t.insert(world, 2);
   t.insert(wololo, 3);
   t.insert(he, 4);
@@ -169,50 +131,28 @@ TEST_F(TrieTest, MethodGetKeyWithPrefix) {
   EXPECT_EQ(0, vec.size()) << "This should be 0";
 }
 
-TEST_F(TrieTest, RemoveEmptyTest) {
-	std::string hello = "Hello", he = "He", hes = "Hes";
-
-	t.insert(he, 1);
-	t.insert(hes, 2);
-	t.insert(hello, 3);
-
-	t.erase(hes);
-	t.erase(he);
-	t.erase(hello);
-
-	EXPECT_EQ(0, t.size()) << "Size should be 0";
-
-	t.insert(he, 1);
-	t.insert(hes, 2);
-	t.insert(hello, 3);
-	t.insert(hes, 4);
-
-	t.erase(hes);
-	t.erase(he);
-	t.erase(hello);
-
-	EXPECT_EQ(0, t.size()) << "Size should be 0";
-}
-
 TEST_F(TrieTest, EmptyStringParameterTest) {
-	std::string hello = "Hello", he = "He", hes = "Hes";
+  std::string hello = "Hello", he = "He", hes = "Hes";
 
-	t.insert(he, 1);
-	t.insert(hes, 2);
-	t.insert(hello, 3);
+  t.insert(he, 1);
+  t.insert(hes, 2);
+  t.insert(hello, 3);
 
-	EXPECT_EQ(0, t.find("")) << "Get from an empty string should be 0 ALWAYS";
-	t.insert("", 1);
-	t.erase("");
-	EXPECT_EQ(false, t.contains("")) << "Contains from an empty string should be 0 ALWAYS";
-	EXPECT_EQ(3, t.size()) << "Even after all those attempts the size should remain 3";
-	std::vector<std::string> vec;
-	vec = t.keys("");
-	EXPECT_EQ(3, vec.size()) << "This should be easy";
+  EXPECT_EQ(0, t.find("")) << "Get from an empty string should be 0 ALWAYS";
+  t.insert("", 1);
+  t.erase("");
+  EXPECT_EQ(false, t.contains(""))
+      << "Contains from an empty string should be 0 ALWAYS";
+  EXPECT_EQ(3, t.size())
+      << "Even after all those attempts the size should remain 3";
+  std::vector<std::string> vec;
+  vec = t.keys("");
+  EXPECT_EQ(3, vec.size()) << "This should be easy";
 }
 
 TEST_F(TrieTest, LongTest) {
-  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
 
   t.insert(hello, 1);
   t.insert(world, 2);
@@ -340,7 +280,7 @@ TEST_F(TrieTest, LongestCommonPath) {
   EXPECT_EQ("Hello", t.lcp()) << "This should be 'Hello'";
 }
 
-int main(int argc, char * argv[]) {
+int main(int argc, char *argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
