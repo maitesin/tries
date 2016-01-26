@@ -33,8 +33,8 @@ Trie::trie<T, R>::find(Trie::trie<T, R>::node_ptr &n, const std::string &key,
         return nullptr;
     }
   } else {
-    if (n->sons[key[d]] != nullptr) {
-      return find(n->sons[key[d]], key, d + 1);
+    if (n->sons[(unsigned char)key[d]] != nullptr) {
+      return find(n->sons[(unsigned char)key[d]], key, d + 1);
     }
   }
   return nullptr;
@@ -60,12 +60,12 @@ Trie::trie<T, R>::insert(Trie::trie<T, R>::node_ptr n, const std::string &key,
     n->value = value;
     return n;
   } else {
-    if (n->sons[key[d]] == nullptr) {
-      n->sons[key[d]] = node_ptr(new node());
+    if (n->sons[(unsigned char)key[d]] == nullptr) {
+      n->sons[(unsigned char)key[d]] = node_ptr(new node());
       ++n->s;
     }
-    n->sons[key[d]] =
-        insert(std::move(n->sons[key[d]]), key, value, d + 1, created);
+    n->sons[(unsigned char)key[d]] =
+        insert(std::move(n->sons[(unsigned char)key[d]]), key, value, d + 1, created);
     return n;
   }
 }
@@ -92,8 +92,8 @@ bool Trie::trie<T, R>::contains(Trie::trie<T, R>::node_ptr &n,
       return false;
     return n->value != def;
   } else {
-    if (n->sons[key[d]] != nullptr) {
-      return contains(n->sons[key[d]], key, d + 1);
+    if (n->sons[(unsigned char)key[d]] != nullptr) {
+      return contains(n->sons[(unsigned char)key[d]], key, d + 1);
     }
     return false;
   }
@@ -116,10 +116,10 @@ bool Trie::trie<T, R>::erase(Trie::trie<T, R>::node_ptr &n,
     n->value = T();
     return n->s == 0;
   } else {
-    if (n != nullptr && n->sons[key[d]] != nullptr) {
-      bool deleted = erase(n->sons[key[d]], key, d + 1, decrease);
+    if (n != nullptr && n->sons[(unsigned char)key[d]] != nullptr) {
+      bool deleted = erase(n->sons[(unsigned char)key[d]], key, d + 1, decrease);
       if (deleted) {
-        n->sons[key[d]].reset();
+        n->sons[(unsigned char)key[d]].reset();
         --n->s;
         if (n->s == 0 && n->value == def)
           return true;
@@ -144,8 +144,8 @@ void Trie::trie<T, R>::keys(Trie::trie<T, R>::node_ptr &n, std::string prefix,
   if (prefix.size() == d) {
     gather_keys(n, prefix, v);
   } else {
-    if (n->sons[prefix[d]] != nullptr)
-      keys(n->sons[prefix[d]], prefix, d + 1, v);
+    if (n->sons[(unsigned char)prefix[d]] != nullptr)
+      keys(n->sons[(unsigned char)prefix[d]], prefix, d + 1, v);
   }
 }
 
@@ -213,7 +213,7 @@ void Trie::trie<T, R>::show(Trie::trie<T, R>::node_ptr &n, size_t pos,
                             size_t &label) {
   std::cout << label << std::endl;
   size_t copy_label = label;
-  for (unsigned int i = 0; i < n->r; ++i) {
+  for (size_t i = 0; i < n->r; ++i) {
     if (n->sons[i] != nullptr) {
       std::cout << copy_label << "->";
       ++label;
@@ -230,7 +230,7 @@ template <class T, size_t R>
 std::string Trie::trie<T, R>::lcp(Trie::trie<T, R>::node_ptr &n,
                                   std::string s) {
   if (n->s == 1) {
-    for (unsigned int i = 0; i < n->r; ++i) {
+    for (size_t i = 0; i < n->r; ++i) {
       if (n->sons[i] != nullptr) {
         return lcp(n->sons[i], s + static_cast<char>(i));
       }

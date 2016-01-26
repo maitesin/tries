@@ -7,8 +7,8 @@
 template <class T, size_t R>
 const T &RadixTree::radix_tree<T, R>::find(const std::string &key) {
   if (key != "") {
-    if (roots[key[0]] != nullptr) {
-      node_ptr node(find(roots[key[0]], key, 0));
+    if (roots[(unsigned char)key[0]] != nullptr) {
+      node_ptr node(find(roots[(unsigned char)key[0]], key, 0));
       if (node != nullptr) {
         aux_ret = node->value;
         node.release();
@@ -32,7 +32,7 @@ RadixTree::radix_tree<T, R>::find(RadixTree::radix_tree<T, R>::node_ptr &n,
       if (n->path == sub) {
         if (key.size() > d + n->path.size()) {
           // Call it again
-          return find(n->sons[key[d + n->path.size()]], key,
+          return find(n->sons[(unsigned char)key[d + n->path.size()]], key,
                       d + n->path.size());
         } else {
           // We found it
@@ -51,7 +51,7 @@ void RadixTree::radix_tree<T, R>::insert(const std::string &key,
                                          const T &value) {
   if (key != "") {
     bool created = false;
-    roots[key[0]] = insert(std::move(roots[key[0]]), key, value, 0, created);
+    roots[(unsigned char)key[0]] = insert(std::move(roots[(unsigned char)key[0]]), key, value, 0, created);
     if (created)
       ++s;
   }
@@ -84,10 +84,10 @@ RadixTree::radix_tree<T, R>::insert(RadixTree::radix_tree<T, R>::node_ptr n,
       if (n->path == sub_key) {
         if (key.size() > d + n->path.size()) {
           // Call it again with the right son and updating the depth
-          n->s += n->sons[key[d + n->path.size()]] != nullptr ? 1 : 0;
+          n->s += n->sons[(unsigned char)key[d + n->path.size()]] != nullptr ? 1 : 0;
           // Added 1 to the size of n if the right son is null
-          n->sons[key[d + n->path.size()]] =
-              insert(std::move(n->sons[key[d + n->path.size()]]), key, value,
+          n->sons[(unsigned char)key[d + n->path.size()]] =
+              insert(std::move(n->sons[(unsigned char)key[d + n->path.size()]]), key, value,
                      d + n->path.size(), created);
           ++n->s;
           return n;
@@ -122,7 +122,7 @@ RadixTree::radix_tree<T, R>::split(RadixTree::radix_tree<T, R>::node_ptr n,
   std::string lower_path = n->path.substr(p, n->path.size() - p);
   node_ptr ptr = node_ptr(new node(upper_path, value));
   n->path = lower_path;
-  ptr->sons[lower_path[0]] = std::move(n);
+  ptr->sons[(unsigned char)lower_path[0]] = std::move(n);
   n = std::move(ptr);
   n->s = 1;
   return n;
@@ -140,7 +140,7 @@ RadixTree::radix_tree<T, R>::find_diff_and_split(
     if (n->path[i] != key[i]) {
       n = split(std::move(n), T(), i);
       std::string branch = key.substr(i, key.size() - i);
-      n->sons[branch[0]] = node_ptr(new node(branch, value));
+      n->sons[(unsigned char)branch[0]] = node_ptr(new node(branch, value));
       ++n->s;
       return n;
     }
@@ -160,8 +160,8 @@ void RadixTree::radix_tree<T, R>::clear(
 
 template <class T, size_t R>
 bool RadixTree::radix_tree<T, R>::contains(const std::string &key) {
-  if (roots[key[0]] != nullptr) {
-    return contains(roots[key[0]], key, 0);
+  if (roots[(unsigned char)key[0]] != nullptr) {
+    return contains(roots[(unsigned char)key[0]], key, 0);
   }
   return false;
 }
@@ -178,7 +178,7 @@ bool RadixTree::radix_tree<T, R>::contains(
       if (n->path == sub) {
         if (key.size() > d + n->path.size()) {
           // Call it again
-          return contains(n->sons[key[d + n->path.size()]], key,
+          return contains(n->sons[(unsigned char)key[d + n->path.size()]], key,
                           d + n->path.size());
         } else {
           // We found it
@@ -195,8 +195,8 @@ bool RadixTree::radix_tree<T, R>::contains(
 template <class T, size_t R>
 void RadixTree::radix_tree<T, R>::erase(const std::string &key) {
   bool decrease = false;
-  if (roots[key[0]] != nullptr)
-    erase(roots[key[0]], key, 0, decrease);
+  if (roots[(unsigned char)key[0]] != nullptr)
+    erase(roots[(unsigned char)key[0]], key, 0, decrease);
   if (decrease)
     --s;
 }
@@ -215,11 +215,11 @@ bool RadixTree::radix_tree<T, R>::erase(
       if (n->path == sub) {
         if (key.size() > d + n->path.size()) {
           // Call it again
-          bool deleted = erase(n->sons[key[d + n->path.size()]], key,
+          bool deleted = erase(n->sons[(unsigned char)key[d + n->path.size()]], key,
                                d + n->path.size(), decrease);
           if (deleted) {
-            n->sons[key[d + n->path.size()]].reset();
-            n->sons[key[d + n->path.size()]] = nullptr;
+            n->sons[(unsigned char)key[d + n->path.size()]].reset();
+            n->sons[(unsigned char)key[d + n->path.size()]] = nullptr;
             --n->s;
             if (n->s == 1 && n->value == T()) {
               merge_with_only_son(n);
@@ -290,8 +290,8 @@ RadixTree::radix_tree<T, R>::keys(const std::string &prefix) {
         gather_keys(roots[i], "", vec);
       }
     }
-  } else if (roots[prefix[0]] != nullptr)
-    keys(roots[prefix[0]], prefix, 0, vec);
+  } else if (roots[(unsigned char)prefix[0]] != nullptr)
+    keys(roots[(unsigned char)prefix[0]], prefix, 0, vec);
   return *vec;
 }
 
@@ -312,8 +312,8 @@ void RadixTree::radix_tree<T, R>::keys(RadixTree::radix_tree<T, R>::node_ptr &n,
     if (n->path == sub) {
       if (prefix.size() > d + n->path.size()) {
         // Call it again
-        if (n->sons[prefix[d + n->path.size()]] != nullptr) {
-          keys(n->sons[prefix[d + n->path.size()]],
+        if (n->sons[(unsigned char)prefix[d + n->path.size()]] != nullptr) {
+          keys(n->sons[(unsigned char)prefix[d + n->path.size()]],
                prefix_cut(prefix, d + n->path.size()), d + n->path.size(), v);
         }
         return;
@@ -329,11 +329,7 @@ void RadixTree::radix_tree<T, R>::keys(RadixTree::radix_tree<T, R>::node_ptr &n,
 template <class T, size_t R>
 std::string RadixTree::radix_tree<T, R>::prefix_cut(std::string &prefix,
                                                     size_t d) {
-  std::string cut = "";
-  for (size_t i = 0; i < d; ++i) {
-    cut += prefix[i];
-  }
-  return cut;
+  return prefix.substr(0, d);
 }
 
 template <class T, size_t R>
@@ -411,7 +407,7 @@ void RadixTree::radix_tree<T, R>::show(RadixTree::radix_tree<T, R>::node_ptr &n,
 template <class T, size_t R> std::string RadixTree::radix_tree<T, R>::lcp() {
   unsigned int founds = 0;
   std::string lcp = "";
-  for (unsigned int i = 0; i < r; ++i) {
+  for (size_t i = 0; i < r; ++i) {
     if (roots[i] != nullptr) {
       if (roots[i]->s > 0 || roots[i]->value != def) {
         ++founds;
