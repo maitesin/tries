@@ -16,6 +16,7 @@ TEST_F(TrieTest, SizeOfAnEmptyObjectIsZero) {
 TEST_F(TrieTest, SizeOfAnObjectWithOneElement) {
   const std::string key = "key";
   const int value = 42;
+  t.insert(key, value);
   EXPECT_EQ(1, t.size())
       << "Size for an object with one element should be one ";
 }
@@ -52,19 +53,19 @@ TEST_F(TrieTest, FindAKeyAfterObjectHasBeenCleared) {
                                "the object has been cleared should be zero";
 }
 
-TEST_F(TrieTest, RemoveInsertedKey) {
+TEST_F(TrieTest, EraseInsertedKey) {
 	const std::string key = "key";
 	const int value = 42;
 	t.insert(key, value);
-	t.remove(key);
+	t.erase(key);
 	EXPECT_EQ(0, t.find(key)) << "After removing an inserted entry in the"
 		"object it should return the entry with the default constructor"
 		"of the template";
 }
 
-TEST_F(TrieTest, RemoveNonInsertedKey) {
+TEST_F(TrieTest, EraseNonInsertedKey) {
 	const std::string key = "key";
-	t.remove(key);
+	t.erase(key);
 	EXPECT_EQ(0, t.size()) << "Removing a non inserted entry should not"
 		"affect at all to the state of the object";
 }
@@ -73,13 +74,13 @@ TEST_F(TrieTest, ContainsAnInsertedKey) {
 	const std::string key = "key";
 	const int value = 42;
 	t.insert(key, value);
-	EXPECT_EQ(true, t.contains(key)) << "The object should return true when"
+	EXPECT_TRUE(t.contains(key)) << "The object should return true when"
 		"it contains the entry";
 }
 
 TEST_F(TrieTest, ContainsANonInsertedKey) {
 	const std::string key = "key";
-	EXPECT_EQ(false, t.contains(key)) << "The object should return false"
+	EXPECT_FALSE(t.contains(key)) << "The object should return false"
 		"when it does not contain the entry";
 }
 
@@ -88,7 +89,89 @@ TEST_F(TrieTest, LongestCommonPathOfAnEmptyObject) {
 		"should be the empty string";
 }
 
-TEST_F(TrieTest, MethodGetKeyWithPrefix) {
+TEST_F(TrieTest, LongestCommonPathOfThreeObjects) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo";
+
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  EXPECT_EQ("", t.lcp()) << "This should be ''";
+}
+
+TEST_F(TrieTest, LongestCommonPathOfTwoObjects) {
+	std::string world = "World", wololo = "Wololo";
+	t.insert(world, 2);
+	t.insert(wololo, 3);
+	EXPECT_EQ("Wo", t.lcp()) << "This should be 'Wo'";
+}
+
+TEST_F(TrieTest, LongestCommonPathOfTwoObjectAfterRemovingOne) {
+	std::string hello = "Hello", world = "World", wololo = "Wololo";
+	t.insert(hello, 1);
+	t.insert(world, 2);
+	t.insert(wololo, 3);
+	t.erase(hello);
+	EXPECT_EQ("Wo", t.lcp()) << "This should be 'Wo'";
+}
+
+TEST_F(TrieTest, LongestCommonPathAfterClear) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	t.clear();
+	EXPECT_EQ("", t.lcp()) << "This should be ''";
+}
+
+TEST_F(TrieTest, LongestCommonPathOfOneObject) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	EXPECT_EQ("Hello", t.lcp()) << "This should be 'Hello'";
+}
+
+TEST_F(TrieTest, LongestCommonPathOfOneObjectAfterClear) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	t.clear();
+	t.insert(hello, 1);
+	EXPECT_EQ("Hello", t.lcp()) << "This should be 'Hello'";
+}
+
+TEST_F(TrieTest, GetKeysWithNoObjects) {
+	EXPECT_EQ(0, t.keys().size()) << "The size of the vector should be 0";
+}
+
+TEST_F(TrieTest, GetKeysWithOneObjects) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	EXPECT_EQ(1, t.keys().size()) << "The size of the vector should be 1";
+}
+
+TEST_F(TrieTest, GetKeysWithTwoObjects) {
+	std::string world = "World", wololo = "Wololo";
+	t.insert(world, 2);
+	t.insert(wololo, 3);
+	EXPECT_EQ(2, t.keys().size()) << "The size of the vector should be 2";
+}
+
+TEST_F(TrieTest, GetKeysWithNoObjectsAfterClear) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	t.clear();
+	EXPECT_EQ(0, t.keys().size()) << "The size of the vector should be 0";
+}
+
+TEST_F(TrieTest, GetKeysWithOneObjectsAfterClear) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	t.clear();
+	t.insert(hello, 1);
+	EXPECT_EQ(1, t.keys().size()) << "The size of the vector should be 1";
+}
+
+TEST_F(TrieTest, MethodGetKeyWithPrefixOfEmptyObject) {
+	EXPECT_EQ(0, t.keys("").size()) << "The size of the vector should be 0";
+}
+
+TEST_F(TrieTest, MethodGetKeyWithPrefixOfSevenObjects1) {
   std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
               kthulu = "Kthulu", no = "No", hes = "Hes";
   t.insert(hello, 1);
@@ -98,56 +181,105 @@ TEST_F(TrieTest, MethodGetKeyWithPrefix) {
   t.insert(kthulu, 5);
   t.insert(no, 6);
   t.insert(hes, 7);
-  EXPECT_EQ(7, t.size()) << "This should be 7";
-
-  std::vector<std::string> vec;
-  // With prefix Hel
-  vec = t.keys("Hel");
-  EXPECT_EQ(1, vec.size()) << "This should be 1";
-  EXPECT_EQ(hello, vec[0]) << "This should be 'Hello'";
-  // With prefix N
-  vec = t.keys("N");
-  EXPECT_EQ(1, vec.size()) << "This should be 1";
-  EXPECT_EQ(no, vec[0]) << "This should be 'No'";
-  // With prefix No
-  vec = t.keys("No");
-  EXPECT_EQ(1, vec.size()) << "This should be 1";
-  EXPECT_EQ(no, vec[0]) << "This should be 'No'";
-  // With prefix Nos
-  vec = t.keys("Nos");
-  EXPECT_EQ(0, vec.size()) << "This should be 0";
-  // With prefix W
-  vec = t.keys("W");
-  EXPECT_EQ(2, vec.size()) << "This should be 2";
-  EXPECT_EQ(wololo, vec[0]) << "This should be 'Wololo'";
-  EXPECT_EQ(world, vec[1]) << "This should be 'World'";
-  // With prefix Wo
-  vec = t.keys("Wo");
-  EXPECT_EQ(2, vec.size()) << "This should be 2";
-  EXPECT_EQ(wololo, vec[0]) << "This should be 'Wololo'";
-  EXPECT_EQ(world, vec[1]) << "This should be 'World'";
-  // With prefix Wou
-  vec = t.keys("Wou");
-  EXPECT_EQ(0, vec.size()) << "This should be 0";
+  EXPECT_EQ(1, t.keys("Hel").size()) << "This should be 1";
 }
 
-TEST_F(TrieTest, EmptyStringParameterTest) {
-  std::string hello = "Hello", he = "He", hes = "Hes";
+TEST_F(TrieTest, MethodGetKeyWithPrefixOfSevenObjects2) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(1, t.keys("N").size()) << "This should be 1";
+}
 
-  t.insert(he, 1);
-  t.insert(hes, 2);
-  t.insert(hello, 3);
+TEST_F(TrieTest, MethodGetKeyWithPrefixOfSevenObjects3) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(1, t.keys("No").size()) << "This should be 1";
+}
 
-  EXPECT_EQ(0, t.find("")) << "Get from an empty string should be 0 ALWAYS";
-  t.insert("", 1);
-  t.erase("");
-  EXPECT_EQ(false, t.contains(""))
-      << "Contains from an empty string should be 0 ALWAYS";
-  EXPECT_EQ(3, t.size())
-      << "Even after all those attempts the size should remain 3";
-  std::vector<std::string> vec;
-  vec = t.keys("");
-  EXPECT_EQ(3, vec.size()) << "This should be easy";
+TEST_F(TrieTest, MethodGetKeyWithPrefixOfSevenObjects4) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(0, t.keys("Nos").size()) << "This should be 0";
+}
+
+TEST_F(TrieTest, MethodGetKeyWithPrefixOfSevenObjects5) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(2, t.keys("W").size()) << "This should be 2";
+}
+
+TEST_F(TrieTest, MethodGetKeyWithPrefixOfSevenObjects6) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(2, t.keys("Wo").size()) << "This should be 2";
+}
+
+TEST_F(TrieTest, MethodGetKeyWithPrefixOfSevenObjects7) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(0, t.keys("Wou").size()) << "This should be 0";
+}
+
+TEST_F(TrieTest, EmptyStringParameterFind) {
+	EXPECT_EQ(0, t.find("")) << "Find from an empty string should be ALWAYS 0";
+}
+
+TEST_F(TrieTest, EmptyStringParameterInsert) {
+	t.insert("", 1);
+	EXPECT_EQ(0, t.size()) << "Insert an empty string should never do anything";
+}
+
+TEST_F(TrieTest, EmptyStringParameterErase) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	t.erase("");
+	EXPECT_EQ(1, t.size()) << "Erase an empty string should never do anything";
+}
+
+TEST_F(TrieTest, EmptyStringParameterContains) {
+	EXPECT_FALSE(t.contains("")) << "Contains from an empty string should be 0 ALWAYS";
 }
 
 TEST_F(TrieTest, LongTest) {
@@ -256,28 +388,6 @@ TEST_F(TrieTest, LongTest) {
   EXPECT_EQ(3, t.size()) << "This should be 3";
   t.erase(no);
   EXPECT_EQ(3, t.size()) << "This should be 3";
-}
-
-TEST_F(TrieTest, LongestCommonPath) {
-  std::string hello = "Hello", world = "World", wololo = "Wololo";
-
-  t.insert(hello, 1);
-  t.insert(world, 2);
-  t.insert(wololo, 3);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ("", t.lcp()) << "This should be ''";
-
-  t.erase(hello);
-  EXPECT_EQ(2, t.size()) << "This should be 2";
-  EXPECT_EQ("Wo", t.lcp()) << "This should be 'Wo'";
-
-  t.clear();
-  EXPECT_EQ(0, t.size()) << "This should be 0";
-  EXPECT_EQ("", t.lcp()) << "This should be ''";
-
-  t.insert(hello, 1);
-  EXPECT_EQ(1, t.size()) << "This should be 1";
-  EXPECT_EQ("Hello", t.lcp()) << "This should be 'Hello'";
 }
 
 int main(int argc, char *argv[]) {
