@@ -114,7 +114,7 @@ template <class T> void TST::tst<T>::clear(TST::tst<T>::node_ptr n) {
 }
 
 template <class T> bool TST::tst<T>::contains(const std::string &key) {
-  return contains(root, key, 0);
+  return root != nullptr ? contains(root, key, 0) : false;
 }
 
 template <class T>
@@ -150,7 +150,9 @@ bool TST::tst<T>::contains(TST::tst<T>::node_ptr &n, const std::string &key,
 
 template <class T> void TST::tst<T>::erase(const std::string &key) {
   bool decrease = false;
-  erase(root, key, 0, decrease);
+  if (root != nullptr) {
+    erase(root, key, 0, decrease);
+  }
   if (decrease)
     --s;
 }
