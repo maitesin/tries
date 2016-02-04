@@ -1,233 +1,292 @@
+#include <string>
 #include "radix_tree.cpp"
 #include "gtest/gtest.h"
 
 class RadixTest : public testing::Test {
 protected:
-  virtual void TearDown() {
-    t.clear();
-  }
+  virtual void TearDown() { t.clear(); }
 
   RadixTree::radix_tree<int, 256> t;
 }; // class
 
-TEST_F(RadixTest, MethodInsertTest1) {
-  const std::string key = "hi";
-  const std::string no_key = "no";
-  const int value = 42;
-  EXPECT_EQ(0, t.size()) << "This should be 0 due it is an emplty trie";
-  t.insert(key, value);
-  EXPECT_EQ(1, t.size()) << "This should be 1. It only has a value";
-  EXPECT_EQ(42, t.find(key)) << "This should be 42. It is the value we insert";
-  EXPECT_EQ(0, t.find(no_key)) << "This should be the default value for the content. We never inserted any value with this key";
+TEST_F(RadixTest, SizeOfAnEmptyObjectIsZero) {
+  EXPECT_EQ(0, t.size()) << "Size for an empty object should be always zero";
 }
 
-TEST_F(RadixTest, MethodInsertTest2) {
-	const std::string world = "World",
-	      worry = "Worry",
-	      wololo = "Wololo";
-	t.insert(worry, 1);
+TEST_F(RadixTest, SizeOfAnObjectWithOneElement) {
+  const std::string key = "key";
+  const int value = 42;
+  t.insert(key, value);
+  EXPECT_EQ(1, t.size())
+      << "Size for an object with one element should be one ";
+}
+
+TEST_F(RadixTest, FindANotInsertedKey) {
+  const std::string no_key = "no";
+  EXPECT_EQ(0, t.find(no_key)) << "Find a key that is not in the object "
+                                  "has to return the entry with the "
+                                  "default contructor of the template";
+}
+
+TEST_F(RadixTest, FindAnInsertedKey) {
+  const std::string key = "hi";
+  const int value = 42;
+  t.insert(key, value);
+  EXPECT_EQ(42, t.find(key)) << "After inserting an entry in the object. It "
+                                "should be able to be retrieved";
+}
+
+TEST_F(RadixTest, CleanAnObjectWithOneElement) {
+  const std::string key = "key";
+  const int value = 42;
+  t.insert(key, value);
+  t.clear();
+  EXPECT_EQ(0, t.size()) << "The size of an object after clear should be zero";
+}
+
+TEST_F(RadixTest, FindAKeyAfterObjectHasBeenCleared) {
+  const std::string key = "key";
+  const int value = 42;
+  t.insert(key, value);
+  t.clear();
+  EXPECT_EQ(0, t.find(key)) << "The result of find for an inserter key after "
+                               "the object has been cleared should be zero";
+}
+
+TEST_F(RadixTest, EraseInsertedKey) {
+	const std::string key = "key";
+	const int value = 42;
+	t.insert(key, value);
+	t.erase(key);
+	EXPECT_EQ(0, t.find(key)) << "After removing an inserted entry in the"
+		"object it should return the entry with the default constructor"
+		"of the template";
+}
+
+TEST_F(RadixTest, EraseNonInsertedKey) {
+	const std::string key = "key";
+	t.erase(key);
+	EXPECT_EQ(0, t.size()) << "Removing a non inserted entry should not"
+		"affect at all to the state of the object";
+}
+
+TEST_F(RadixTest, ContainsAnInsertedKey) {
+	const std::string key = "key";
+	const int value = 42;
+	t.insert(key, value);
+	EXPECT_TRUE(t.contains(key)) << "The object should return true when"
+		"it contains the entry";
+}
+
+TEST_F(RadixTest, ContainsANonInsertedKey) {
+	const std::string key = "key";
+	EXPECT_FALSE(t.contains(key)) << "The object should return false"
+		"when it does not contain the entry";
+}
+
+TEST_F(RadixTest, LongestCommonPathOfAnEmptyObject) {
+	EXPECT_EQ("", t.lcp()) << "The longest common path of an empty object"
+		"should be the empty string";
+}
+
+TEST_F(RadixTest, LongestCommonPathOfThreeObjects) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo";
+
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  EXPECT_EQ("", t.lcp()) << "This should be ''";
+}
+
+TEST_F(RadixTest, LongestCommonPathOfTwoObjects) {
+	std::string world = "World", wololo = "Wololo";
 	t.insert(world, 2);
 	t.insert(wololo, 3);
-	EXPECT_EQ(3, t.size()) << "This should be 3";
-	EXPECT_EQ(1, t.find(worry)) << "This should be 1";
-	EXPECT_EQ(2, t.find(world)) << "This should be 2";
-	EXPECT_EQ(3, t.find(wololo)) << "This should be 3";
+	EXPECT_EQ("Wo", t.lcp()) << "This should be 'Wo'";
 }
 
-TEST_F(RadixTest, MethodClean) {
-  const std::string key = "hi";
-  const int value = 42;
-  EXPECT_EQ(0, t.size()) << "This should be 0 due it is an emplty trie";
-  t.insert(key, value);
-  EXPECT_EQ(1, t.size()) << "This should be 1. It only has a value";
-  t.clear();
-  EXPECT_EQ(0, t.size()) << "This should be 0 due it is an emplty trie";
-  EXPECT_EQ(0, t.find(key)) << "This should be 0 due we just cleared the trie";
+TEST_F(RadixTest, LongestCommonPathOfTwoObjectAfterRemovingOne) {
+	std::string hello = "Hello", world = "World", wololo = "Wololo";
+	t.insert(hello, 1);
+	t.insert(world, 2);
+	t.insert(wololo, 3);
+	t.erase(hello);
+	EXPECT_EQ("Wo", t.lcp()) << "This should be 'Wo'";
 }
 
-TEST_F(RadixTest, MethodGetRemove) {
-  std::string hello = "Hello", he = "He", hes = "Hes";
+TEST_F(RadixTest, LongestCommonPathAfterClear) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	t.clear();
+	EXPECT_EQ("", t.lcp()) << "This should be ''";
+}
+
+TEST_F(RadixTest, LongestCommonPathOfOneObject) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	EXPECT_EQ("Hello", t.lcp()) << "This should be 'Hello'";
+}
+
+TEST_F(RadixTest, LongestCommonPathOfOneObjectAfterClear) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	t.clear();
+	t.insert(hello, 1);
+	EXPECT_EQ("Hello", t.lcp()) << "This should be 'Hello'";
+}
+
+TEST_F(RadixTest, GetKeysWithNoObjects) {
+	EXPECT_EQ(0, t.keys().size()) << "The size of the vector should be 0";
+}
+
+TEST_F(RadixTest, GetKeysWithOneObjects) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	EXPECT_EQ(1, t.keys().size()) << "The size of the vector should be 1";
+}
+
+TEST_F(RadixTest, GetKeysWithTwoObjects) {
+	std::string world = "World", wololo = "Wololo";
+	t.insert(world, 2);
+	t.insert(wololo, 3);
+	EXPECT_EQ(2, t.keys().size()) << "The size of the vector should be 2";
+}
+
+TEST_F(RadixTest, GetKeysWithNoObjectsAfterClear) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	t.clear();
+	EXPECT_EQ(0, t.keys().size()) << "The size of the vector should be 0";
+}
+
+TEST_F(RadixTest, GetKeysWithOneObjectsAfterClear) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
+	t.clear();
+	t.insert(hello, 1);
+	EXPECT_EQ(1, t.keys().size()) << "The size of the vector should be 1";
+}
+
+TEST_F(RadixTest, MethodGetKeyWithPrefixOfEmptyObject) {
+	EXPECT_EQ(0, t.keys("").size()) << "The size of the vector should be 0";
+}
+
+TEST_F(RadixTest, MethodGetKeyWithPrefixOfSevenObjects1) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
   t.insert(hello, 1);
-  t.insert(he, 2);
-  t.insert(hes, 3);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  t.erase(he);
-  EXPECT_EQ(2, t.size()) << "This should be 2";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(0, t.find(he)) << "This should be 0";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  t.erase(hes);
-  EXPECT_EQ(1, t.size()) << "This should be 1";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(0, t.find(he)) << "This should be 0";
-  EXPECT_EQ(0, t.find(hes)) << "This should be 0";
-  t.insert(hes, 3);
-  EXPECT_EQ(2, t.size()) << "This should be 2";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(0, t.find(he)) << "This should be 0";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  t.insert(he, 2);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  t.erase(hello);
-  EXPECT_EQ(2, t.size()) << "This should be 2";
-  EXPECT_EQ(0, t.find(hello)) << "This should be 0";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  t.insert(hello, 1);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  // Check things are not in the trie
-  EXPECT_EQ(0, t.find("HelloS")) << "This should be 0";
-  EXPECT_EQ(0, t.find("H")) << "This should be 0";
-  EXPECT_EQ(0, t.find("Hel")) << "This should be 0";
-}
-
-TEST_F(RadixTest, MethodContains) {
-  std::string hello = "Hello", he = "He", hes = "Hes";
-  t.insert(hello, 1);
-  t.insert(he, 2);
-  t.insert(hes, 3);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  EXPECT_EQ(true, t.contains(hello)) << "This should contain 'Hello'";
-  EXPECT_EQ(true, t.contains(he)) << "This should contain 'He'";
-  EXPECT_EQ(true, t.contains(hes)) << "This should contain 'Hes'";
-  EXPECT_EQ(false, t.contains("he")) << "This should NOT contain 'he'";
-  EXPECT_EQ(false, t.contains("Hel")) << "This should NOT contain 'Hel'";
-  EXPECT_EQ(false, t.contains("HelloS")) << "This should NOT contain 'HelloS'";
-}
-
-TEST_F(RadixTest, MethodGetKeys) {
-  std::string hello = "Hello", he = "He", hes = "Hes";
-  t.insert(hello, 1);
-  t.insert(he, 2);
-  t.insert(hes, 3);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ(1, t.find(hello)) << "This should be 1";
-  EXPECT_EQ(2, t.find(he)) << "This should be 2";
-  EXPECT_EQ(3, t.find(hes)) << "This should be 3";
-  std::vector<std::string> vec;
-  vec = t.keys();
-  EXPECT_EQ(3, vec.size()) << "This should be 3";
-  EXPECT_EQ(he, vec[0]) << "This should be 'He'";
-  EXPECT_EQ(hello, vec[1]) << "This should be 'Hello'";
-  EXPECT_EQ(hes, vec[2]) << "This should be 'Hes'";
-  t.erase(he);
-  vec = t.keys();
-  EXPECT_EQ(2, vec.size()) << "This should be 2";
-  EXPECT_EQ(hello, vec[0]) << "This should be 'Hello'";
-  EXPECT_EQ(hes, vec[1]) << "This should be 'Hes'";
-  t.insert(he, 2);
-  vec = t.keys();
-  EXPECT_EQ(3, vec.size()) << "This should be 3";
-  EXPECT_EQ(he, vec[0]) << "This should be 'He'";
-  EXPECT_EQ(hello, vec[1]) << "This should be 'Hello'";
-  EXPECT_EQ(hes, vec[2]) << "This should be 'Hes'";
-  t.erase(hello);
-  vec = t.keys();
-  EXPECT_EQ(2, vec.size()) << "This should be 2";
-  EXPECT_EQ(he, vec[0]) << "This should be 'He'";
-  EXPECT_EQ(hes, vec[1]) << "This should be 'Hes'";  
-}
-
-TEST_F(RadixTest, MethodGetKeyWithPrefix) {
-  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
-  t.insert(hello, 1);  
   t.insert(world, 2);
   t.insert(wololo, 3);
   t.insert(he, 4);
   t.insert(kthulu, 5);
   t.insert(no, 6);
   t.insert(hes, 7);
-  EXPECT_EQ(7, t.size()) << "This should be 7";
-
-  std::vector<std::string> vec;
-  // With prefix Hel
-  vec = t.keys("Hel");
-  EXPECT_EQ(1, vec.size()) << "This should be 1";
-  EXPECT_EQ(hello, vec[0]) << "This should be 'Hello'";
-  // With prefix N
-  vec = t.keys("N");
-  EXPECT_EQ(1, vec.size()) << "This should be 1";
-  EXPECT_EQ(no, vec[0]) << "This should be 'No'";
-  // With prefix No
-  vec = t.keys("No");
-  EXPECT_EQ(1, vec.size()) << "This should be 1";
-  EXPECT_EQ(no, vec[0]) << "This should be 'No'";
-  // With prefix Nos
-  vec = t.keys("Nos");
-  EXPECT_EQ(0, vec.size()) << "This should be 0";
-  // With prefix W
-  vec = t.keys("W");
-  EXPECT_EQ(2, vec.size()) << "This should be 2";
-  EXPECT_EQ(wololo, vec[0]) << "This should be 'Wololo'";
-  EXPECT_EQ(world, vec[1]) << "This should be 'World'";
-  // With prefix Wo
-  vec = t.keys("Wo");
-  EXPECT_EQ(2, vec.size()) << "This should be 2";
-  EXPECT_EQ(wololo, vec[0]) << "This should be 'Wololo'";
-  EXPECT_EQ(world, vec[1]) << "This should be 'World'";
-  // With prefix Wou
-  vec = t.keys("Wou");
-  EXPECT_EQ(0, vec.size()) << "This should be 0";
+  EXPECT_EQ(1, t.keys("Hel").size()) << "This should be 1";
 }
 
-TEST_F(RadixTest, RemoveEmptyTest) {
-	std::string hello = "Hello", he = "He", hes = "Hes";
-
-	t.insert(he, 1);
-	t.insert(hes, 2);
-	t.insert(hello, 3);
-
-	t.erase(hes);
-	t.erase(he);
-	t.erase(hello);
-
-	EXPECT_EQ(0, t.size()) << "Size should be 0";
-
-	t.insert(he, 1);
-	t.insert(hes, 2);
-	t.insert(hello, 3);
-	t.insert(hes, 4);
-
-	t.erase(hes);
-	t.erase(he);
-	t.erase(hello);
-
-	EXPECT_EQ(0, t.size()) << "Size should be 0";
+TEST_F(RadixTest, MethodGetKeyWithPrefixOfSevenObjects2) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(1, t.keys("N").size()) << "This should be 1";
 }
 
-TEST_F(RadixTest, EmptyStringParameterTest) {
-	std::string hello = "Hello", he = "He", hes = "Hes";
+TEST_F(RadixTest, MethodGetKeyWithPrefixOfSevenObjects3) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(1, t.keys("No").size()) << "This should be 1";
+}
 
-	t.insert(he, 1);
-	t.insert(hes, 2);
-	t.insert(hello, 3);
+TEST_F(RadixTest, MethodGetKeyWithPrefixOfSevenObjects4) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(0, t.keys("Nos").size()) << "This should be 0";
+}
 
-	EXPECT_EQ(0, t.find("")) << "Get from an empty string should be 0 ALWAYS";
+TEST_F(RadixTest, MethodGetKeyWithPrefixOfSevenObjects5) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(2, t.keys("W").size()) << "This should be 2";
+}
+
+TEST_F(RadixTest, MethodGetKeyWithPrefixOfSevenObjects6) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(2, t.keys("Wo").size()) << "This should be 2";
+}
+
+TEST_F(RadixTest, MethodGetKeyWithPrefixOfSevenObjects7) {
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+  t.insert(hello, 1);
+  t.insert(world, 2);
+  t.insert(wololo, 3);
+  t.insert(he, 4);
+  t.insert(kthulu, 5);
+  t.insert(no, 6);
+  t.insert(hes, 7);
+  EXPECT_EQ(0, t.keys("Wou").size()) << "This should be 0";
+}
+
+TEST_F(RadixTest, EmptyStringParameterFind) {
+	EXPECT_EQ(0, t.find("")) << "Find from an empty string should be ALWAYS 0";
+}
+
+TEST_F(RadixTest, EmptyStringParameterInsert) {
 	t.insert("", 1);
+	EXPECT_EQ(0, t.size()) << "Insert an empty string should never do anything";
+}
+
+TEST_F(RadixTest, EmptyStringParameterErase) {
+	std::string hello = "Hello";
+	t.insert(hello, 1);
 	t.erase("");
-	EXPECT_EQ(false, t.contains("")) << "Contains from an empty string should be 0 ALWAYS";
-	EXPECT_EQ(3, t.size()) << "Even after all those attempts the size should remain 3";
-	std::vector<std::string> vec;
-	vec = t.keys("");
-	EXPECT_EQ(3, vec.size()) << "This should be easy";
+	EXPECT_EQ(1, t.size()) << "Erase an empty string should never do anything";
+}
+
+TEST_F(RadixTest, EmptyStringParameterContains) {
+	EXPECT_FALSE(t.contains("")) << "Contains from an empty string should be 0 ALWAYS";
 }
 
 TEST_F(RadixTest, LongTest) {
-  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He", kthulu = "Kthulu", no = "No", hes = "Hes";
+  std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
 
-  t.insert(hello, 1);  
+  t.insert(hello, 1);
   t.insert(world, 2);
   t.insert(wololo, 3);
   EXPECT_EQ(3, t.size()) << "This should be 3";
@@ -240,7 +299,7 @@ TEST_F(RadixTest, LongTest) {
   t.insert(kthulu, 4);
   EXPECT_EQ(4, t.size()) << "This should be 4";
   EXPECT_EQ(4, t.find(kthulu)) << "This should be 4";
-  
+
   // Checking before and after adding He. The prefix was alreay in the trie.
   EXPECT_EQ(0, t.find(he)) << "This should be 0";
   t.insert(he, 5);
@@ -331,30 +390,7 @@ TEST_F(RadixTest, LongTest) {
   EXPECT_EQ(3, t.size()) << "This should be 3";
 }
 
-TEST_F(RadixTest, LongestCommonPath) {
-  std::string hello = "Hello", world = "World", wololo = "Wololo";
-
-  t.insert(hello, 1);
-  t.insert(world, 2);
-  t.insert(wololo, 3);
-  EXPECT_EQ(3, t.size()) << "This should be 3";
-  EXPECT_EQ("", t.lcp()) << "This should be ''";
-
-  t.erase(hello);
-  EXPECT_EQ(2, t.size()) << "This should be 2";
-  EXPECT_EQ("Wo", t.lcp()) << "This should be 'Wo'";
-
-  t.clear();
-  EXPECT_EQ(0, t.size()) << "This should be 0";
-  EXPECT_EQ("", t.lcp()) << "This should be ''";
-
-  t.insert(hello, 1);
-  EXPECT_EQ(1, t.size()) << "This should be 1";
-  EXPECT_EQ("Hello", t.lcp()) << "This should be 'Hello'";
-}
-
-
-int main(int argc, char * argv[]) {
+int main(int argc, char *argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
