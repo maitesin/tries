@@ -1,6 +1,8 @@
 language: cpp
 compiler:
 - gcc
+- clang
+
 install:
 # Upgrade GCC
 - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
