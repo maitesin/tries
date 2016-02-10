@@ -13,7 +13,7 @@ install:
 - sudo pip install conan==0.6
 
 # Automatic detection of your arch, compiler, etc
-- conan install .
+- conan install -r conan.io .
 
 script:
 - cmake .
