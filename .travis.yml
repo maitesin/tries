@@ -10,7 +10,7 @@ install:
 - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
 
 - sudo pip install cpp-coveralls
-- sudo pip install conan
+- sudo pip install conan==0.6
 
 # Automatic detection of your arch, compiler, etc
 - conan install .
