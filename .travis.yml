@@ -1,6 +1,7 @@
 language: cpp
 compiler:
 - gcc
+- clang
 
 install:
 # Upgrade GCC
@@ -8,6 +9,12 @@ install:
 - sudo apt-get update -qq
 - sudo apt-get install -qq g++-5
 - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5
+
+# Upgrade Clang
+- sudo add-apt-repository ppa:h-rayflood/llvm -y
+- sudo apt-get update -qq
+- sudo apt-get install -qq clang-3.6
+
 - sudo pip install cpp-coveralls
 - sudo pip install conan
 
@@ -20,7 +27,7 @@ script:
 
 after_success:
 - make test
-- coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" --gcov-options '\-lp' --gcov 'gcov-5' 
+- coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" --gcov-options '\-lp' --gcov 'gcov-5.2' 
 
 addons:
   coverity_scan:
