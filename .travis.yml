@@ -19,6 +19,9 @@ install:
 - sudo pip install -U pip
 - sudo pip install cpp-coveralls
 
+
+- cmake --version
+
 script:
 - cmake .
 - make
