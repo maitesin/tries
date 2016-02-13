@@ -6,29 +6,25 @@ install:
 # Upgrade GCC
 - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 - sudo apt-get update -qq
-- sudo apt-get install -qq g++-5
-- sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5
+- sudo apt-get install -qq g++-4.9
+- sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
 
-# Upgrade Python to python 3.4
-- sudo add-apt-repository ppa:fkrull/deadsnakes -y
-- sudo apt-get update -qq
-- sudo apt-get install -qq python3.4
-- sudo rm /usr/local/bin/python
-- sudo ln -s /usr/local/bin/python3.4 /usr/local/bin/python
-
-- sudo pip install cpp-coveralls
-- sudo pip install conan
+# Download conan
+- wget http://downloads.conan.io/latest_debian -O conan.deb
+- sudo dpkg -i conan.deb
+- rm conan.deb
 
 # Automatic detection of your arch, compiler, etc
-- conan install -r conan.io . --build
+- conan install
+- sudo pip install cpp-coveralls
 
 script:
 - cmake .
 - make
 
-after_success:
+#after_success:
 - make test
-- coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" --gcov-options '\-lp' --gcov 'gcov-5.2' 
+- coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" --gcov-options '\-lp' --gcov 'gcov-4.9' 
 
 addons:
   coverity_scan:
