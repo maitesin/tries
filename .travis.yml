@@ -32,7 +32,7 @@ script:
 - cmake .
 - make
 
-#after_success:
+after_success:
 - make test
 - coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" --gcov-options '\-lp' --gcov 'gcov-4.9' 
 
