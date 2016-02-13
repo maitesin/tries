@@ -4,9 +4,10 @@ compiler:
 
 install:
 # Upgrade CMake
+- sudo apt-get remove --purge -qq cmake
 - sudo add-apt-repository ppa:george-edison55/precise-backports -y
 - sudo apt-get update -qq
-- sudo apt-get install cmake
+- sudo apt-get install -qq cmake
 
 # Upgrade GCC
 - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
