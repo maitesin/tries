@@ -16,6 +16,7 @@ install:
 
 # Automatic detection of your arch, compiler, etc
 - conan install
+- sudo pip install -U pip
 - sudo pip install cpp-coveralls
 
 script:
