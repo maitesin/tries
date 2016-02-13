@@ -9,6 +9,11 @@ install:
 - sudo apt-get install -qq g++-4.9
 - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
 
+  # Upgrade CMake
+- sudo add-apt-repository ppa:george-edison55/precise-backports -y
+- sudo apt-get update -qq
+- sudo apt-get upgrade -qq
+
 # Download conan
 - wget http://downloads.conan.io/latest_debian -O conan.deb
 - sudo dpkg -i conan.deb
