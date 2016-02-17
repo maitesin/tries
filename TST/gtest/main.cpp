@@ -262,6 +262,14 @@ TEST_F(TSTTest, MethodGetKeyWithPrefixOfSevenObjects7) {
   EXPECT_EQ(0, t.keys("Wou").size()) << "This should be 0";
 }
 
+TEST_F(TSTTest, MethodFindMiddleNode) {
+	std::string hello = "Hello", he = "He";
+	t.insert(hello, 1);
+	t.insert(he, 2);
+	t.erase(he);
+	EXPECT_EQ(1, t.keys("He")) << "This should be 1";
+}
+
 TEST_F(TSTTest, EmptyStringParameterFind) {
 	EXPECT_EQ(0, t.find("")) << "Find from an empty string should be ALWAYS 0";
 }
@@ -280,6 +288,20 @@ TEST_F(TSTTest, EmptyStringParameterErase) {
 
 TEST_F(TSTTest, EmptyStringParameterContains) {
 	EXPECT_FALSE(t.contains("")) << "Contains from an empty string should be 0 ALWAYS";
+}
+
+TEST_F(TSTTest, MethodShow) {
+	 std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+              kthulu = "Kthulu", no = "No", hes = "Hes";
+	t.insert(hello, 1);
+	t.insert(world, 2);
+	t.insert(he, 3);
+	t.insert(kthulu, 4);
+	t.insert(no, 5);
+	t.insert(hes, 6);
+	t.insert(wololo, 7);
+	t.show();
+	EXPECT_TRUE(true) << "This test is just to check that show method does not break";
 }
 
 TEST_F(TSTTest, LongTest) {

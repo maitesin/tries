@@ -282,6 +282,20 @@ TEST_F(TrieTest, EmptyStringParameterContains) {
 	EXPECT_FALSE(t.contains("")) << "Contains from an empty string should be 0 ALWAYS";
 }
 
+TEST_F(TrieTest, MethodShow) {
+	std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
+	             kthulu = "Kthulu", no = "No", hes = "Hes";
+	t.insert(hello, 1);
+	t.insert(world, 2);
+	t.insert(he, 3);
+	t.insert(kthulu, 4);
+	t.insert(no, 5);
+	t.insert(hes, 6);
+	t.insert(wololo, 7);
+	t.show();
+	EXPECT_TRUE(true) << "This test is just to check that show method does not break";
+}
+
 TEST_F(TrieTest, LongTest) {
   std::string hello = "Hello", world = "World", wololo = "Wololo", he = "He",
               kthulu = "Kthulu", no = "No", hes = "Hes";
