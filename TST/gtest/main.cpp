@@ -267,7 +267,7 @@ TEST_F(TSTTest, MethodFindMiddleNode) {
 	t.insert(hello, 1);
 	t.insert(he, 2);
 	t.erase(he);
-	EXPECT_EQ(1, t.keys("He")) << "This should be 1";
+	EXPECT_EQ(1, t.keys("He").size()) << "This should be 1";
 }
 
 TEST_F(TSTTest, EmptyStringParameterFind) {
