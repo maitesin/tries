@@ -2,6 +2,7 @@ doc/latex
 test/bin/*
 test/data/*
 test/plots/*
+!test/plots/*.py
 test/dict/*.txt
 
 **/CMakeFiles

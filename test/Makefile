@@ -135,6 +135,18 @@ run:
 	cd scripts && ./get_keys.sh
 	echo "Executing: get_keys_prefix.sh"
 	cd scripts && ./get_keys_prefix.sh
+	echo "Executing: insert_dictionary.sh"
+	cd scripts && ./insert_dictionary.sh
+	echo "Executing: remove_found_dictionary.sh"
+	cd scripts && ./remove_found_dictionary.sh
+	echo "Executing: remove_not_found_dictionary.sh"
+	cd scripts && ./remove_not_found_dictionary.sh
+	echo "Executing: search_found_dictionary.sh"
+	cd scripts && ./search_found_dictionary.sh
+	echo "Executing: get_keys_dictionary.sh"
+	cd scripts && ./get_keys_dictionary.sh
+	echo "Executing: get_keys_prefix_dictionary.sh"
+	cd scripts && ./get_keys_prefix_dictionary.sh
 
 graphics:
 	echo "Executing: insert.py"
@@ -149,3 +161,17 @@ graphics:
 	cd plots && ./get_keys.py
 	echo "Executing: get_keys_prefix.py"
 	cd plots && ./get_keys_prefix.py
+	for dict in $(wildcard $(DICT)/*.txt); do\
+		echo "Executing: insert_dictionary.py $$dict"; \
+		cd plots && ./insert_dictionary.py $$dict; \
+		echo "Executing: remove_found_dictionary.py $$dict"; \
+		cd plots && ./remove_found_dictionary.py $$dict; \
+		echo "Executing: remove_not_found_dictionary.py $$dict"; \
+		cd plots && ./remove_not_found_dictionary.py $$dict; \
+		echo "Executing: search_found_dictionary.py $$dict"; \
+		cd plots && ./search_found_dictionary.py $$dict; \
+		echo "Executing: get_keys_dictionary.py $$dict"; \
+		cd plots && ./get_keys_dictionary.py $$dict; \
+		echo "Executing: get_keys_prefix_dictionary.py $$dict"; \
+		cd plots && ./get_keys_prefix_dictionary.py $$dict; \
+	done
