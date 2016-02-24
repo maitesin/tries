@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-O3 -DMAX_SIZE=1000000 --std=c++11
+CXXFLAGS=-O3 -DMAX_SIZE=1000 --std=c++11
 TRIE_SOURCE=../trie/lib
 RADIX_SOURCE=../Radix_Tree/lib
 TST_SOURCE=../TST/lib
