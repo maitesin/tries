@@ -25,6 +25,6 @@ traverse_dict() {
     for i in $(ls *${suffix})
     do
 	echo $(echo ${i} | sed "s/${suffix}//g")
-	exec_test ${i}
+	exec_test_dict ${i}
     done
 }

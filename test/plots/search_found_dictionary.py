@@ -7,7 +7,7 @@ from matplotlib import rc, rcParams
 
 rc('font',**{'family':'serif','serif':['Computer Modern']})
 
-dict=sys[1]
+dict=sys.argv[1].split("/")[2]
 
 trie = genfromtxt('../data/trie_search_found_' + dict  + '.output')
 tst = genfromtxt('../data/tst_search_found_' + dict  + '.output')

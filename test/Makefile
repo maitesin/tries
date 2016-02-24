@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-O2 -DMAX_SIZE=1000000 --std=c++11
+CXXFLAGS=-O2 -DMAX_SIZE=20 --std=c++11
 TRIE_SOURCE=../trie/lib
 RADIX_SOURCE=../Radix_Tree/lib
 TST_SOURCE=../TST/lib
@@ -169,19 +169,19 @@ graphics:
 	echo "Executing: lcp.py"
 	cd plots && ./lcp.py
 
-	for dict in $(wildcard $(DICT)/*.txt); do\
-		echo "Executing: insert_dictionary.py $$dict"; \
-		cd plots && ./insert_dictionary.py $$dict; \
-		echo "Executing: remove_found_dictionary.py $$dict"; \
-		cd plots && ./remove_found_dictionary.py $$dict; \
-		echo "Executing: remove_not_found_dictionary.py $$dict"; \
-		cd plots && ./remove_not_found_dictionary.py $$dict; \
-		echo "Executing: search_found_dictionary.py $$dict"; \
-		cd plots && ./search_found_dictionary.py $$dict; \
-		echo "Executing: get_keys_dictionary.py $$dict"; \
-		cd plots && ./get_keys_dictionary.py $$dict; \
-		echo "Executing: get_keys_prefix_dictionary.py $$dict"; \
-		cd plots && ./get_keys_prefix_dictionary.py $$dict; \
-		echo "Executing: lcp_dictionary.py $$dict"; \
-		cd plots && ./lcp_dictionary.py $$dict; \
+	cd plots && for dict in $(wildcard $(DICT)/*.txt); do\
+		echo "Executing: insert_dictionary.py ../$$dict"; \
+		./insert_dictionary.py ../$$dict; \
+		echo "Executing: remove_found_dictionary.py ../$$dict"; \
+		./remove_found_dictionary.py ../$$dict; \
+		echo "Executing: remove_not_found_dictionary.py ../$$dict"; \
+		./remove_not_found_dictionary.py ../$$dict; \
+		echo "Executing: search_found_dictionary.py ../$$dict"; \
+		./search_found_dictionary.py ../$$dict; \
+		echo "Executing: get_keys_dictionary.py ../$$dict"; \
+		./get_keys_dictionary.py ../$$dict; \
+		echo "Executing: get_keys_prefix_dictionary.py ../$$dict"; \
+		./get_keys_prefix_dictionary.py ../$$dict; \
+		echo "Executing: lcp_dictionary.py ../$$dict"; \
+		./lcp_dictionary.py ../$$dict; \
 	done

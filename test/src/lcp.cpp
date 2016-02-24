@@ -74,7 +74,6 @@ std::string get_map_longest_common_prefix(std::map<std::string, int> & m) {
 std::string get_map_longest_common_prefix(std::unordered_map<std::string, int> & m) {
 #endif
 #ifdef MAP_FUNCTION
-
 	std::vector<std::string> strs;
 	for (auto it = m.begin(); it != m.end(); ++it) {
 		strs.push_back(it->first);
@@ -128,7 +127,6 @@ int main(int argc, char * argv[]) {
 		srand(SALT);
 		for (unsigned int j = 0; j < MAX_SIZE; ++j) {
 			aux = get_random_string(rand()%size);
-			std::cout << aux << std::endl;
 #ifndef MAP_FUNCTION
 			t.insert(aux, 1);
 #else
