@@ -135,6 +135,9 @@ run:
 	cd scripts && ./get_keys.sh
 	echo "Executing: get_keys_prefix.sh"
 	cd scripts && ./get_keys_prefix.sh
+	echo "Executing: lcp.sh"
+	cd scripts && ./lcp.sh
+
 	echo "Executing: insert_dictionary.sh"
 	cd scripts && ./insert_dictionary.sh
 	echo "Executing: remove_found_dictionary.sh"
@@ -147,6 +150,8 @@ run:
 	cd scripts && ./get_keys_dictionary.sh
 	echo "Executing: get_keys_prefix_dictionary.sh"
 	cd scripts && ./get_keys_prefix_dictionary.sh
+	echo "Executing: lcp_dictionary.sh"
+	cd scripts && ./lcp_dictionary.sh
 
 graphics:
 	echo "Executing: insert.py"
@@ -161,6 +166,9 @@ graphics:
 	cd plots && ./get_keys.py
 	echo "Executing: get_keys_prefix.py"
 	cd plots && ./get_keys_prefix.py
+	echo "Executing: lcp.py"
+	cd plots && ./lcp.py
+
 	for dict in $(wildcard $(DICT)/*.txt); do\
 		echo "Executing: insert_dictionary.py $$dict"; \
 		cd plots && ./insert_dictionary.py $$dict; \
@@ -174,4 +182,6 @@ graphics:
 		cd plots && ./get_keys_dictionary.py $$dict; \
 		echo "Executing: get_keys_prefix_dictionary.py $$dict"; \
 		cd plots && ./get_keys_prefix_dictionary.py $$dict; \
+		echo "Executing: lcp_dictionary.py $$dict"; \
+		cd plots && ./lcp_dictionary.py $$dict; \
 	done
