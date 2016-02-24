@@ -15,44 +15,18 @@ radix = genfromtxt('../data/radix_get_keys_prefix_' + dict  + '.output')
 _map = genfromtxt('../data/map_get_keys_prefix_' + dict  + '.output')
 umap  = genfromtxt('../data/umap_get_keys_prefix_' + dict  + '.output')
 
-######## TIME ########
-plot(trie[:,0], trie[:,1], '-o', label='Trie')
-hold(True)
-plot(tst[:,0], tst[:,1], '-o', label='Ternary Search Tree')
-plot(radix[:,0], radix[:,1], '-o', label='Radix Tree')
-plot(_map[:,0], _map[:,1], '-o', label='STL ordered Map')
-plot(umap[:,0], umap[:,1], '-o', label='STL unordered Map')
+data = [trie, tst, radix, _map, umap]
+fig, ax = subplots()
+index = arange(5)
+width = 0.5
 
-xlabel('Max length of the string')
+ax.bar(index,data, width, align='center')
+
+xlabel('Data structures')
 ylabel('Time(ms)')
-title('Remove test (found)')
+title('Get keys prefix dictionary(' + dict + ')')
+xticks(index, ('Trie', 'TST', 'Radix', 'Map', 'Umap'))
 legend(loc='best')
 grid(True)
+
 savefig('get_keys_prefix_' + dict  + '_time_ALL.eps')
-
-hold(False)
-plot(tst[:,0], tst[:,1], '-o', label='Ternary Search Tree')
-hold(True)
-plot(radix[:,0], radix[:,1], '-o', label='Radix Tree')
-plot(_map[:,0], _map[:,1], '-o', label='STL ordered Map')
-plot(umap[:,0], umap[:,1], '-o', label='STL unordered Map')
-
-xlabel('Max length of the string')
-ylabel('Time(ms)')
-title('Remove test (found)')
-legend(loc='best')
-grid(True)
-savefig('get_keys_prefix_' + dict  + '_time_TRMU.eps')
-
-hold(False)
-plot(radix[:,0], radix[:,1], '-o', label='Radix Tree')
-hold(True)
-plot(_map[:,0], _map[:,1], '-o', label='STL ordered Map')
-plot(umap[:,0], umap[:,1], '-o', label='STL unordered Map')
-
-xlabel('Max length of the string')
-ylabel('Time(ms)')
-title('Remove test (found)')
-legend(loc='best')
-grid(True)
-savefig('get_keys_prefix_' + dict  + '_time_RMU.eps')
