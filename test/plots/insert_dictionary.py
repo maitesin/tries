@@ -31,6 +31,7 @@ grid(True)
 savefig('../images/insert/dict/insert_' + dict  + '_time_ALL.eps')
 
 data = [trie, tst, radix]
+fig, ax = subplots()
 index = arange(3)
 width = 0.5
 

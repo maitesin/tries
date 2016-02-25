@@ -32,6 +32,7 @@ savefig('../images/get_keys_prefix/dict/get_keys_prefix_' + dict  + '_time_ALL.e
 
 
 data = [trie, tst, radix]
+fig, ax = subplots()
 index = arange(3)
 width = 0.5
 
