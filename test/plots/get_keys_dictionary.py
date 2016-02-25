@@ -29,4 +29,4 @@ xticks(index, ('Trie', 'TST', 'Radix', 'Map', 'Umap'))
 legend(loc='best')
 grid(True)
 
-savefig('get_keys_' + dict  + '_time_ALL.eps')
+savefig('../images/get_keys/dict/get_keys_' + dict  + '_time_ALL.eps')
