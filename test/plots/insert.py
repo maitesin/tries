@@ -54,6 +54,19 @@ legend(loc='best')
 grid(True)
 savefig('../images/insert/random/insert_time_RMU.eps')
 
+hold(False)
+plot(trie[:,0], trie[:,1], '-o', label='Trie')
+hold(True)
+plot(tst[:,0], tst[:,1], '-o', label='Ternary Search Tree')
+plot(radix[:,0], radix[:,1], '-o', label='Radix Tree')
+
+xlabel('Max length of the string')
+ylabel('Time(ms)')
+title('Insert test')
+legend(loc='best')
+grid(True)
+savefig('../images/insert/random/insert_time_TTR.eps')
+
 ###### MEMORY ######
 hold(False)
 plot(trie[:,0], trie[:,2], '-o', label='Trie')
@@ -69,3 +82,4 @@ title('Memory test')
 legend(loc='best')
 grid(True)
 savefig('../images/insert/random/memory.eps')
+

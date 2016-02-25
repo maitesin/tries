@@ -53,3 +53,17 @@ title('Get keys prefix')
 legend(loc='best')
 grid(True)
 savefig('../images/get_keys_prefix/random/get_keys_prefix_time_RMU.eps')
+
+
+hold(False)
+plot(trie[:,0], trie[:,1], '-o', label='Trie')
+hold(True)
+plot(tst[:,0], tst[:,1], '-o', label='Ternary Search Tree')
+plot(radix[:,0], radix[:,1], '-o', label='Radix Tree')
+
+xlabel('Max length of the string')
+ylabel('Time(ms)')
+title('Get keys prefix')
+legend(loc='best')
+grid(True)
+savefig('../images/get_keys_prefix/random/get_keys_prefix_time_TTR.eps')
