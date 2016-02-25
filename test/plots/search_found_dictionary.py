@@ -30,3 +30,18 @@ legend(loc='best')
 grid(True)
 
 savefig('../images/search_found/dict/search_found_' + dict  + '_time_ALL.eps')
+
+data = [trie, tst, radix]
+index = arange(3)
+width = 0.5
+
+ax.bar(index,data, width, align='center')
+
+xlabel('Data structures')
+ylabel('Time(ms)')
+title('Search found dictionary(' + dict + ')')
+xticks(index, ('Trie', 'TST', 'Radix'))
+legend(loc='best')
+grid(True)
+
+savefig('../images/search_found/dict/search_found_' + dict  + '_time_TTR.eps')

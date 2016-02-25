@@ -30,3 +30,19 @@ legend(loc='best')
 grid(True)
 
 savefig('../images/remove_found/dict/remove_found_' + dict  + '_time_ALL.eps')
+
+
+data = [trie, tst, radix]
+index = arange(3)
+width = 0.5
+
+ax.bar(index,data, width, align='center')
+
+xlabel('Data structures')
+ylabel('Time(ms)')
+title('Remove found dictionary(' + dict + ')')
+xticks(index, ('Trie', 'TST', 'Radix'))
+legend(loc='best')
+grid(True)
+
+savefig('../images/remove_found/dict/remove_found_' + dict  + '_time_TTR.eps')
