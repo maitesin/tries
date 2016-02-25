@@ -4,7 +4,6 @@ from numpy import *
 from pylab import *
 from matplotlib import rc, rcParams
 
-rc('font',**{'family':'serif','serif':['Computer Modern']})
 
 trie = genfromtxt('../data/trie_get_keys_prefix.output')
 tst = genfromtxt('../data/tst_get_keys_prefix.output')

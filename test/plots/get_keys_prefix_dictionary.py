@@ -5,7 +5,6 @@ from numpy import *
 from pylab import *
 from matplotlib import rc, rcParams
 
-rc('font',**{'family':'serif','serif':['Computer Modern']})
 
 dict=sys.argv[1].split("/")[2]
 
