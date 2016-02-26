@@ -53,6 +53,7 @@ legend(loc='best')
 grid(True)
 savefig('../images/remove_found/random/remove_found_time_RMU.eps')
 
+hold(False)
 plot(trie[:,0], trie[:,1], '-o', label='Trie')
 hold(True)
 plot(tst[:,0], tst[:,1], '-o', label='Ternary Search Tree')
