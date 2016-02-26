@@ -131,6 +131,8 @@ run:
 	cd scripts && ./remove_not_found.sh
 	echo "Executing: search_found.sh"
 	cd scripts && ./search_found.sh
+	echo "Executing: search_not_found.sh"
+	cd scripts && ./search_not_found.sh
 	echo "Executing: get_keys.sh"
 	cd scripts && ./get_keys.sh
 	echo "Executing: get_keys_prefix.sh"
@@ -146,6 +148,8 @@ run:
 	cd scripts && ./remove_not_found_dictionary.sh
 	echo "Executing: search_found_dictionary.sh"
 	cd scripts && ./search_found_dictionary.sh
+	echo "Executing: search_not_found_dictionary.sh"
+	cd scripts && ./search_not_found_dictionary.sh
 	echo "Executing: get_keys_dictionary.sh"
 	cd scripts && ./get_keys_dictionary.sh
 	echo "Executing: get_keys_prefix_dictionary.sh"
@@ -162,6 +166,8 @@ graphics:
 	cd plots && ./remove_not_found.py
 	echo "Executing: search_found.py"
 	cd plots && ./search_found.py
+	echo "Executing: search_not_found.py"
+	cd plots && ./search_not_found.py
 	echo "Executing: get_keys.py"
 	cd plots && ./get_keys.py
 	echo "Executing: get_keys_prefix.py"
@@ -178,6 +184,8 @@ graphics:
 		./remove_not_found_dictionary.py ../$$dict; \
 		echo "Executing: search_found_dictionary.py ../$$dict"; \
 		./search_found_dictionary.py ../$$dict; \
+		echo "Executing: search_not_found_dictionary.py ../$$dict"; \
+		./search_not_found_dictionary.py ../$$dict; \
 		echo "Executing: get_keys_dictionary.py ../$$dict"; \
 		./get_keys_dictionary.py ../$$dict; \
 		echo "Executing: get_keys_prefix_dictionary.py ../$$dict"; \
