@@ -47,3 +47,6 @@ I have develop several test scenarios (and I am still developing new ones) to co
 * Get Keys with Prefix
   - Random values
   - Dictionaries
+* Longest Common Path
+  - Random values
+  - Dictionaries
