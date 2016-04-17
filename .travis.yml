@@ -36,11 +36,10 @@ after_success:
 - make test
 - coveralls --exclude "test" --exclude "CMakeFiles" --include "trie/lib/" --include "TST/lib/" --include "Radix_Tree/lib/" --gcov-options '\-lp' --gcov 'gcov-4.9' 
 
+env:
+  - secure: "SeCJaR041ZLYRz9O0_Ze8A"
 addons:
   coverity_scan:
-    # GitHub project metadata
-    # ** specific to your project **
-
     project:
       name: maitesin/tries
       version: 0.8
