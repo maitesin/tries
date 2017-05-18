@@ -3,25 +3,26 @@
 
 Trie / Ternary Search Tree (TST) / Radix Tree
 =====
-##Description of this project
+
+## Description of this project
 I have created three data structures that are implementations of the <b>abstract data type dictionary</b>. But they are enhanced with an <b>extra method</b> called <b>"keys"</b>, this returns the keys with that share a provided prefix. This can be useful to use it in tasks such as autocomplete searches.
 
 The aim of this study is to <b>compare the performance</b> of these three data structures in <b>different scenarios</b> and against the <b>std::map</b> and <b>std::unordered_map</b>. Moreover, the second aim of this project is to practice new things added in the standard <b>C++11</b> and the <b>Google Test</b> as a unit test framework.
 
-##Operations supported by the three data structures tested in this project.
-Operation|Description
----------|-----------
-clear|Removes all the content of the data structure
-find|Returns the value stored in the data structure for a specific key provided
-insert|Adds a new pair of key and value to the data structure
-size|Returns the amount of elements stored in the data structure
-show|Prints the content of the data structure in the [dot](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) format
-erase|Removes the value stored in the data structure for a specific key provided
-contains|Returns true if there is a value associated to the key provided
-keys|Returns a std::vector with all the keys in the data structure that have the provided prefix. If no prefix is provided returns a std::vector with all the keys in the data structure.
-lcp|Returns the longest common prefix of all keys stored in the data structure.
+## Operations supported by the three data structures tested in this project.
+|Operation|Description|
+|---------|-----------|
+|clear|Removes all the content of the data structure|
+|find|Returns the value stored in the data structure for a specific key provided|
+|insert|Adds a new pair of key and value to the data structure|
+|size|Returns the amount of elements stored in the data structure|
+|show|Prints the content of the data structure in the [dot](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) format|
+|erase|Removes the value stored in the data structure for a specific key provided|
+|contains|Returns true if there is a value associated to the key provided|
+|keys|Returns a std::vector with all the keys in the data structure that have the provided prefix. If no prefix is provided returns a std::vector with all the keys in the data structure.|
+|lcp|Returns the longest common prefix of all keys stored in the data structure.|
 
-##Scenarios tested
+## Scenarios tested
 I have develop several test scenarios (and I am still developing new ones) to compare the performance of these five data structures.
 * Memory
   - Random values
